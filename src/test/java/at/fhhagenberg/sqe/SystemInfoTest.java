@@ -1,17 +1,17 @@
 package at.fhhagenberg.sqe;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
 public class SystemInfoTest {
     @Test
     public void testJavaVersion() {
-       assertEquals("13", SystemInfo.javaVersion());
+    	assertTrue(SystemInfo.javaVersion().startsWith("13"));
     }
 
     @Test
     public void testJavafxVersion() {
-       assertEquals("13", SystemInfo.javafxVersion());
+    	assertTrue(SystemInfo.javafxVersion().startsWith("13"));
     }
 }
