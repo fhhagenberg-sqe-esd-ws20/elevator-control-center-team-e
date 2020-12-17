@@ -12,38 +12,32 @@ public class BuildingWrapper implements IBuildingWrapper {
 	
 	@Override
 	public int getElevatorNum() throws RemoteException {
-		// TODO Auto-generated method stub
-		return 0;
+		return model.getElevatorNum();
 	}
 
 	@Override
 	public boolean getFloorButtonDown(int floor) throws RemoteException {
-		// TODO Auto-generated method stub
-		return false;
+		return model.getFloorButtonDown(floor);
 	}
 
 	@Override
 	public boolean getFloorButtonUp(int floor) throws RemoteException {
-		// TODO Auto-generated method stub
-		return false;
+		return model.getFloorButtonUp(floor);
 	}
 
 	@Override
 	public int getFloorHeight() throws RemoteException {
-		// TODO Auto-generated method stub
-		return 0;
+		return model.getFloorHeight();
 	}
 
 	@Override
 	public int getFloorNum() throws RemoteException {
-		// TODO Auto-generated method stub
-		return 0;
+		return model.getFloorNum();
 	}
 
 	@Override
 	public long getClockTick() throws RemoteException {
-		// TODO Auto-generated method stub
-		return 0;
+		return model.getClockTick();
 	}
 
 }
