@@ -5,7 +5,7 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ master ]
+    branches: [ fix/maven-build-error ]
   pull_request:
     branches: [ master ]
 
