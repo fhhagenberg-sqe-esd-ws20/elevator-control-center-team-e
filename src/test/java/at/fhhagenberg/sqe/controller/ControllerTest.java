@@ -207,9 +207,9 @@ class ControllerTest {
 	
 	@Test
 	void testSetElevator() throws RemoteException, InterruptedException {
-		
-		controller = new Controller(buildingMock, elevatorMock);
 		Mockito.when(buildingMock.getElevatorNum()).thenReturn(3);
+		controller = new Controller(buildingMock, elevatorMock);
+
 		controller.setElevator(2);
 		assertEquals(2, controller.getCurrentElevator());
 		

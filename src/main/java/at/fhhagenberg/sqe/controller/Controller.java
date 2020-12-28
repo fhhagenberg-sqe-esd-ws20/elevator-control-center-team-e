@@ -128,11 +128,11 @@ public class Controller {
 	}
 	
 	public void setElevator(int elevator) {
-		if(elevator > this.getElevatorNumbers()) {
+		if(elevator >= this.getElevatorNumbers()) {
 			error.set("elevatorNumber not available");
 			return;
 		}
-		elevatorNumbers.set(elevator);
+		currentElevator.set(elevator);
 		clearProberties();
 	}
 	
