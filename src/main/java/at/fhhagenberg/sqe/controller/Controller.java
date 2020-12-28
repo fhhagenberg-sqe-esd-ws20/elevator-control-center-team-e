@@ -14,6 +14,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleMapProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 
 
@@ -41,7 +42,7 @@ public class Controller {
 	private IBuildingWrapper building;
 	private IElevatorWrapper elevator;
 	private static int FETCH_INTERVAL = 100;
-	private static int MAX_RETRIES = 5;
+	private static int MAX_RETRIES = 4;
 	
 	// properties - building
 	private IntegerProperty elevatorNumbers;
@@ -73,7 +74,7 @@ public class Controller {
 		floorHeight = new SimpleIntegerProperty();
 		floorNumber = new SimpleIntegerProperty();
 		currentElevator = new SimpleIntegerProperty();
-		buttons = new SimpleMapProperty<Integer, FloorButtons>();
+		buttons = FXCollections.observableHashMap();
 		isManualMode = new SimpleBooleanProperty();
 		
 		committedDirection = new SimpleIntegerProperty();
@@ -89,7 +90,9 @@ public class Controller {
 		error = new SimpleStringProperty();
 		
 		this.initStaticBuildingInfo();
-		this.start();
+		
+		// for tests better to call it separate
+		// this.start();
 	}
 	
 	public void SetTarget(int target) {
@@ -119,9 +122,38 @@ public class Controller {
 		}
 	}
 	
-	private void start() {
+	public void start() {
 		ScheduledExecutorService es = Executors.newScheduledThreadPool(1);
 		es.scheduleAtFixedRate(this::scheduleFetch, FETCH_INTERVAL, FETCH_INTERVAL, TimeUnit.MILLISECONDS);
+	}
+	
+	public void setElevator(int elevator) {
+		if(elevator > this.getElevatorNumbers()) {
+			error.set("elevatorNumber not available");
+			return;
+		}
+		elevatorNumbers.set(elevator);
+		clearProberties();
+	}
+	
+	private void clearProberties() {
+		for(int i = 0; i < floorNumber.get(); i++) {
+			var tmp = buttons.get(i);
+			tmp.elevatorButton.set(false);
+			tmp.floorButtonDown.set(false);
+			tmp.floorButtonUp.set(false);
+			tmp.elevatorServicesFloor.set(true);
+		}
+		
+		committedDirection.set(0);
+		elevatorAccel.set(0);
+		elevatorDoorStatus.set(0);
+		elevatorFloor.set(0);
+		elevatorPosition.set(0);
+		elevatorSpeed.set(0);
+		elevatorWeight.set(0);
+		elevatorCapacity.set(0);
+		elevatorTarget.set(0);
 	}
 	
 	private synchronized void scheduleFetch() {
@@ -149,8 +181,7 @@ public class Controller {
 				elevatorCapacity.set(elevator.getElevatorCapacity(currentElevator.get()));
 				elevatorTarget.set(elevator.getTarget(currentElevator.get()));
 				
-				cnt++;
-				if(cnt == MAX_RETRIES) {
+				if(cnt++ == MAX_RETRIES) {
 					throw new RemoteException("Reached maximum retries while updating elevator.");
 				}
 			} while (tick != elevator.getClockTick());
@@ -158,5 +189,54 @@ public class Controller {
 		} catch (RemoteException e) {
 			error.set(e.getMessage());
 		}
+	}
+	
+	public int getElevatorNumbers() {
+		return elevatorNumbers.get();
+	}
+	public int getFloorHeight() {
+		return floorHeight.get();
+	}
+	public int getFloorNumber() {
+		return floorNumber.get();
+	}
+	public int getCurrentElevator() {
+		return currentElevator.get();
+	}
+	public ObservableMap<Integer, FloorButtons> getButtons() {
+		return buttons;
+	}
+	public boolean getIsManualMode() {
+		return isManualMode.get();
+	}
+	public int getCommittedDirection() {
+		return committedDirection.get();
+	}
+	public int getElevatorAccel() {
+		return elevatorAccel.get();
+	}
+	public int getElevatorDoorStatus() {
+		return elevatorDoorStatus.get();
+	}
+	public int getElevatorFloor() {
+		return elevatorFloor.get();
+	}
+	public int getElevatorPosition() {
+		return elevatorPosition.get();
+	}
+	public int getElevatorSpeed() {
+		return elevatorSpeed.get();
+	}
+	public int getElevatorWeight() {
+		return elevatorWeight.get();
+	}
+	public int getElevatorCapacity() {
+		return elevatorCapacity.get();
+	}
+	public int getElevatorTarget() {
+		return elevatorTarget.get();
+	}
+	public String getError() {
+		return error.get();
 	}
 }
