@@ -9,7 +9,10 @@ import at.fhhagenberg.sqe.model.IBuildingWrapper;
 import at.fhhagenberg.sqe.model.IElevatorWrapper;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleMapProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableMap;
 
@@ -23,6 +26,11 @@ public class Controller {
 		public BooleanProperty elevatorServicesFloor;
 		
 		public FloorButtons(boolean down, boolean up, boolean btn, boolean service) {
+			floorButtonDown = new SimpleBooleanProperty();
+			floorButtonUp = new SimpleBooleanProperty();
+			elevatorButton = new SimpleBooleanProperty();
+			elevatorServicesFloor = new SimpleBooleanProperty();
+			
 			floorButtonDown.set(down);
 			floorButtonUp.set(up);
 			elevatorButton.set(btn);
@@ -61,6 +69,25 @@ public class Controller {
 		building = bw;
 		elevator = ew;
 		
+		elevatorNumbers = new SimpleIntegerProperty();
+		floorHeight = new SimpleIntegerProperty();
+		floorNumber = new SimpleIntegerProperty();
+		currentElevator = new SimpleIntegerProperty();
+		buttons = new SimpleMapProperty<Integer, FloorButtons>();
+		isManualMode = new SimpleBooleanProperty();
+		
+		committedDirection = new SimpleIntegerProperty();
+		elevatorAccel = new SimpleIntegerProperty();
+		elevatorDoorStatus = new SimpleIntegerProperty();
+		elevatorFloor = new SimpleIntegerProperty();
+		elevatorPosition = new SimpleIntegerProperty();
+		elevatorSpeed = new SimpleIntegerProperty();
+		elevatorWeight = new SimpleIntegerProperty();
+		elevatorCapacity = new SimpleIntegerProperty();
+		elevatorTarget = new SimpleIntegerProperty();
+		
+		error = new SimpleStringProperty();
+		
 		this.initStaticBuildingInfo();
 		this.start();
 	}
@@ -83,7 +110,6 @@ public class Controller {
 			isManualMode.set(true);
 			currentElevator.set(0);
 			
-			buttons = new SimpleMapProperty<Integer, FloorButtons>();
 			for(int i = 0; i < floorNumber.get(); i++) {
 				buttons.put(i, new FloorButtons(false, false, false, true));
 			}
