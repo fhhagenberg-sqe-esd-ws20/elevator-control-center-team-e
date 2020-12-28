@@ -5,17 +5,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import at.fhhagenberg.sqe.controller.ControllerData.FloorButtons;
 import at.fhhagenberg.sqe.model.IBuildingWrapper;
 import at.fhhagenberg.sqe.model.IElevatorWrapper;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleMapProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
 
@@ -27,7 +18,7 @@ public class Controller {
 	private static int MAX_RETRIES = 4;
 	
 	@FXML
-	private ControllerData data;
+	private ControllerData data = new ControllerData();
 	
 	public Controller(IBuildingWrapper bw, IElevatorWrapper ew) {
 		building = bw;

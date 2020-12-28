@@ -4,6 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
+import at.fhhagenberg.sqe.controller.Controller;
+import at.fhhagenberg.sqe.model.BuildingWrapper;
+import at.fhhagenberg.sqe.model.DummyElevator;
+import at.fhhagenberg.sqe.model.ElevatorWrapper;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -21,9 +25,14 @@ public class App extends Application {
     @Override
     public void start(Stage stage) {
     	Parent root = null;
+    	FXMLLoader loader;
     	try {
 	    	URL url = new File("src/main/resources/fxml/eccView.fxml").toURI().toURL();
-	    	root = FXMLLoader.load(url);
+	    	loader = new FXMLLoader(url);
+	    	
+	    	loader.setController(new Controller(new BuildingWrapper(new DummyElevator()), new ElevatorWrapper(new DummyElevator())));
+	    	
+	    	root = loader.load();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
