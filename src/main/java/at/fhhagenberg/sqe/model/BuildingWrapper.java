@@ -34,10 +34,4 @@ public class BuildingWrapper implements IBuildingWrapper {
 	public int getFloorNum() throws RemoteException {
 		return model.getFloorNum();
 	}
-
-	@Override
-	public long getClockTick() throws RemoteException {
-		return model.getClockTick();
-	}
-
 }

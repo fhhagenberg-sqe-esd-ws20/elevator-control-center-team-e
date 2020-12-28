@@ -106,5 +106,9 @@ public interface IElevatorWrapper {
 	 */
 	public void setTarget(int elevatorNumber, int target) throws java.rmi.RemoteException; 
 
-	
+	/**
+	 * Retrieves the current clock tick of the elevator control system. 
+	 * @return clock tick
+	 */
+	public long getClockTick() throws java.rmi.RemoteException;
 }

@@ -79,5 +79,9 @@ public class ElevatorWrapper implements IElevatorWrapper {
 	public void setTarget(int elevatorNumber, int target) throws RemoteException {
 		model.setTarget(elevatorNumber, target);
 	}
-
+	
+	@Override
+	public long getClockTick() throws RemoteException {
+		return model.getClockTick();
+	}
 }
