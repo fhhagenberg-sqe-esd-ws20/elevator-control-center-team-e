@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import at.fhhagenberg.sqe.view.FXMLListCellFactory?>
+
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
@@ -8,11 +10,13 @@
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<SplitPane dividerPositions="0.8" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<SplitPane fx:controller="at.fhhagenberg.sqe.controller.Controller"
+dividerPositions="0.8" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <items>
       <SplitPane dividerPositions="0.5" prefHeight="160.0" prefWidth="200.0">
          <items>
@@ -20,39 +24,45 @@
                <children>
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Label text="Floor" />
-                        <Label text="99" />
+                        <Label text="Floor " />
+                        <Label id="elevFloor" text="99" />
                      </children>
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Label text="Direction" />
-                        <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
-                        <ImageView fitHeight="50.0" fitWidth="50.0" layoutX="56.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" />
+                        <Label text="Direction " />
+                        <ImageView fitHeight="50.0" fitWidth="50.0">
+                           <image>
+                              <Image url="@../icons/down_dotted_grey.png" />
+                           </image></ImageView>
+                        <ImageView fitHeight="50.0" fitWidth="50.0">
+                           <image>
+                              <Image url="@../icons/up_dotted_grey.png" />
+                           </image></ImageView>
                      </children>
                   </HBox>
                   <HBox layoutX="10.0" layoutY="42.0" prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Label text="Payload" />
-                        <Label text="99" />
+                        <Label text="Payload " />
+                        <Label id="elevFloor" text="99" />
                      </children>
                   </HBox>
                   <HBox layoutX="10.0" layoutY="182.0" prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Label text="Speed" />
-                        <Label text="99" />
+                        <Label text="Speed " />
+                        <Label id="elevFloor" text="99" />
                      </children>
                   </HBox>
                   <HBox layoutX="10.0" layoutY="187.0" prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Label text="Doors" />
-                        <Label text="99" />
+                        <Label text="Doors " />
+                        <Label id="elevFloor" text="99" />
                      </children>
                   </HBox>
                   <HBox layoutX="10.0" layoutY="188.0" prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Label text="Next target" />
-                        <Label text="99" />
+                        <Label text="Next target " />
+                        <Label id="elevFloor" text="99" />
                      </children>
                   </HBox>
                   <ScrollPane prefHeight="211.0" prefWidth="36.0">
@@ -66,16 +76,11 @@
                <content>
                   <VBox prefHeight="200.0" prefWidth="100.0">
                      <children>
-                        <ListView prefHeight="200.0" prefWidth="200.0" />
-                        <HBox id="itemtemplate" prefHeight="100.0" prefWidth="296.0">
-                           <children>
-                              <Label text="Nr" />
-                              <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
-                              <ImageView fitHeight="50.0" fitWidth="50.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" />
-                              <ImageView fitHeight="50.0" fitWidth="50.0" layoutX="60.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" />
-                              <Button mnemonicParsing="false" text="set target" />
-                           </children>
-                        </HBox>
+                        <ListView>
+                        	<cellFactory>
+                        		<FXMLListCellFactory fxmlSource="@floorTemplate.fxml"/>
+                        	</cellFactory>
+                        </ListView>
                      </children>
                   </VBox>
                </content>
