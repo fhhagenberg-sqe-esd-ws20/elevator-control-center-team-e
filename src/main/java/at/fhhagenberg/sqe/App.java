@@ -1,6 +1,12 @@
 package at.fhhagenberg.sqe;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -14,18 +20,18 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) {
-        var javaVersion = SystemInfo.javaVersion();
-        var javafxVersion = SystemInfo.javafxVersion();
+    	Parent root = null;
+    	try {
+	    	URL url = new File("src/main/resources/fxml/eccView.fxml").toURI().toURL();
+	    	root = FXMLLoader.load(url);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
-        var label = new Label("Hello, JavaFX " + javafxVersion + ", running on Java " + javaVersion + ".");
-        var layout = new BorderPane(label);
-        var button = new Button("Click me!");
-        button.setOnAction(evt -> button.setText("Clicked!"));
-        layout.setBottom(button);
-
-        var scene = new Scene(layout, 640, 480);
+        var scene = new Scene(root, 640, 480);
 
         stage.setScene(scene);
+        stage.setTitle("ECC Team E");
         stage.show();
     }
 
