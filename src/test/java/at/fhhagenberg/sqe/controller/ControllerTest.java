@@ -106,7 +106,7 @@ class ControllerTest {
 		Mockito.when(elevatorMock.getTarget(0)).thenReturn(4).thenReturn(5);
 		
 		controller.start();
-		Thread.sleep(110, 0);
+		Thread.sleep(130, 0);
 		
 		assertEquals(true, controller.getButtons().get(0).elevatorButton.get());
 		assertEquals(false, controller.getButtons().get(1).elevatorButton.get());
@@ -134,7 +134,7 @@ class ControllerTest {
 		assertEquals(5, controller.getElevatorCapacity());
 		assertEquals(4, controller.getElevatorTarget());
 		
-		Thread.sleep(110, 0);
+		Thread.sleep(100, 0);
 		
 		assertEquals(true, controller.getButtons().get(0).elevatorButton.get());
 		assertEquals(true, controller.getButtons().get(1).elevatorButton.get());
