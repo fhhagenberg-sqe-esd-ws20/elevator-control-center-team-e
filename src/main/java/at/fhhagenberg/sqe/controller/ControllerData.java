@@ -44,7 +44,7 @@ public class ControllerData {
 		committedDirection = new SimpleIntegerProperty();
 		elevatorAccel = new SimpleIntegerProperty();
 		elevatorDoorStatus = new SimpleIntegerProperty();
-		elevatorFloor = new SimpleIntegerProperty();
+		elevatorFloor = new SimpleIntegerProperty(42);
 		elevatorPosition = new SimpleIntegerProperty();
 		elevatorSpeed = new SimpleIntegerProperty();
 		elevatorWeight = new SimpleIntegerProperty();
@@ -53,4 +53,54 @@ public class ControllerData {
 		
 		error = new SimpleStringProperty();
 	}
+	
+	public int getElevatorNumbers() {
+		return elevatorNumbers.get();
+	}
+	public int getFloorHeight() {
+		return floorHeight.get();
+	}
+	public int getFloorNumber() {
+		return floorNumber.get();
+	}
+	public int getCurrentElevator() {
+		return currentElevator.get();
+	}
+	public ObservableMap<Integer, FloorButtons> getButtons() {
+		return buttons;
+	}
+	public boolean getIsManualMode() {
+		return isManualMode.get();
+	}
+	public int getCommittedDirection() {
+		return committedDirection.get();
+	}
+	public int getElevatorAccel() {
+		return elevatorAccel.get();
+	}
+	public int getElevatorDoorStatus() {
+		return elevatorDoorStatus.get();
+	}
+	public int getElevatorFloor() {
+		return elevatorFloor.get();
+	}
+	public int getElevatorPosition() {
+		return elevatorPosition.get();
+	}
+	public int getElevatorSpeed() {
+		return elevatorSpeed.get();
+	}
+	public int getElevatorWeight() {
+		return elevatorWeight.get();
+	}
+	public int getElevatorCapacity() {
+		return elevatorCapacity.get();
+	}
+	public int getElevatorTarget() {
+		return elevatorTarget.get();
+	}
+	public String getError() {
+		return error.get();
+	}
+
 }

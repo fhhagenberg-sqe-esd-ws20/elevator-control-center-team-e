@@ -18,13 +18,13 @@ public class Controller {
 	private static int MAX_RETRIES = 4;
 	
 	@FXML
-	private ControllerData data = new ControllerData();
+	private ControllerData data;
 	
 	public Controller(IBuildingWrapper bw, IElevatorWrapper ew) {
 		building = bw;
 		elevator = ew;
 		
-		this.initStaticBuildingInfo();
+		//this.initStaticBuildingInfo();
 		
 		// for tests better to call it separate
 		// this.start();

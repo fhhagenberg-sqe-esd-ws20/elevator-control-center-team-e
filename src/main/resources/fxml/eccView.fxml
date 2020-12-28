@@ -31,7 +31,7 @@ dividerPositions="0.8" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-In
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <Label text="Floor " />
-                        <Label id="elevFloor" text="99" />
+                        <Label id="elevFloor" text="${data.elevatorFloor}" />
                      </children>
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0">
