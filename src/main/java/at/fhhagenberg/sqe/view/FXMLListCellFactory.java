@@ -29,6 +29,7 @@ public class FXMLListCellFactory implements Callback<ListView<Object>, ListCell<
                     try {
                         FXMLLoader loader = new FXMLLoader(fxmlSource);
                         loader.getNamespace().put("item", item);
+                        loader.setController(item);
                         setGraphic(loader.load());
                     } catch (IOException e) {
                         e.printStackTrace();

@@ -10,6 +10,7 @@ import at.fhhagenberg.sqe.model.IElevatorWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
@@ -54,7 +55,7 @@ public class Controller {
 			data.currentElevator.set(0);
 			
 			for(int i = 0; i < data.floorNumber.get(); i++) {
-				data.buttons.put(i, new FloorButtons(false, false, false, true));
+				data.buttons.put(i, new FloorButtons(i, false, false, false, true));
 			}
 			
 		} catch (RemoteException e) {
@@ -193,10 +194,11 @@ public class Controller {
 	
 	public void fillFields() {
 		// listview lvFloors
+		data.buttons.put(42, new FloorButtons(42, false, false, false, false));
 		ObservableList<Object> floors = FXCollections.observableArrayList(data.buttons.values());
 		lvFloors.setItems(floors);
 		
-		data.buttons.put(42, new FloorButtons(false, false, false, false));
+		
 		
 		
 		// combobox cmbElevators
@@ -210,6 +212,12 @@ public class Controller {
 		// slider sliAutoManual
 		
 		
+	}
+	
+	@FXML
+	void doSetTarget(ActionEvent event) {
+		event.consume();
+		System.out.println("Hello, World!");
 	}
 	
 }

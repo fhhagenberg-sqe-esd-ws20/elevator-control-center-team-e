@@ -15,7 +15,7 @@
 
 <HBox id="itemtemplate">
    <children>
-      <Label text="Nr" />
+      <Label text="${floorNr}" />
       <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../icons/down_empty.png" />
@@ -28,6 +28,7 @@
          <image>
             <Image url="@../icons/stop_empty.png" />
          </image></ImageView>
-      <Button mnemonicParsing="false" text="set target" />
+      <Button onAction="#doSetTarget"
+      mnemonicParsing="false" text="set target" />
    </children>
 </HBox>

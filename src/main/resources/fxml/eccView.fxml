@@ -76,9 +76,9 @@
                   </ScrollPane>
                </children>
             </VBox>
-            <ScrollPane prefHeight="200.0" prefWidth="200.0">
+            <ScrollPane>
                <content>
-                  <VBox prefHeight="200.0" prefWidth="100.0">
+                  <VBox>
                      <children>
                         <ListView fx:id="lvFloors">
                         	<cellFactory>

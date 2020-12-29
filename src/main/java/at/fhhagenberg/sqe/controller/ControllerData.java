@@ -44,8 +44,10 @@ public class ControllerData {
 		floorNumber = new SimpleIntegerProperty();
 		currentElevator = new SimpleIntegerProperty();
 		buttons = FXCollections.observableHashMap();
-		buttons.put(42, new FloorButtons(false, false, false, false));
+		// TODO debugging call
+		buttons.put(42, new FloorButtons(42, false, false, false, false));
 		buttonList = FXCollections.observableArrayList(buttons.values());
+		// TODO debugging call
 		System.out.println(buttons.values());
 		isManualMode = new SimpleBooleanProperty();
 		
@@ -61,6 +63,7 @@ public class ControllerData {
 		
 		error = new SimpleStringProperty();
 		
+		// TODO debuuging
 		elevators = FXCollections.observableArrayList();
 		for(int i = 0; i < 5; i++) {
 			elevators.add(i);
@@ -95,7 +98,6 @@ public class ControllerData {
 		return elevatorDoorStatus.get();
 	}
 	public int getElevatorFloor() {
-		System.out.println("Henlo" + elevatorFloor.get());
 		return elevatorFloor.get();
 	}
 	public int getElevatorPosition() {
