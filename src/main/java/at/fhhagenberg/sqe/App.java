@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.URL;
 
 import at.fhhagenberg.sqe.controller.Controller;
+import at.fhhagenberg.sqe.controller.ControllerData;
 import at.fhhagenberg.sqe.model.BuildingWrapper;
 import at.fhhagenberg.sqe.model.DummyElevator;
 import at.fhhagenberg.sqe.model.ElevatorWrapper;
@@ -26,11 +27,14 @@ public class App extends Application {
     public void start(Stage stage) {
     	Parent root = null;
     	FXMLLoader loader;
+    	Controller controller = new Controller(new BuildingWrapper(new DummyElevator()), new ElevatorWrapper(new DummyElevator()));
+    	//controller.data = new ControllerData();
+    	
     	try {
 	    	URL url = new File("src/main/resources/fxml/eccView.fxml").toURI().toURL();
 	    	loader = new FXMLLoader(url);
 	    	
-	    	loader.setController(new Controller(new BuildingWrapper(new DummyElevator()), new ElevatorWrapper(new DummyElevator())));
+	    	loader.setController(controller);
 	    	
 	    	root = loader.load();
 		} catch (IOException e) {
@@ -38,10 +42,14 @@ public class App extends Application {
 		}
 
         var scene = new Scene(root, 640, 480);
-
+        
         stage.setScene(scene);
         stage.setTitle("ECC Team E");
         stage.show();
+        
+        controller.initStaticBuildingInfo();
+        controller.start();
+        controller.fillFields();
     }
 
     public static void main(String[] args) {

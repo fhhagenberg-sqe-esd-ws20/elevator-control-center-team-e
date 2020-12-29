@@ -7,6 +7,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 
 public class ControllerData {
@@ -17,6 +18,7 @@ public class ControllerData {
 	IntegerProperty floorNumber;
 	IntegerProperty currentElevator;
 	ObservableMap<Integer, FloorButtons> buttons;
+	ObservableList<FloorButtons> buttonList;
 	BooleanProperty isManualMode;	// if false, elevators are in automatic mode
 	
 	// properties - elevator
@@ -32,6 +34,9 @@ public class ControllerData {
 	
 	// error properties
 	StringProperty error;
+	
+	// properties - ui elements
+	ObservableList<Integer> elevators;
 		
 	public ControllerData() {
 		elevatorNumbers = new SimpleIntegerProperty();
@@ -39,12 +44,15 @@ public class ControllerData {
 		floorNumber = new SimpleIntegerProperty();
 		currentElevator = new SimpleIntegerProperty();
 		buttons = FXCollections.observableHashMap();
+		buttons.put(42, new FloorButtons(false, false, false, false));
+		buttonList = FXCollections.observableArrayList(buttons.values());
+		System.out.println(buttons.values());
 		isManualMode = new SimpleBooleanProperty();
 		
 		committedDirection = new SimpleIntegerProperty();
 		elevatorAccel = new SimpleIntegerProperty();
 		elevatorDoorStatus = new SimpleIntegerProperty();
-		elevatorFloor = new SimpleIntegerProperty(42);
+		elevatorFloor = new SimpleIntegerProperty();
 		elevatorPosition = new SimpleIntegerProperty();
 		elevatorSpeed = new SimpleIntegerProperty();
 		elevatorWeight = new SimpleIntegerProperty();
@@ -52,6 +60,11 @@ public class ControllerData {
 		elevatorTarget = new SimpleIntegerProperty();
 		
 		error = new SimpleStringProperty();
+		
+		elevators = FXCollections.observableArrayList();
+		for(int i = 0; i < 5; i++) {
+			elevators.add(i);
+		}
 	}
 	
 	public int getElevatorNumbers() {
@@ -82,6 +95,7 @@ public class ControllerData {
 		return elevatorDoorStatus.get();
 	}
 	public int getElevatorFloor() {
+		System.out.println("Henlo" + elevatorFloor.get());
 		return elevatorFloor.get();
 	}
 	public int getElevatorPosition() {

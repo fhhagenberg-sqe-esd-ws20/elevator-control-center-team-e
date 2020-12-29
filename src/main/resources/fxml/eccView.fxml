@@ -3,7 +3,6 @@
 <?import at.fhhagenberg.sqe.view.FXMLListCellFactory?>
 <?import at.fhhagenberg.sqe.controller.ControllerData?>
 
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
@@ -16,8 +15,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<SplitPane
-dividerPositions="0.8" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<SplitPane dividerPositions="0.8" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    
    <fx:define>
         <ControllerData fx:id="data" />
@@ -50,25 +48,25 @@ dividerPositions="0.8" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-In
                   <HBox layoutX="10.0" layoutY="42.0" prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <Label text="Payload " />
-                        <Label id="elevFloor" text="99" />
+                        <Label id="elevFloor" text="payload?" />
                      </children>
                   </HBox>
                   <HBox layoutX="10.0" layoutY="182.0" prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <Label text="Speed " />
-                        <Label id="elevFloor" text="99" />
+                        <Label id="elevFloor" text="${data.elevatorSpeed}" />
                      </children>
                   </HBox>
                   <HBox layoutX="10.0" layoutY="187.0" prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <Label text="Doors " />
-                        <Label id="elevFloor" text="99" />
+                        <Label id="elevFloor" text="${data.elevatorDoorStatus}" />
                      </children>
                   </HBox>
                   <HBox layoutX="10.0" layoutY="188.0" prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <Label text="Next target " />
-                        <Label id="elevFloor" text="99" />
+                        <Label id="elevFloor" text="${data.elevatorTarget}" />
                      </children>
                   </HBox>
                   <ScrollPane prefHeight="211.0" prefWidth="36.0">
@@ -82,9 +80,9 @@ dividerPositions="0.8" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-In
                <content>
                   <VBox prefHeight="200.0" prefWidth="100.0">
                      <children>
-                        <ListView>
+                        <ListView fx:id="lvFloors">
                         	<cellFactory>
-                        		<FXMLListCellFactory fxmlSource="@floorTemplate.fxml"/>
+                        		<FXMLListCellFactory fxmlSource="@floorTemplate.fxml" />
                         	</cellFactory>
                         </ListView>
                      </children>
@@ -97,20 +95,20 @@ dividerPositions="0.8" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-In
          <children>
             <VBox prefHeight="200.0" prefWidth="100.0">
                <children>
-                  <Slider max="1.0" />
-                  <Label text="Label" />
+                  <Slider id="sliAutoManual" blockIncrement="1.0" max="1.0" snapToTicks="true" />
+                  <Label text="Automatic/Manual" />
                </children>
             </VBox>
             <VBox prefHeight="200.0" prefWidth="100.0">
                <children>
-                  <Label text="Label" />
-                  <Label text="Label" />
+                  <Label text="${data.floorNumber}" />
+                  <Label text="Floors" />
                </children>
             </VBox>
             <VBox prefHeight="200.0" prefWidth="100.0">
                <children>
-                  <ComboBox prefWidth="150.0" />
-                  <Label text="Label" />
+                  <ComboBox fx:id="cmbElevators" prefWidth="150.0" />
+                  <Label text="Elevator" />
                </children>
             </VBox>
          </children>

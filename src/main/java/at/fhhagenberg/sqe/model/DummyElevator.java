@@ -7,13 +7,13 @@ public class DummyElevator implements IElevator {
 	@Override
 	public int getCommittedDirection(int elevatorNumber) throws RemoteException {
 		// TODO Auto-generated method stub
-		return 0;
+		return 1;
 	}
 
 	@Override
 	public int getElevatorAccel(int elevatorNumber) throws RemoteException {
 		// TODO Auto-generated method stub
-		return 0;
+		return 1;
 	}
 
 	@Override
@@ -25,43 +25,43 @@ public class DummyElevator implements IElevator {
 	@Override
 	public int getElevatorDoorStatus(int elevatorNumber) throws RemoteException {
 		// TODO Auto-generated method stub
-		return 0;
+		return 1;
 	}
 
 	@Override
 	public int getElevatorFloor(int elevatorNumber) throws RemoteException {
 		// TODO Auto-generated method stub
-		return 0;
+		return 1;
 	}
 
 	@Override
 	public int getElevatorNum() throws RemoteException {
 		// TODO Auto-generated method stub
-		return 0;
+		return 1;
 	}
 
 	@Override
 	public int getElevatorPosition(int elevatorNumber) throws RemoteException {
 		// TODO Auto-generated method stub
-		return 0;
+		return 1;
 	}
 
 	@Override
 	public int getElevatorSpeed(int elevatorNumber) throws RemoteException {
 		// TODO Auto-generated method stub
-		return 0;
+		return 1;
 	}
 
 	@Override
 	public int getElevatorWeight(int elevatorNumber) throws RemoteException {
 		// TODO Auto-generated method stub
-		return 0;
+		return 1;
 	}
 
 	@Override
 	public int getElevatorCapacity(int elevatorNumber) throws RemoteException {
 		// TODO Auto-generated method stub
-		return 0;
+		return 1;
 	}
 
 	@Override
@@ -79,13 +79,13 @@ public class DummyElevator implements IElevator {
 	@Override
 	public int getFloorHeight() throws RemoteException {
 		// TODO Auto-generated method stub
-		return 0;
+		return 1;
 	}
 
 	@Override
 	public int getFloorNum() throws RemoteException {
 		// TODO Auto-generated method stub
-		return 0;
+		return 1;
 	}
 
 	@Override
@@ -97,7 +97,7 @@ public class DummyElevator implements IElevator {
 	@Override
 	public int getTarget(int elevatorNumber) throws RemoteException {
 		// TODO Auto-generated method stub
-		return 0;
+		return 1;
 	}
 
 	@Override
@@ -121,7 +121,7 @@ public class DummyElevator implements IElevator {
 	@Override
 	public long getClockTick() throws RemoteException {
 		// TODO Auto-generated method stub
-		return 0;
+		return 1;
 	}
 
 }

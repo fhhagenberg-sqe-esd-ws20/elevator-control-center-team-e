@@ -7,8 +7,13 @@ import java.util.concurrent.TimeUnit;
 
 import at.fhhagenberg.sqe.model.IBuildingWrapper;
 import at.fhhagenberg.sqe.model.IElevatorWrapper;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListView;
+import javafx.scene.control.Slider;
 
 public class Controller {
 	
@@ -18,13 +23,13 @@ public class Controller {
 	private static int MAX_RETRIES = 4;
 	
 	@FXML
-	private ControllerData data;
+	public ControllerData data;
 	
 	public Controller(IBuildingWrapper bw, IElevatorWrapper ew) {
 		building = bw;
 		elevator = ew;
 		
-		//this.initStaticBuildingInfo();
+		// this.initStaticBuildingInfo();
 		
 		// for tests better to call it separate
 		// this.start();
@@ -40,7 +45,7 @@ public class Controller {
 		}
 	}
 	
-	private void initStaticBuildingInfo() {
+	public void initStaticBuildingInfo() {
 		try {
 			data.elevatorNumbers.set(building.getElevatorNum());
 			data.floorHeight.set(building.getFloorHeight());
@@ -68,10 +73,10 @@ public class Controller {
 			return;
 		}
 		data.currentElevator.set(elevator);
-		clearProberties();
+		clearProperties();
 	}
 	
-	private void clearProberties() {
+	private void clearProperties() {
 		for(int i = 0; i < data.floorNumber.get(); i++) {
 			var tmp = data.buttons.get(i);
 			tmp.elevatorButton.set(false);
@@ -175,5 +180,36 @@ public class Controller {
 		return data.error.get();
 	}
 	
+	/*
+	 * UI Section
+	 */
+	
+	@FXML
+	ListView<Object> lvFloors;
+	@FXML
+	ComboBox<Integer> cmbElevators;
+	@FXML
+	Slider sliAutoManual;
+	
+	public void fillFields() {
+		// listview lvFloors
+		ObservableList<Object> floors = FXCollections.observableArrayList(data.buttons.values());
+		lvFloors.setItems(floors);
+		
+		data.buttons.put(42, new FloorButtons(false, false, false, false));
+		
+		
+		// combobox cmbElevators
+		ObservableList<Integer> elevators = FXCollections.observableArrayList();
+		for(int i = 0; i < getElevatorNumbers(); i++) {
+			elevators.add(i);
+		}
+		cmbElevators.setItems(elevators);
+		cmbElevators.getSelectionModel().select(0);
+		
+		// slider sliAutoManual
+		
+		
+	}
 	
 }
