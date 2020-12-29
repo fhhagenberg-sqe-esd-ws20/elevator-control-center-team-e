@@ -44,8 +44,6 @@ public class ControllerData {
 		floorNumber = new SimpleIntegerProperty();
 		currentElevator = new SimpleIntegerProperty();
 		buttons = FXCollections.observableHashMap();
-		// TODO debugging call
-		buttons.put(42, new FloorButtons(42, false, false, false, false));
 		buttonList = FXCollections.observableArrayList(buttons.values());
 		// TODO debugging call
 		System.out.println(buttons.values());

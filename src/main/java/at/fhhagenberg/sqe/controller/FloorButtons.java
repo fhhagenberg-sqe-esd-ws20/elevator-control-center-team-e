@@ -8,13 +8,17 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
 public class FloorButtons {
-	public IntegerProperty floorNr;
-	public BooleanProperty floorButtonDown;
-	public BooleanProperty floorButtonUp;
-	public BooleanProperty elevatorButton;
-	public BooleanProperty elevatorServicesFloor;
+	private Controller rootController;
 	
-	public FloorButtons(int nr, boolean down, boolean up, boolean btn, boolean service) {
+	IntegerProperty floorNr;
+	BooleanProperty floorButtonDown;
+	BooleanProperty floorButtonUp;
+	BooleanProperty elevatorButton;
+	BooleanProperty elevatorServicesFloor;
+	
+	public FloorButtons(Controller root, int nr, boolean down, boolean up, boolean btn, boolean service) {
+		rootController = root;
+		
 		floorNr = new SimpleIntegerProperty();
 		floorButtonDown = new SimpleBooleanProperty();
 		floorButtonUp = new SimpleBooleanProperty();
@@ -31,10 +35,22 @@ public class FloorButtons {
 	public int getFloorNr() {
 		return floorNr.get();
 	}
-	
+	public boolean getFloorButtonDown() {
+		return floorButtonDown.get();
+	}
+	public boolean getFloorButtonUp() {
+		return floorButtonUp.get();
+	}
+	public boolean getElevatorButton() {
+		return elevatorButton.get();
+	}
+	public boolean getElevatorServicesFloor() {
+		return elevatorServicesFloor.get();
+	}
+
 	@FXML
 	void doSetTarget(ActionEvent event) {
 		event.consume();
-		System.out.println("Hello, World! (from " + getFloorNr() + ")");
+		rootController.SetTarget(getFloorNr());
 	}
 }

@@ -29,7 +29,7 @@ public class Controller {
 	public Controller(IBuildingWrapper bw, IElevatorWrapper ew) {
 		building = bw;
 		elevator = ew;
-		
+				
 		// this.initStaticBuildingInfo();
 		
 		// for tests better to call it separate
@@ -37,6 +37,8 @@ public class Controller {
 	}
 	
 	public void SetTarget(int target) {
+		System.out.println("Set Target (" + target + ")");
+		
 		if(!data.isManualMode.get()) return;
 		
 		try {
@@ -55,7 +57,7 @@ public class Controller {
 			data.currentElevator.set(0);
 			
 			for(int i = 0; i < data.floorNumber.get(); i++) {
-				data.buttons.put(i, new FloorButtons(i, false, false, false, true));
+				data.buttons.put(i, new FloorButtons(this, i, false, false, false, true));
 			}
 			
 		} catch (RemoteException e) {
@@ -194,7 +196,7 @@ public class Controller {
 	
 	public void fillFields() {
 		// listview lvFloors
-		data.buttons.put(42, new FloorButtons(42, false, false, false, false));
+		data.buttons.put(42, new FloorButtons(this, 42, false, false, false, false));
 		ObservableList<Object> floors = FXCollections.observableArrayList(data.buttons.values());
 		lvFloors.setItems(floors);
 		
@@ -212,12 +214,6 @@ public class Controller {
 		// slider sliAutoManual
 		
 		
-	}
-	
-	@FXML
-	void doSetTarget(ActionEvent event) {
-		event.consume();
-		System.out.println("Hello, World!");
 	}
 	
 }

@@ -15,7 +15,7 @@
 
 <HBox id="itemtemplate">
    <children>
-      <Label text="${floorNr}" />
+      <Label text="${item.floorNr}" />
       <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../icons/down_empty.png" />
