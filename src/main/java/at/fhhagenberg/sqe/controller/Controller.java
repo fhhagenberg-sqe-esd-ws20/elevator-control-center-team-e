@@ -91,7 +91,7 @@ public class Controller {
 					tmp.floorButtonDown.set(building.getFloorButtonDown(i));
 					tmp.floorButtonUp.set(building.getFloorButtonUp(i));
 					tmp.elevatorServicesFloor.set(elevator.getServicesFloors(data.currentElevator.get(), i));
-				
+					
 					if(tmp.setTarget) {
 						if(!data.isManualMode.get()) continue;
 						
@@ -103,6 +103,7 @@ public class Controller {
 						tmp.setTarget = false;
 					}
 				}
+				if(lvFloors != null) lvFloors.refresh(); // force proper update of floors
 				
 				Platform.runLater(() -> {
 					try {

@@ -99,6 +99,7 @@ public class DummyElevator implements IElevator {
 	public boolean getServicesFloors(int elevatorNumber, int floor) throws RemoteException {
 		// TODO Auto-generated method stub
 		if(elevatorNumber == 0 && floor == 2) return false;
+		if(elevatorNumber == 1 && floor == 1) return false;
 		return true;
 	}
 
