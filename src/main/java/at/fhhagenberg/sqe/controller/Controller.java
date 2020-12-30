@@ -1,25 +1,19 @@
 package at.fhhagenberg.sqe.controller;
 
 import java.rmi.RemoteException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import at.fhhagenberg.sqe.model.IBuildingWrapper;
 import at.fhhagenberg.sqe.model.IElevatorWrapper;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
-import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
@@ -41,7 +35,7 @@ public class Controller {
 		data = new ControllerData();
 		
 		// also needs to be called in App after data is initialized by FXML
-		// this.initStaticBuildingInfo();
+		this.initStaticBuildingInfo();
 		
 		// for tests better to call it separate
 		// this.start();
@@ -75,28 +69,6 @@ public class Controller {
 		} catch (RemoteException e) {
 			data.errors.add(e.getMessage());
 		}
-		
-		// if 0 is default:
-		imgElevDown.setVisible(true);
-		imgElevUp.setVisible(false);
-		/* Property Listener */
-		data.committedDirection.addListener((o, oldVal, newVal) -> {
-			// up=0, down=1 and uncommitted=2
-			if(newVal.intValue() == 1) {
-				imgElevDown.setVisible(false);
-				imgElevUp.setVisible(true);
-			} else if(newVal.intValue() == 0) {
-				imgElevDown.setVisible(true);
-				imgElevUp.setVisible(false);
-			}
-			else {
-				imgElevDown.setVisible(false);
-				imgElevUp.setVisible(false);
-			}
-		});
-		data.elevatorDoorStatus.addListener((o, oldVal, newVal) -> {
-			
-		});
 	}
 	
 	public void start() {	
@@ -297,6 +269,30 @@ public class Controller {
 		lbSpeed.textProperty().bind(data.elevatorSpeed.asString());
 		lbDoors.textProperty().bind(data.elevatorDoorStatusString);
 		lbTarget.textProperty().bind(data.elevatorTarget.asString());
+	}
+	
+	public void addUIListeners() {
+		// if 0 is default:
+		imgElevDown.setVisible(true);
+		imgElevUp.setVisible(false);
+		/* Property Listener */
+		data.committedDirection.addListener((o, oldVal, newVal) -> {
+			// up=0, down=1 and uncommitted=2
+			if(newVal.intValue() == 1) {
+				imgElevDown.setVisible(false);
+				imgElevUp.setVisible(true);
+			} else if(newVal.intValue() == 0) {
+				imgElevDown.setVisible(true);
+				imgElevUp.setVisible(false);
+			}
+			else {
+				imgElevDown.setVisible(false);
+				imgElevUp.setVisible(false);
+			}
+		});
+		data.elevatorDoorStatus.addListener((o, oldVal, newVal) -> {
+			
+		});
 	}
 	
 }

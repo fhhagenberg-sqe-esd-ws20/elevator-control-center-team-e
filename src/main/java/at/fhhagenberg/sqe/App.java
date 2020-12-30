@@ -49,6 +49,7 @@ public class App extends Application {
         controller.initStaticBuildingInfo();
         controller.start();
         controller.fillFields();
+        controller.addUIListeners();
     }
 
     public static void main(String[] args) {
