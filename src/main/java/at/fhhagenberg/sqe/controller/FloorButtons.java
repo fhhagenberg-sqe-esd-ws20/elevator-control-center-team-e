@@ -4,6 +4,8 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
@@ -16,6 +18,8 @@ public class FloorButtons {
 	BooleanProperty elevatorButton;
 	BooleanProperty elevatorServicesFloor;
 	
+	StringProperty downPic;
+	
 	public FloorButtons(Controller root, int nr, boolean down, boolean up, boolean btn, boolean service) {
 		rootController = root;
 		
@@ -25,11 +29,14 @@ public class FloorButtons {
 		elevatorButton = new SimpleBooleanProperty();
 		elevatorServicesFloor = new SimpleBooleanProperty();
 		
+		downPic = new SimpleStringProperty();
+		
 		floorNr.set(nr);
 		floorButtonDown.set(down);
 		floorButtonUp.set(up);
 		elevatorButton.set(btn);
 		elevatorServicesFloor.set(service);
+		downPic.set("@../icons/down_empty.png");
 	}
 	
 	public int getFloorNr() {
@@ -47,10 +54,15 @@ public class FloorButtons {
 	public boolean getElevatorServicesFloor() {
 		return elevatorServicesFloor.get();
 	}
+	public String getDownPic() {
+		return downPic.get();
+	}
 
 	@FXML
 	void doSetTarget(ActionEvent event) {
 		event.consume();
+		// no worki
+		rootController.data.errors.add("target");
 		rootController.SetTarget(getFloorNr());
 	}
 }

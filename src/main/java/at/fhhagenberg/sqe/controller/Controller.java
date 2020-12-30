@@ -21,6 +21,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
 public class Controller {
@@ -53,7 +54,7 @@ public class Controller {
 		try {
 			elevator.setTarget(data.currentElevator.get(), target);
 		} catch (RemoteException e) {
-			data.error.set(e.getMessage());
+			data.errors.add(e.getMessage());
 		}
 	}
 	
@@ -70,8 +71,30 @@ public class Controller {
 			}
 			
 		} catch (RemoteException e) {
-			data.error.set(e.getMessage());
+			data.errors.add(e.getMessage());
 		}
+		
+		// if 0 is default:
+		imgElevDown.setVisible(true);
+		imgElevUp.setVisible(false);
+		/* Property Listener */
+		data.committedDirection.addListener((o, oldVal, newVal) -> {
+			// up=0, down=1 and uncommitted=2
+			if(newVal.intValue() == 1) {
+				imgElevDown.setVisible(false);
+				imgElevUp.setVisible(true);
+			} else if(newVal.intValue() == 0) {
+				imgElevDown.setVisible(true);
+				imgElevUp.setVisible(false);
+			}
+			else {
+				imgElevDown.setVisible(false);
+				imgElevUp.setVisible(false);
+			}
+		});
+		data.elevatorDoorStatus.addListener((o, oldVal, newVal) -> {
+			
+		});
 	}
 	
 	public void start() {	
@@ -82,7 +105,7 @@ public class Controller {
 	
 	public void setElevator(int elevator) {
 		if(elevator >= this.getElevatorNumbers()) {
-			data.error.set("elevatorNumber not available");
+			data.errors.add("elevatorNumber not available");
 			return;
 		}
 		data.currentElevator.set(elevator);
@@ -156,7 +179,7 @@ public class Controller {
 						} while (tick != elevator.getClockTick());
 						
 					} catch (RemoteException e) {
-						data.error.set(e.getMessage());
+						data.errors.add(e.getMessage());
 						return false;
 					}
 					return true;
@@ -211,16 +234,15 @@ public class Controller {
 	public int getElevatorTarget() {
 		return data.elevatorTarget.get();
 	}
-	public String getError() {
-		return data.error.get();
-	}
-	
+
 	/*
 	 * UI Section
 	 */
 	
 	@FXML
 	ListView<Object> lvFloors;
+	@FXML
+	ListView<Object> lvErrors;
 	@FXML
 	ComboBox<Integer> cmbElevators;
 	@FXML
@@ -237,6 +259,11 @@ public class Controller {
 	Label lbDoors;
 	@FXML
 	Label lbTarget;
+	
+	@FXML
+	ImageView imgElevDown;
+	@FXML
+	ImageView imgElevUp;
 
 	
 	public void fillFields() {
@@ -263,9 +290,8 @@ public class Controller {
 		lbFloor.textProperty().bind(data.elevatorFloor.asString());
 		lbPayload.textProperty().bind(data.elevatorWeight.asString());
 		lbSpeed.textProperty().bind(data.elevatorSpeed.asString());
-		lbDoors.textProperty().bind(data.elevatorDoorStatus.asString());
+		lbDoors.textProperty().bind(data.elevatorDoorStatusString);
 		lbTarget.textProperty().bind(data.elevatorTarget.asString());
-		
 	}
 	
 }

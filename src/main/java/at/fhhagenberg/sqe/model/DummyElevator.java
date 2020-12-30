@@ -9,7 +9,7 @@ public class DummyElevator implements IElevator {
 	@Override
 	public int getCommittedDirection(int elevatorNumber) throws RemoteException {
 		// TODO Auto-generated method stub
-		return 1;
+		return 0;
 	}
 
 	@Override
@@ -27,7 +27,7 @@ public class DummyElevator implements IElevator {
 	@Override
 	public int getElevatorDoorStatus(int elevatorNumber) throws RemoteException {
 		// TODO Auto-generated method stub
-		return 3;
+		return 2;
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public class DummyElevator implements IElevator {
 	@Override
 	public int getElevatorNum() throws RemoteException {
 		// TODO Auto-generated method stub
-		return 5;
+		return 25;
 	}
 
 	@Override

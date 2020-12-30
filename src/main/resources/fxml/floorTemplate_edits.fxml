@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import at.fhhagenberg.sqe.view.FXMLListCellFactory?>
-<?import at.fhhagenberg.sqe.controller.ControllerData?>
-
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -31,68 +27,78 @@
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <Label text="Floor " />
-                        <Label fx:id="lbFloor" />
+                        <Label id="elevFloor" text="${data.elevatorFloor}" />
                      </children>
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <Label text="Direction " />
-                        <ImageView fx:id="imgElevDown"  fitHeight="50.0" fitWidth="50.0">
+                        <ImageView fx:id="imgElevDown" fitHeight="50.0" fitWidth="50.0">
                            <image>
-                              <Image url="@../icons/down_dotted.png" />
+                              <Image url="@../icons/down_dotted_grey.png" />
                            </image></ImageView>
-                        <ImageView fx:id="imgElevUp"  fitHeight="50.0" fitWidth="50.0">
+                        <ImageView fitHeight="50.0" fitWidth="50.0">
                            <image>
-                              <Image url="@../icons/up_dotted.png" />
+                              <Image url="@../icons/up_dotted_grey.png" />
                            </image></ImageView>
                      </children>
                   </HBox>
                   <HBox layoutX="10.0" layoutY="42.0" prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <Label text="Payload " />
-                        <Label fx:id="lbPayload" />
+                        <Label id="elevFloor" text="payload?" />
                      </children>
                   </HBox>
                   <HBox layoutX="10.0" layoutY="182.0" prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <Label text="Speed " />
-                        <Label fx:id="lbSpeed" />
+                        <Label id="elevFloor" text="${data.elevatorSpeed}" />
                      </children>
                   </HBox>
                   <HBox layoutX="10.0" layoutY="187.0" prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <Label text="Doors " />
-                        <Label fx:id="lbDoors" />
+                        <Label id="elevFloor" text="${data.elevatorDoorStatus}" />
                      </children>
                   </HBox>
                   <HBox layoutX="10.0" layoutY="188.0" prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <Label text="Next target " />
-                        <Label fx:id="lbTarget" />
+                        <Label id="elevFloor" text="${data.elevatorTarget}" />
                      </children>
                   </HBox>
-                  <ListView fx:id="lvErrors" prefHeight="150.0" />
+                  <ScrollPane prefHeight="211.0" prefWidth="36.0">
+                     <content>
+                        <TextArea id="errors" prefHeight="156.0" prefWidth="280.0" />
+                     </content>
+                  </ScrollPane>
                </children>
             </VBox>
-
-            <ListView fx:id="lvFloors">
-            	<cellFactory>
-            		<FXMLListCellFactory fxmlSource="@floorTemplate.fxml" />
-            	</cellFactory>
-            </ListView>
-
+            <ScrollPane prefHeight="200.0" prefWidth="200.0">
+               <content>
+                  <VBox prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <ListView prefHeight="200.0" prefWidth="246.0">
+                        	<cellFactory>
+                        		<FXMLListCellFactory fxmlSource="@floorTemplate.fxml" />
+                        	</cellFactory>
+                        </ListView>
+                     </children>
+                  </VBox>
+               </content>
+            </ScrollPane>
          </items>
       </SplitPane>
       <HBox prefHeight="105.0" prefWidth="598.0">
          <children>
             <VBox prefHeight="200.0" prefWidth="100.0">
                <children>
-                  <RadioButton fx:id="rbManual" mnemonicParsing="false" selected="true" text="Manual">
+                  <RadioButton mnemonicParsing="false" selected="true" text="Manual">
                      <toggleGroup>
-                        <ToggleGroup fx:id="tgMode" />
+                        <ToggleGroup fx:id="mode" />
                      </toggleGroup>
                   </RadioButton>
-                  <RadioButton fx:id="rbAuto" mnemonicParsing="false" text="Automatic" toggleGroup="$tgMode" />
+                  <RadioButton mnemonicParsing="false" text="Automatic" toggleGroup="$mode" />
                </children>
             </VBox>
             <VBox prefHeight="200.0" prefWidth="100.0">
@@ -103,7 +109,7 @@
             </VBox>
             <VBox prefHeight="200.0" prefWidth="100.0">
                <children>
-                  <ComboBox fx:id="cmbElevators" prefWidth="150.0" />
+                  <ComboBox prefWidth="150.0" />
                   <Label text="Elevator" />
                </children>
             </VBox>

@@ -33,10 +33,11 @@ public class ControllerData {
 	IntegerProperty elevatorTarget;
 	
 	// error properties
-	StringProperty error;
+	ObservableList<String> errors;
 	
 	// properties - ui elements
 	ObservableList<Integer> elevators;
+	StringProperty elevatorDoorStatusString;
 		
 	public ControllerData() {
 		elevatorNumbers = new SimpleIntegerProperty();
@@ -45,8 +46,6 @@ public class ControllerData {
 		currentElevator = new SimpleIntegerProperty();
 		buttons = FXCollections.observableHashMap();
 		buttonList = FXCollections.observableArrayList(buttons.values());
-		// TODO debugging call
-		System.out.println(buttons.values());
 		isManualMode = new SimpleBooleanProperty();
 		
 		committedDirection = new SimpleIntegerProperty();
@@ -59,13 +58,24 @@ public class ControllerData {
 		elevatorCapacity = new SimpleIntegerProperty();
 		elevatorTarget = new SimpleIntegerProperty();
 		
-		error = new SimpleStringProperty();
+		errors = FXCollections.observableArrayList();
 		
-		// TODO debuuging
 		elevators = FXCollections.observableArrayList();
-		for(int i = 0; i < 5; i++) {
+		for(int i = 0; i < elevatorNumbers.get(); i++) {
 			elevators.add(i);
 		}
+		
+		elevatorDoorStatusString = new SimpleStringProperty("unknown");
+		elevatorDoorStatus.addListener((o, oldVal, newVal) -> {
+			// 1=open and 2=closed
+			if(newVal.intValue() == 1) {
+				elevatorDoorStatusString.set("open");
+			} else if (newVal.intValue() == 2) {
+				elevatorDoorStatusString.set("closed");
+			} else {
+				elevatorDoorStatusString.set("unknown");
+			}
+		});
 	}
 	
 	public int getElevatorNumbers() {
@@ -112,9 +122,6 @@ public class ControllerData {
 	}
 	public int getElevatorTarget() {
 		return elevatorTarget.get();
-	}
-	public String getError() {
-		return error.get();
 	}
 
 }
