@@ -38,6 +38,8 @@ public class Controller {
 		building = bw;
 		elevator = ew;
 		
+		data = new ControllerData();
+		
 		// also needs to be called in App after data is initialized by FXML
 		// this.initStaticBuildingInfo();
 		
@@ -233,6 +235,9 @@ public class Controller {
 	}
 	public int getElevatorTarget() {
 		return data.elevatorTarget.get();
+	}
+	public String getLastError() {
+		return data.errors.get(data.errors.size() - 1);
 	}
 
 	/*

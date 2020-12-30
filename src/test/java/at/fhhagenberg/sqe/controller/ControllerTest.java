@@ -38,7 +38,7 @@ class ControllerTest {
 	}
 
 	@Test
-	void testProbertyAfterCtor() throws RemoteException {
+	void testPropertyAfterCtor() throws RemoteException {
 		Mockito.when(buildingMock.getElevatorNum()).thenReturn(2);
 		Mockito.when(buildingMock.getFloorHeight()).thenReturn(3);
 		Mockito.when(buildingMock.getFloorNum()).thenReturn(4);
@@ -69,7 +69,7 @@ class ControllerTest {
 		Mockito.when(buildingMock.getElevatorNum()).thenThrow(new RemoteException("failed connecting"));
 		controller = new Controller(buildingMock, elevatorMock);
 		
-		assertEquals("failed connecting", controller.getError());
+		assertEquals("failed connecting", controller.getLastError());
 	}
 	
 	@Test
@@ -172,7 +172,7 @@ class ControllerTest {
 		thenReturn((long) 4).thenReturn((long) 5).thenReturn((long) 6).thenReturn((long) 7);
 		controller.start();
 		Thread.sleep(710, 0);
-		assertEquals("Reached maximum retries while updating elevator.", controller.getError());
+		assertEquals("Reached maximum retries while updating elevator.", controller.getLastError());
 		
 	}
 	
@@ -183,7 +183,7 @@ class ControllerTest {
 		Mockito.when(elevatorMock.getClockTick()).thenThrow(new RemoteException("no connection"));
 		controller.start();
 		Thread.sleep(110, 0);
-		assertEquals("no connection", controller.getError());
+		assertEquals("no connection", controller.getLastError());
 		
 	}
 	
