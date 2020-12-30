@@ -10,6 +10,8 @@
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
@@ -29,7 +31,7 @@
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <Label text="Floor " />
-                        <Label id="elevFloor" text="${data.elevatorFloor}" />
+                        <Label fx:id="lbFloor" />
                      </children>
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0">
@@ -48,30 +50,30 @@
                   <HBox layoutX="10.0" layoutY="42.0" prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <Label text="Payload " />
-                        <Label id="elevFloor" text="payload?" />
+                        <Label fx:id="lbPayload" />
                      </children>
                   </HBox>
                   <HBox layoutX="10.0" layoutY="182.0" prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <Label text="Speed " />
-                        <Label id="elevFloor" text="${data.elevatorSpeed}" />
+                        <Label fx:id="lbSpeed" />
                      </children>
                   </HBox>
                   <HBox layoutX="10.0" layoutY="187.0" prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <Label text="Doors " />
-                        <Label id="elevFloor" text="${data.elevatorDoorStatus}" />
+                        <Label fx:id="lbDoors" />
                      </children>
                   </HBox>
                   <HBox layoutX="10.0" layoutY="188.0" prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <Label text="Next target " />
-                        <Label id="elevFloor" text="${data.elevatorTarget}" />
+                        <Label fx:id="lbTarget" />
                      </children>
                   </HBox>
                   <ScrollPane prefHeight="211.0" prefWidth="36.0">
                      <content>
-                        <TextArea id="errors" prefHeight="156.0" prefWidth="280.0" />
+                        <TextArea fx:id="taErrors" prefHeight="156.0" prefWidth="280.0" />
                      </content>
                   </ScrollPane>
                </children>
@@ -95,8 +97,12 @@
          <children>
             <VBox prefHeight="200.0" prefWidth="100.0">
                <children>
-                  <Slider id="sliAutoManual" blockIncrement="1.0" max="1.0" snapToTicks="true" />
-                  <Label text="Automatic/Manual" />
+                  <RadioButton fx:id="rbManual" mnemonicParsing="false" selected="true" text="Manual">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="tgMode" />
+                     </toggleGroup>
+                  </RadioButton>
+                  <RadioButton fx:id="rbAuto" mnemonicParsing="false" text="Automatic" toggleGroup="$tgMode" />
                </children>
             </VBox>
             <VBox prefHeight="200.0" prefWidth="100.0">

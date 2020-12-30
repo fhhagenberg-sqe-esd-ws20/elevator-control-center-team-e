@@ -7,14 +7,18 @@ import java.util.concurrent.TimeUnit;
 
 import at.fhhagenberg.sqe.model.IBuildingWrapper;
 import at.fhhagenberg.sqe.model.IElevatorWrapper;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
+import javafx.scene.control.ToggleGroup;
 
 public class Controller {
 	
@@ -29,7 +33,7 @@ public class Controller {
 	public Controller(IBuildingWrapper bw, IElevatorWrapper ew) {
 		building = bw;
 		elevator = ew;
-				
+		
 		// this.initStaticBuildingInfo();
 		
 		// for tests better to call it separate
@@ -38,6 +42,7 @@ public class Controller {
 	
 	public void SetTarget(int target) {
 		System.out.println("Set Target (" + target + ")");
+		data.elevatorPosition.setValue(42);
 		
 		if(!data.isManualMode.get()) return;
 		
@@ -192,17 +197,26 @@ public class Controller {
 	@FXML
 	ComboBox<Integer> cmbElevators;
 	@FXML
-	Slider sliAutoManual;
+	RadioButton rbManual;
+	@FXML
+	ToggleGroup tgMode;
+	@FXML
+	Label lbFloor;
+	@FXML
+	Label lbPayload;
+	@FXML
+	Label lbSpeed;
+	@FXML
+	Label lbDoors;
+	@FXML
+	Label lbTarget;
+
 	
 	public void fillFields() {
 		// listview lvFloors
-		data.buttons.put(42, new FloorButtons(this, 42, false, false, false, false));
 		ObservableList<Object> floors = FXCollections.observableArrayList(data.buttons.values());
 		lvFloors.setItems(floors);
-		
-		
-		
-		
+
 		// combobox cmbElevators
 		ObservableList<Integer> elevators = FXCollections.observableArrayList();
 		for(int i = 0; i < getElevatorNumbers(); i++) {
@@ -210,9 +224,20 @@ public class Controller {
 		}
 		cmbElevators.setItems(elevators);
 		cmbElevators.getSelectionModel().select(0);
+		cmbElevators.valueProperty().addListener((o, oldVal, newVal) -> {
+			data.currentElevator.set(newVal);
+		});
 		
-		// slider sliAutoManual
+		// auto/manual (radio buttons)
+		tgMode.selectedToggleProperty().addListener((o, oldVal, newVal) -> {
+			data.isManualMode.set(rbManual.isSelected());
+		});
 		
+		lbFloor.textProperty().bind(data.elevatorFloor.asString());
+		lbPayload.textProperty().bind(data.elevatorWeight.asString());
+		lbSpeed.textProperty().bind(data.elevatorSpeed.asString());
+		lbDoors.textProperty().bind(data.elevatorDoorStatus.asString());
+		lbTarget.textProperty().bind(data.elevatorTarget.asString());
 		
 	}
 	
