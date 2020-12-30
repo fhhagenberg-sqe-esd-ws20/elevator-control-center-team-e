@@ -30,12 +30,16 @@ public class DummyElevator implements IElevator {
 	@Override
 	public int getElevatorDoorStatus(int elevatorNumber) throws RemoteException {
 		// TODO Auto-generated method stub
+		if(elevatorNumber == 5) return 0;
+		if(elevatorNumber == 1) return 1;
 		return 2;
 	}
 
 	@Override
 	public int getElevatorFloor(int elevatorNumber) throws RemoteException {
 		// TODO Auto-generated method stub
+		if(elevatorNumber == 1) return 100;
+		if(elevatorNumber == 0) return 42;
 		return 4;
 	}
 
