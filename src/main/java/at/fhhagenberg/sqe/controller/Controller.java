@@ -1,6 +1,9 @@
 package at.fhhagenberg.sqe.controller;
 
 import java.rmi.RemoteException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import at.fhhagenberg.sqe.model.IBuildingWrapper;
 import at.fhhagenberg.sqe.model.IElevatorWrapper;
@@ -71,9 +74,62 @@ public class Controller {
 	}
 	
 	public void start() {	
-		UpdateService service = new UpdateService(building, elevator, data);
-		service.setPeriod(Duration.millis(FETCH_INTERVAL));
-		service.start();
+		ScheduledExecutorService es = Executors.newScheduledThreadPool(1);
+		es.scheduleAtFixedRate(this::scheduleFetch, FETCH_INTERVAL, FETCH_INTERVAL, TimeUnit.MILLISECONDS);
+	}
+	
+	private synchronized void scheduleFetch() {
+		try {
+			long tick;
+			int cnt = 0;
+			do {
+				tick = elevator.getClockTick();
+				
+				for(int i = 0; i < data.floorNumber.get(); i++) {
+					var tmp = data.buttons.get(i);
+					tmp.elevatorButton.set(elevator.getElevatorButton(data.currentElevator.get(), i));
+					tmp.floorButtonDown.set(building.getFloorButtonDown(i));
+					tmp.floorButtonUp.set(building.getFloorButtonUp(i));
+					tmp.elevatorServicesFloor.set(elevator.getServicesFloors(data.currentElevator.get(), i));
+				
+					if(tmp.setTarget) {
+						if(!data.isManualMode.get()) continue;
+						
+						try {
+							elevator.setTarget(data.currentElevator.get(), tmp.floorNr.get());
+						} catch (RemoteException e) {
+							data.errors.add(e.getMessage());
+						}
+						tmp.setTarget = false;
+					}
+				}
+				
+				Platform.runLater(() -> {
+					try {
+						data.committedDirection.set(elevator.getCommittedDirection(data.currentElevator.get()));
+						data.elevatorAccel.set(elevator.getElevatorAccel(data.currentElevator.get()));
+						data.elevatorDoorStatus.set(elevator.getElevatorDoorStatus(data.currentElevator.get()));
+						data.elevatorPosition.set(elevator.getElevatorPosition(data.currentElevator.get()));
+						data.elevatorSpeed.set(elevator.getElevatorSpeed(data.currentElevator.get()));
+						data.elevatorCapacity.set(elevator.getElevatorCapacity(data.currentElevator.get()));
+						data.elevatorTarget.set(elevator.getTarget(data.currentElevator.get()));
+						data.elevatorFloor.set(elevator.getElevatorFloor(data.currentElevator.get()));
+						data.elevatorWeight.set(elevator.getElevatorWeight(data.currentElevator.get()));
+					} catch (RemoteException e) {
+						data.errors.add(e.getMessage());
+					}
+					
+				});
+				
+				if(cnt++ == MAX_RETRIES) {
+					throw new RemoteException("Reached maximum retries while updating elevator.");
+				}
+			} while (tick != elevator.getClockTick());
+			
+		} catch (RemoteException e) {
+			data.errors.add(e.getMessage());
+		}
+
 	}
 	
 	public void setElevator(int elevator) {
@@ -103,81 +159,6 @@ public class Controller {
 		data.elevatorWeight.set(0);
 		data.elevatorCapacity.set(0);
 		data.elevatorTarget.set(0);
-	}
-	
-	private static class UpdateService extends ScheduledService<Boolean> {
-		private IBuildingWrapper building;
-		private IElevatorWrapper elevator;
-		private ControllerData data;
-		
-		public UpdateService(IBuildingWrapper bw, IElevatorWrapper ew, ControllerData cd) {
-			building = bw;
-			elevator = ew;
-			data = cd;
-		}
-		
-		@Override
-		protected Task<Boolean> createTask() {
-			return new Task<Boolean>() {
-
-				@Override
-				protected Boolean call() throws Exception {
-					try {
-						long tick;
-						int cnt = 0;
-						do {
-							tick = elevator.getClockTick();
-							
-							for(int i = 0; i < data.floorNumber.get(); i++) {
-								var tmp = data.buttons.get(i);
-								tmp.elevatorButton.set(elevator.getElevatorButton(data.currentElevator.get(), i));
-								tmp.floorButtonDown.set(building.getFloorButtonDown(i));
-								tmp.floorButtonUp.set(building.getFloorButtonUp(i));
-								tmp.elevatorServicesFloor.set(elevator.getServicesFloors(data.currentElevator.get(), i));
-							
-								if(tmp.setTarget) {
-									if(!data.isManualMode.get()) continue;
-									
-									try {
-										elevator.setTarget(data.currentElevator.get(), tmp.floorNr.get());
-									} catch (RemoteException e) {
-										data.errors.add(e.getMessage());
-									}
-									tmp.setTarget = false;
-								}
-							}
-							
-							Platform.runLater(() -> {
-								try {
-									data.committedDirection.set(elevator.getCommittedDirection(data.currentElevator.get()));
-									data.elevatorAccel.set(elevator.getElevatorAccel(data.currentElevator.get()));
-									data.elevatorDoorStatus.set(elevator.getElevatorDoorStatus(data.currentElevator.get()));
-									data.elevatorPosition.set(elevator.getElevatorPosition(data.currentElevator.get()));
-									data.elevatorSpeed.set(elevator.getElevatorSpeed(data.currentElevator.get()));
-									data.elevatorCapacity.set(elevator.getElevatorCapacity(data.currentElevator.get()));
-									data.elevatorTarget.set(elevator.getTarget(data.currentElevator.get()));
-									data.elevatorFloor.set(elevator.getElevatorFloor(data.currentElevator.get()));
-									data.elevatorWeight.set(elevator.getElevatorWeight(data.currentElevator.get()));
-								} catch (RemoteException e) {
-									data.errors.add(e.getMessage());
-								}
-								
-							});
-							
-							if(cnt++ == MAX_RETRIES) {
-								throw new RemoteException("Reached maximum retries while updating elevator.");
-							}
-						} while (tick != elevator.getClockTick());
-						
-					} catch (RemoteException e) {
-						data.errors.add(e.getMessage());
-						return false;
-					}
-					return true;
-				}
-				
-			};
-		}
 	}
 	
 	public int getElevatorNumbers() {
