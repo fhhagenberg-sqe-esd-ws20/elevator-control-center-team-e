@@ -20,6 +20,8 @@ public class FloorButtons {
 	
 	StringProperty downPic;
 	
+	boolean setTarget = false;
+	
 	public FloorButtons(Controller root, int nr, boolean down, boolean up, boolean btn, boolean service) {
 		rootController = root;
 		
@@ -61,8 +63,7 @@ public class FloorButtons {
 	@FXML
 	void doSetTarget(ActionEvent event) {
 		event.consume();
-		// no worki
-		rootController.data.errors.add("target");
-		rootController.SetTarget(getFloorNr());
+		setTarget = true;
+		//rootController.SetTarget(getFloorNr());
 	}
 }

@@ -4,6 +4,7 @@ import java.rmi.RemoteException;
 
 import at.fhhagenberg.sqe.model.IBuildingWrapper;
 import at.fhhagenberg.sqe.model.IElevatorWrapper;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
@@ -43,8 +44,6 @@ public class Controller {
 	
 	public void SetTarget(int target) {
 		System.out.println("Set Target (" + target + ")");
-		data.elevatorPosition.setValue(42);
-		
 		if(!data.isManualMode.get()) return;
 		
 		try {
@@ -135,17 +134,36 @@ public class Controller {
 								tmp.floorButtonDown.set(building.getFloorButtonDown(i));
 								tmp.floorButtonUp.set(building.getFloorButtonUp(i));
 								tmp.elevatorServicesFloor.set(elevator.getServicesFloors(data.currentElevator.get(), i));
+							
+								if(tmp.setTarget) {
+									if(!data.isManualMode.get()) continue;
+									
+									try {
+										elevator.setTarget(data.currentElevator.get(), tmp.floorNr.get());
+									} catch (RemoteException e) {
+										data.errors.add(e.getMessage());
+									}
+									tmp.setTarget = false;
+								}
 							}
 							
 							data.committedDirection.set(elevator.getCommittedDirection(data.currentElevator.get()));
 							data.elevatorAccel.set(elevator.getElevatorAccel(data.currentElevator.get()));
 							data.elevatorDoorStatus.set(elevator.getElevatorDoorStatus(data.currentElevator.get()));
-							data.elevatorFloor.set(elevator.getElevatorFloor(data.currentElevator.get()));
 							data.elevatorPosition.set(elevator.getElevatorPosition(data.currentElevator.get()));
 							data.elevatorSpeed.set(elevator.getElevatorSpeed(data.currentElevator.get()));
-							data.elevatorWeight.set(elevator.getElevatorWeight(data.currentElevator.get()));
 							data.elevatorCapacity.set(elevator.getElevatorCapacity(data.currentElevator.get()));
-							data.elevatorTarget.set(elevator.getTarget(data.currentElevator.get()));
+							Platform.runLater(() -> {
+								try {
+									data.elevatorTarget.set(elevator.getTarget(data.currentElevator.get()));
+									data.elevatorFloor.set(elevator.getElevatorFloor(data.currentElevator.get()));
+									data.elevatorWeight.set(elevator.getElevatorWeight(data.currentElevator.get()));
+									
+								} catch (RemoteException e) {
+									data.errors.add(e.getMessage());
+								}
+								
+							});
 							
 							if(cnt++ == MAX_RETRIES) {
 								throw new RemoteException("Reached maximum retries while updating elevator.");
@@ -256,12 +274,18 @@ public class Controller {
 		cmbElevators.setItems(elevators);
 		cmbElevators.getSelectionModel().select(0);
 		cmbElevators.valueProperty().addListener((o, oldVal, newVal) -> {
-			data.currentElevator.set(newVal);
+			Platform.runLater(() -> {
+				data.currentElevator.set(newVal);
+			});
+			
 		});
 		
 		// auto/manual (radio buttons)
 		tgMode.selectedToggleProperty().addListener((o, oldVal, newVal) -> {
-			data.isManualMode.set(rbManual.isSelected());
+			Platform.runLater(() -> {
+				data.isManualMode.set(rbManual.isSelected());
+			});
+			
 		});
 		
 		lbFloor.textProperty().bind(data.elevatorFloor.asString());
@@ -277,18 +301,21 @@ public class Controller {
 		imgElevUp.setVisible(false);
 		/* Property Listener */
 		data.committedDirection.addListener((o, oldVal, newVal) -> {
-			// up=0, down=1 and uncommitted=2
-			if(newVal.intValue() == 1) {
-				imgElevDown.setVisible(false);
-				imgElevUp.setVisible(true);
-			} else if(newVal.intValue() == 0) {
-				imgElevDown.setVisible(true);
-				imgElevUp.setVisible(false);
-			}
-			else {
-				imgElevDown.setVisible(false);
-				imgElevUp.setVisible(false);
-			}
+			Platform.runLater(() -> {
+				// up=0, down=1 and uncommitted=2
+				if(newVal.intValue() == 1) {
+					imgElevDown.setVisible(false);
+					imgElevUp.setVisible(true);
+				} else if(newVal.intValue() == 0) {
+					imgElevDown.setVisible(true);
+					imgElevUp.setVisible(false);
+				}
+				else {
+					imgElevDown.setVisible(false);
+					imgElevUp.setVisible(false);
+				}
+			});
+			
 		});
 		data.elevatorDoorStatus.addListener((o, oldVal, newVal) -> {
 			

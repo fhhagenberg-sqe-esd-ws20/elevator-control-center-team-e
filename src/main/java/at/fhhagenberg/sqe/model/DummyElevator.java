@@ -1,10 +1,12 @@
 package at.fhhagenberg.sqe.model;
 
 import java.rmi.RemoteException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class DummyElevator implements IElevator {
 
-	private int v = 0;
+	private AtomicInteger v = new AtomicInteger(42);
+	//private int v = 42;
 	
 	@Override
 	public int getCommittedDirection(int elevatorNumber) throws RemoteException {
@@ -99,7 +101,7 @@ public class DummyElevator implements IElevator {
 	@Override
 	public int getTarget(int elevatorNumber) throws RemoteException {
 		// TODO Auto-generated method stub
-		return v;
+		return v.get();
 	}
 
 	@Override
@@ -117,7 +119,7 @@ public class DummyElevator implements IElevator {
 	@Override
 	public void setTarget(int elevatorNumber, int target) throws RemoteException {
 		// TODO Auto-generated method stub
-		v = target;
+		v.set(target);
 	}
 
 	@Override

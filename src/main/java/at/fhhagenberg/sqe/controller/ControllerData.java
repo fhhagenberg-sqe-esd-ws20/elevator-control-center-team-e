@@ -1,5 +1,6 @@
 package at.fhhagenberg.sqe.controller;
 
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -68,13 +69,16 @@ public class ControllerData {
 		elevatorDoorStatusString = new SimpleStringProperty("unknown");
 		elevatorDoorStatus.addListener((o, oldVal, newVal) -> {
 			// 1=open and 2=closed
-			if(newVal.intValue() == 1) {
-				elevatorDoorStatusString.set("open");
-			} else if (newVal.intValue() == 2) {
-				elevatorDoorStatusString.set("closed");
-			} else {
-				elevatorDoorStatusString.set("unknown");
-			}
+			Platform.runLater(() -> {
+				if(newVal.intValue() == 1) {
+					elevatorDoorStatusString.set("open");
+				} else if (newVal.intValue() == 2) {
+					elevatorDoorStatusString.set("closed");
+				} else {
+					elevatorDoorStatusString.set("unknown");
+				}
+			});
+			
 		});
 	}
 	
