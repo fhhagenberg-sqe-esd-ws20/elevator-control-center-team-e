@@ -28,7 +28,6 @@ public class App extends Application {
     	Parent root = null;
     	FXMLLoader loader;
     	Controller controller = new Controller(new BuildingWrapper(new DummyElevator()), new ElevatorWrapper(new DummyElevator()));
-    	//controller.data = new ControllerData();
     	
     	try {
 	    	URL url = new File("src/main/resources/fxml/eccView.fxml").toURI().toURL();

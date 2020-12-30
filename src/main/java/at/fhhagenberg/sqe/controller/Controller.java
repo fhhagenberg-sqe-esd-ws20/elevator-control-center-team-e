@@ -37,6 +37,7 @@ public class Controller {
 		building = bw;
 		elevator = ew;
 		
+		// also needs to be called in App after data is initialized by FXML
 		// this.initStaticBuildingInfo();
 		
 		// for tests better to call it separate
@@ -73,10 +74,7 @@ public class Controller {
 		}
 	}
 	
-	public void start() {
-//		ScheduledExecutorService es = Executors.newScheduledThreadPool(1);
-//		es.scheduleAtFixedRate(this::scheduleFetch, FETCH_INTERVAL, FETCH_INTERVAL, TimeUnit.MILLISECONDS);
-		
+	public void start() {	
 		UpdateService service = new UpdateService(building, elevator, data);
 		service.setPeriod(Duration.millis(FETCH_INTERVAL));
 		service.start();
@@ -165,41 +163,6 @@ public class Controller {
 				}
 				
 			};
-		}
-	}
-	
-	private synchronized void scheduleFetch() {
-		try {
-			long tick;
-			int cnt = 0;
-			do {
-				tick = elevator.getClockTick();
-				
-				for(int i = 0; i < data.floorNumber.get(); i++) {
-					var tmp = data.buttons.get(i);
-					tmp.elevatorButton.set(elevator.getElevatorButton(data.currentElevator.get(), i));
-					tmp.floorButtonDown.set(building.getFloorButtonDown(i));
-					tmp.floorButtonUp.set(building.getFloorButtonUp(i));
-					tmp.elevatorServicesFloor.set(elevator.getServicesFloors(data.currentElevator.get(), i));
-				}
-				
-				data.committedDirection.set(elevator.getCommittedDirection(data.currentElevator.get()));
-				data.elevatorAccel.set(elevator.getElevatorAccel(data.currentElevator.get()));
-				data.elevatorDoorStatus.set(elevator.getElevatorDoorStatus(data.currentElevator.get()));
-				data.elevatorFloor.set(elevator.getElevatorFloor(data.currentElevator.get()));
-				data.elevatorPosition.set(elevator.getElevatorPosition(data.currentElevator.get()));
-				data.elevatorSpeed.set(elevator.getElevatorSpeed(data.currentElevator.get()));
-				data.elevatorWeight.set(elevator.getElevatorWeight(data.currentElevator.get()));
-				data.elevatorCapacity.set(elevator.getElevatorCapacity(data.currentElevator.get()));
-				data.elevatorTarget.set(elevator.getTarget(data.currentElevator.get()));
-				
-				if(cnt++ == MAX_RETRIES) {
-					throw new RemoteException("Reached maximum retries while updating elevator.");
-				}
-			} while (tick != elevator.getClockTick());
-			
-		} catch (RemoteException e) {
-			data.error.set(e.getMessage());
 		}
 	}
 	
