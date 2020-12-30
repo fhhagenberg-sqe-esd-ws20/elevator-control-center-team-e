@@ -11,6 +11,8 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
+import javafx.concurrent.ScheduledService;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -19,6 +21,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleGroup;
+import javafx.util.Duration;
 
 public class Controller {
 	
@@ -71,8 +74,12 @@ public class Controller {
 	}
 	
 	public void start() {
-		ScheduledExecutorService es = Executors.newScheduledThreadPool(1);
-		es.scheduleAtFixedRate(this::scheduleFetch, FETCH_INTERVAL, FETCH_INTERVAL, TimeUnit.MILLISECONDS);
+//		ScheduledExecutorService es = Executors.newScheduledThreadPool(1);
+//		es.scheduleAtFixedRate(this::scheduleFetch, FETCH_INTERVAL, FETCH_INTERVAL, TimeUnit.MILLISECONDS);
+		
+		UpdateService service = new UpdateService(building, elevator, data);
+		service.setPeriod(Duration.millis(FETCH_INTERVAL));
+		service.start();
 	}
 	
 	public void setElevator(int elevator) {
@@ -102,6 +109,63 @@ public class Controller {
 		data.elevatorWeight.set(0);
 		data.elevatorCapacity.set(0);
 		data.elevatorTarget.set(0);
+	}
+	
+	private static class UpdateService extends ScheduledService<Boolean> {
+		private IBuildingWrapper building;
+		private IElevatorWrapper elevator;
+		private ControllerData data;
+		
+		public UpdateService(IBuildingWrapper bw, IElevatorWrapper ew, ControllerData cd) {
+			building = bw;
+			elevator = ew;
+			data = cd;
+		}
+		
+		@Override
+		protected Task<Boolean> createTask() {
+			return new Task<Boolean>() {
+
+				@Override
+				protected Boolean call() throws Exception {
+					try {
+						long tick;
+						int cnt = 0;
+						do {
+							tick = elevator.getClockTick();
+							
+							for(int i = 0; i < data.floorNumber.get(); i++) {
+								var tmp = data.buttons.get(i);
+								tmp.elevatorButton.set(elevator.getElevatorButton(data.currentElevator.get(), i));
+								tmp.floorButtonDown.set(building.getFloorButtonDown(i));
+								tmp.floorButtonUp.set(building.getFloorButtonUp(i));
+								tmp.elevatorServicesFloor.set(elevator.getServicesFloors(data.currentElevator.get(), i));
+							}
+							
+							data.committedDirection.set(elevator.getCommittedDirection(data.currentElevator.get()));
+							data.elevatorAccel.set(elevator.getElevatorAccel(data.currentElevator.get()));
+							data.elevatorDoorStatus.set(elevator.getElevatorDoorStatus(data.currentElevator.get()));
+							data.elevatorFloor.set(elevator.getElevatorFloor(data.currentElevator.get()));
+							data.elevatorPosition.set(elevator.getElevatorPosition(data.currentElevator.get()));
+							data.elevatorSpeed.set(elevator.getElevatorSpeed(data.currentElevator.get()));
+							data.elevatorWeight.set(elevator.getElevatorWeight(data.currentElevator.get()));
+							data.elevatorCapacity.set(elevator.getElevatorCapacity(data.currentElevator.get()));
+							data.elevatorTarget.set(elevator.getTarget(data.currentElevator.get()));
+							
+							if(cnt++ == MAX_RETRIES) {
+								throw new RemoteException("Reached maximum retries while updating elevator.");
+							}
+						} while (tick != elevator.getClockTick());
+						
+					} catch (RemoteException e) {
+						data.error.set(e.getMessage());
+						return false;
+					}
+					return true;
+				}
+				
+			};
+		}
 	}
 	
 	private synchronized void scheduleFetch() {
