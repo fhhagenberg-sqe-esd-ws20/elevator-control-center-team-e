@@ -21,6 +21,6 @@
          <image>
             <Image url="@../icons/stop_empty.png" />
          </image></ImageView>
-      <Button mnemonicParsing="false" prefWidth="124.0" text="set target" textAlignment="CENTER" />
+      <Button disable="true" mnemonicParsing="false" prefWidth="124.0" text="set target" textAlignment="CENTER" />
    </children>
 </HBox>

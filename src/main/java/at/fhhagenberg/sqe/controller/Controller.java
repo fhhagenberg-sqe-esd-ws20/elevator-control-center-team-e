@@ -147,18 +147,17 @@ public class Controller {
 								}
 							}
 							
-							data.committedDirection.set(elevator.getCommittedDirection(data.currentElevator.get()));
-							data.elevatorAccel.set(elevator.getElevatorAccel(data.currentElevator.get()));
-							data.elevatorDoorStatus.set(elevator.getElevatorDoorStatus(data.currentElevator.get()));
-							data.elevatorPosition.set(elevator.getElevatorPosition(data.currentElevator.get()));
-							data.elevatorSpeed.set(elevator.getElevatorSpeed(data.currentElevator.get()));
-							data.elevatorCapacity.set(elevator.getElevatorCapacity(data.currentElevator.get()));
 							Platform.runLater(() -> {
 								try {
+									data.committedDirection.set(elevator.getCommittedDirection(data.currentElevator.get()));
+									data.elevatorAccel.set(elevator.getElevatorAccel(data.currentElevator.get()));
+									data.elevatorDoorStatus.set(elevator.getElevatorDoorStatus(data.currentElevator.get()));
+									data.elevatorPosition.set(elevator.getElevatorPosition(data.currentElevator.get()));
+									data.elevatorSpeed.set(elevator.getElevatorSpeed(data.currentElevator.get()));
+									data.elevatorCapacity.set(elevator.getElevatorCapacity(data.currentElevator.get()));
 									data.elevatorTarget.set(elevator.getTarget(data.currentElevator.get()));
 									data.elevatorFloor.set(elevator.getElevatorFloor(data.currentElevator.get()));
 									data.elevatorWeight.set(elevator.getElevatorWeight(data.currentElevator.get()));
-									
 								} catch (RemoteException e) {
 									data.errors.add(e.getMessage());
 								}
@@ -237,7 +236,7 @@ public class Controller {
 	@FXML
 	ListView<Object> lvFloors;
 	@FXML
-	ListView<Object> lvErrors;
+	ListView<String> lvErrors;
 	@FXML
 	ComboBox<Integer> cmbElevators;
 	@FXML
@@ -265,6 +264,9 @@ public class Controller {
 		// listview lvFloors
 		ObservableList<Object> floors = FXCollections.observableArrayList(data.buttons.values());
 		lvFloors.setItems(floors);
+		
+		// listview lvErrors
+		lvErrors.setItems(data.errors);
 
 		// combobox cmbElevators
 		ObservableList<Integer> elevators = FXCollections.observableArrayList();
@@ -285,7 +287,6 @@ public class Controller {
 			Platform.runLater(() -> {
 				data.isManualMode.set(rbManual.isSelected());
 			});
-			
 		});
 		
 		lbFloor.textProperty().bind(data.elevatorFloor.asString());
@@ -317,9 +318,12 @@ public class Controller {
 			});
 			
 		});
-		data.elevatorDoorStatus.addListener((o, oldVal, newVal) -> {
-			
+		data.isManualMode.addListener((o, oldVal, newVal) -> {
+			Platform.runLater(() -> {
+				lvFloors.setDisable(!newVal);
+			});
 		});
+		
 	}
 	
 }

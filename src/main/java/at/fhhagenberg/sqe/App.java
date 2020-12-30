@@ -27,7 +27,9 @@ public class App extends Application {
     public void start(Stage stage) {
     	Parent root = null;
     	FXMLLoader loader;
-    	Controller controller = new Controller(new BuildingWrapper(new DummyElevator()), new ElevatorWrapper(new DummyElevator()));
+    	BuildingWrapper building = new BuildingWrapper(new DummyElevator()); // TODO use Simulator
+    	ElevatorWrapper elevator = new ElevatorWrapper(new DummyElevator()); // TODO use Simulator
+    	Controller controller = new Controller(building, elevator);
     	
     	try {
 	    	URL url = new File("src/main/resources/fxml/eccView.fxml").toURI().toURL();

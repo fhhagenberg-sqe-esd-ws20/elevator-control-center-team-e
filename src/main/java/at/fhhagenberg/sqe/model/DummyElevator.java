@@ -23,6 +23,7 @@ public class DummyElevator implements IElevator {
 	@Override
 	public boolean getElevatorButton(int elevatorNumber, int floor) throws RemoteException {
 		// TODO Auto-generated method stub
+		if(elevatorNumber == 0 && floor == 3) return true;
 		return false;
 	}
 
@@ -71,12 +72,14 @@ public class DummyElevator implements IElevator {
 	@Override
 	public boolean getFloorButtonDown(int floor) throws RemoteException {
 		// TODO Auto-generated method stub
+		if(floor == 4) return true;
 		return false;
 	}
 
 	@Override
 	public boolean getFloorButtonUp(int floor) throws RemoteException {
 		// TODO Auto-generated method stub
+		if(floor == 5) return true;
 		return false;
 	}
 
@@ -95,7 +98,8 @@ public class DummyElevator implements IElevator {
 	@Override
 	public boolean getServicesFloors(int elevatorNumber, int floor) throws RemoteException {
 		// TODO Auto-generated method stub
-		return false;
+		if(elevatorNumber == 0 && floor == 2) return false;
+		return true;
 	}
 
 	@Override

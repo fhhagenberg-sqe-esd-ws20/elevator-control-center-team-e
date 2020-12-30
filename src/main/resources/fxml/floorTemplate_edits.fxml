@@ -78,7 +78,7 @@
                <content>
                   <VBox prefHeight="200.0" prefWidth="100.0">
                      <children>
-                        <ListView prefHeight="200.0" prefWidth="246.0">
+                        <ListView disable="true" prefHeight="200.0" prefWidth="246.0">
                         	<cellFactory>
                         		<FXMLListCellFactory fxmlSource="@floorTemplate.fxml" />
                         	</cellFactory>

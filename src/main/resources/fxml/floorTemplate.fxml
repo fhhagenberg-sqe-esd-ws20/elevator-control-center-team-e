@@ -19,19 +19,22 @@
       
       <!-- TODO: conditional image-showing -->
       
-      <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView  visible="${item.floorButtonDown}" 
+      fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../icons/down_empty.png" />
          </image></ImageView>
-      <ImageView fitHeight="50.0" fitWidth="50.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView  visible="${item.floorButtonUp}"
+      fitHeight="50.0" fitWidth="50.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../icons/up_empty.png" />
          </image></ImageView>
-      <ImageView fitHeight="50.0" fitWidth="50.0" layoutX="60.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView  visible="${item.elevatorButton}"
+      fitHeight="50.0" fitWidth="50.0" layoutX="60.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../icons/stop_empty.png" />
          </image></ImageView>
-      <Button onAction="#doSetTarget"
+      <Button onAction="#doSetTarget" disable="${!item.elevatorServicesFloor}"
       mnemonicParsing="false" text="set target" />
    </children>
 </HBox>
