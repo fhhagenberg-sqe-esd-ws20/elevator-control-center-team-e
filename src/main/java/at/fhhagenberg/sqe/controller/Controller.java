@@ -103,7 +103,6 @@ public class Controller {
 						tmp.setTarget = false;
 					}
 				}
-				if(lvFloors != null) lvFloors.refresh(); // force proper update of floors
 				
 				Platform.runLater(() -> {
 					try {

@@ -39,6 +39,19 @@ public class FloorButtons {
 		elevatorButton.set(btn);
 		elevatorServicesFloor.set(service);
 		downPic.set("@../icons/down_empty.png");
+		
+		floorButtonDown.addListener((o, oldVal, newVal) -> {
+			if(root.lvFloors != null) root.lvFloors.refresh(); // force proper update of floors
+		});
+		floorButtonUp.addListener((o, oldVal, newVal) -> {
+			if(root.lvFloors != null) root.lvFloors.refresh(); // force proper update of floors
+		});
+		elevatorButton.addListener((o, oldVal, newVal) -> {
+			if(root.lvFloors != null) root.lvFloors.refresh(); // force proper update of floors
+		});
+		elevatorServicesFloor.addListener((o, oldVal, newVal) -> {
+			if(root.lvFloors != null) root.lvFloors.refresh(); // force proper update of floors
+		});
 	}
 	
 	public int getFloorNr() {
