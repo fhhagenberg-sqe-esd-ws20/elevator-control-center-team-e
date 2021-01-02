@@ -31,7 +31,7 @@
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <Label text="Floor " />
-                        <Label fx:id="lbFloor" />
+                        <Label fx:id="lbFloor" id="lbFloor" />
                      </children>
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0">
@@ -50,25 +50,25 @@
                   <HBox layoutX="10.0" layoutY="42.0" prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <Label text="Payload " />
-                        <Label fx:id="lbPayload" />
+                        <Label fx:id="lbPayload" id="lbPayload" />
                      </children>
                   </HBox>
                   <HBox layoutX="10.0" layoutY="182.0" prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <Label text="Speed " />
-                        <Label fx:id="lbSpeed" />
+                        <Label fx:id="lbSpeed" id="lbSpeed" />
                      </children>
                   </HBox>
                   <HBox layoutX="10.0" layoutY="187.0" prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <Label text="Doors " />
-                        <Label fx:id="lbDoors" />
+                        <Label fx:id="lbDoors" id="lbDoors" />
                      </children>
                   </HBox>
                   <HBox layoutX="10.0" layoutY="188.0" prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <Label text="Next target " />
-                        <Label fx:id="lbTarget" />
+                        <Label fx:id="lbTarget" id="lbTarget" />
                      </children>
                   </HBox>
                   <ListView fx:id="lvErrors" prefHeight="150.0" />
@@ -97,7 +97,7 @@
             </VBox>
             <VBox prefHeight="200.0" prefWidth="100.0">
                <children>
-                  <Label text="${data.floorNumber}" />
+                  <Label text="${data.floorNumber}" id="floorNumber" />
                   <Label text="Floors" />
                </children>
             </VBox>

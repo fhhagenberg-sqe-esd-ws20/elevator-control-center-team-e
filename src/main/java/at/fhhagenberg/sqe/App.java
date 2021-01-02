@@ -9,6 +9,9 @@ import at.fhhagenberg.sqe.controller.ControllerData;
 import at.fhhagenberg.sqe.model.BuildingWrapper;
 import at.fhhagenberg.sqe.model.DummyElevator;
 import at.fhhagenberg.sqe.model.ElevatorWrapper;
+import at.fhhagenberg.sqe.model.IBuildingWrapper;
+import at.fhhagenberg.sqe.model.IElevatorWrapper;
+import at.fhhagenberg.sqe.model.IElevator;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -23,12 +26,26 @@ import javafx.stage.Stage;
  */
 public class App extends Application {
 
+	private IBuildingWrapper used_buildingwrapper;
+	private IElevatorWrapper used_elevatorwrapper;
+	
+	public App() {
+		IElevator used_elevator = new DummyElevator();   // TODO use Simulator
+		used_buildingwrapper = new BuildingWrapper(used_elevator);
+		used_elevatorwrapper = new ElevatorWrapper(used_elevator);
+	}
+	
+	public App(IBuildingWrapper bw, IElevatorWrapper ew) {
+		used_buildingwrapper = bw;
+		used_elevatorwrapper = ew;
+	}
+	
     @Override
     public void start(Stage stage) {
     	Parent root = null;
     	FXMLLoader loader;
-    	BuildingWrapper building = new BuildingWrapper(new DummyElevator()); // TODO use Simulator
-    	ElevatorWrapper elevator = new ElevatorWrapper(new DummyElevator()); // TODO use Simulator
+    	IBuildingWrapper building = used_buildingwrapper;
+    	IElevatorWrapper elevator = used_elevatorwrapper;
     	Controller controller = new Controller(building, elevator);
     	
     	try {
