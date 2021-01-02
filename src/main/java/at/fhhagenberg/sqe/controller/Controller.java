@@ -7,88 +7,38 @@ import java.util.concurrent.TimeUnit;
 
 import at.fhhagenberg.sqe.model.IBuildingWrapper;
 import at.fhhagenberg.sqe.model.IElevatorWrapper;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleMapProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
-
-
+import javafx.concurrent.ScheduledService;
+import javafx.concurrent.Task;
+import javafx.fxml.FXML;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.ImageView;
+import javafx.util.Duration;
 
 public class Controller {
-	public class FloorButtons{
-		public BooleanProperty floorButtonDown;
-		public BooleanProperty floorButtonUp;
-		public BooleanProperty elevatorButton;
-		public BooleanProperty elevatorServicesFloor;
-		
-		public FloorButtons(boolean down, boolean up, boolean btn, boolean service) {
-			floorButtonDown = new SimpleBooleanProperty();
-			floorButtonUp = new SimpleBooleanProperty();
-			elevatorButton = new SimpleBooleanProperty();
-			elevatorServicesFloor = new SimpleBooleanProperty();
-			
-			floorButtonDown.set(down);
-			floorButtonUp.set(up);
-			elevatorButton.set(btn);
-			elevatorServicesFloor.set(service);
-		}
-	}
 	
 	private IBuildingWrapper building;
 	private IElevatorWrapper elevator;
 	private static int FETCH_INTERVAL = 100;
 	private static int MAX_RETRIES = 4;
 	
-	// properties - building
-	private IntegerProperty elevatorNumbers;
-	private IntegerProperty floorHeight;
-	private IntegerProperty floorNumber;
-	private IntegerProperty currentElevator;
-	private ObservableMap<Integer, FloorButtons> buttons;
-	private BooleanProperty isManualMode;	// if false, elevators are in automatic mode
-	
-	// properties - elevator
-	private IntegerProperty committedDirection;	// up=0, down=1 and uncommitted=2
-	private IntegerProperty elevatorAccel;
-	private IntegerProperty elevatorDoorStatus; // 1=open and 2=closed
-	private IntegerProperty elevatorFloor;
-	private IntegerProperty elevatorPosition;
-	private IntegerProperty elevatorSpeed;
-	private IntegerProperty elevatorWeight;
-	private IntegerProperty elevatorCapacity;
-	private IntegerProperty elevatorTarget;
-	
-	// error properties
-	private StringProperty error;
+	@FXML
+	public ControllerData data;
 	
 	public Controller(IBuildingWrapper bw, IElevatorWrapper ew) {
 		building = bw;
 		elevator = ew;
 		
-		elevatorNumbers = new SimpleIntegerProperty();
-		floorHeight = new SimpleIntegerProperty();
-		floorNumber = new SimpleIntegerProperty();
-		currentElevator = new SimpleIntegerProperty();
-		buttons = FXCollections.observableHashMap();
-		isManualMode = new SimpleBooleanProperty();
+		data = new ControllerData();
 		
-		committedDirection = new SimpleIntegerProperty();
-		elevatorAccel = new SimpleIntegerProperty();
-		elevatorDoorStatus = new SimpleIntegerProperty();
-		elevatorFloor = new SimpleIntegerProperty();
-		elevatorPosition = new SimpleIntegerProperty();
-		elevatorSpeed = new SimpleIntegerProperty();
-		elevatorWeight = new SimpleIntegerProperty();
-		elevatorCapacity = new SimpleIntegerProperty();
-		elevatorTarget = new SimpleIntegerProperty();
-		
-		error = new SimpleStringProperty();
-		
+		// also needs to be called in App after data is initialized by FXML
 		this.initStaticBuildingInfo();
 		
 		// for tests better to call it separate
@@ -96,64 +46,36 @@ public class Controller {
 	}
 	
 	public void SetTarget(int target) {
-		if(!isManualMode.get()) return;
+		System.out.println("Set Target (" + target + ")");
+		if(!data.isManualMode.get()) return;
 		
 		try {
-			elevator.setTarget(currentElevator.get(), target);
+			elevator.setTarget(data.currentElevator.get(), target);
 		} catch (RemoteException e) {
-			error.set(e.getMessage());
+			data.errors.add(e.getMessage());
 		}
 	}
 	
-	private void initStaticBuildingInfo() {
+	public void initStaticBuildingInfo() {
 		try {
-			elevatorNumbers.set(building.getElevatorNum());
-			floorHeight.set(building.getFloorHeight());
-			floorNumber.set(building.getFloorNum());
-			isManualMode.set(true);
-			currentElevator.set(0);
+			data.elevatorNumbers.set(building.getElevatorNum());
+			data.floorHeight.set(building.getFloorHeight());
+			data.floorNumber.set(building.getFloorNum());
+			data.isManualMode.set(true);
+			data.currentElevator.set(0);
 			
-			for(int i = 0; i < floorNumber.get(); i++) {
-				buttons.put(i, new FloorButtons(false, false, false, true));
+			for(int i = 0; i < data.floorNumber.get(); i++) {
+				data.buttons.put(i, new FloorButtons(this, i, false, false, false, true));
 			}
 			
 		} catch (RemoteException e) {
-			error.set(e.getMessage());
+			data.errors.add(e.getMessage());
 		}
 	}
 	
-	public void start() {
+	public void start() {	
 		ScheduledExecutorService es = Executors.newScheduledThreadPool(1);
 		es.scheduleAtFixedRate(this::scheduleFetch, FETCH_INTERVAL, FETCH_INTERVAL, TimeUnit.MILLISECONDS);
-	}
-	
-	public void setElevator(int elevator) {
-		if(elevator >= this.getElevatorNumbers()) {
-			error.set("elevatorNumber not available");
-			return;
-		}
-		currentElevator.set(elevator);
-		clearProberties();
-	}
-	
-	private void clearProberties() {
-		for(int i = 0; i < floorNumber.get(); i++) {
-			var tmp = buttons.get(i);
-			tmp.elevatorButton.set(false);
-			tmp.floorButtonDown.set(false);
-			tmp.floorButtonUp.set(false);
-			tmp.elevatorServicesFloor.set(true);
-		}
-		
-		committedDirection.set(0);
-		elevatorAccel.set(0);
-		elevatorDoorStatus.set(0);
-		elevatorFloor.set(0);
-		elevatorPosition.set(0);
-		elevatorSpeed.set(0);
-		elevatorWeight.set(0);
-		elevatorCapacity.set(0);
-		elevatorTarget.set(0);
 	}
 	
 	private synchronized void scheduleFetch() {
@@ -163,23 +85,41 @@ public class Controller {
 			do {
 				tick = elevator.getClockTick();
 				
-				for(int i = 0; i < floorNumber.get(); i++) {
-					var tmp = buttons.get(i);
-					tmp.elevatorButton.set(elevator.getElevatorButton(currentElevator.get(), i));
+				for(int i = 0; i < data.floorNumber.get(); i++) {
+					var tmp = data.buttons.get(i);
+					tmp.elevatorButton.set(elevator.getElevatorButton(data.currentElevator.get(), i));
 					tmp.floorButtonDown.set(building.getFloorButtonDown(i));
 					tmp.floorButtonUp.set(building.getFloorButtonUp(i));
-					tmp.elevatorServicesFloor.set(elevator.getServicesFloors(currentElevator.get(), i));
+					tmp.elevatorServicesFloor.set(elevator.getServicesFloors(data.currentElevator.get(), i));
+					
+					if(tmp.setTarget) {
+						if(!data.isManualMode.get()) continue;
+						
+						try {
+							elevator.setTarget(data.currentElevator.get(), tmp.floorNr.get());
+						} catch (RemoteException e) {
+							data.errors.add(e.getMessage());
+						}
+						tmp.setTarget = false;
+					}
 				}
 				
-				committedDirection.set(elevator.getCommittedDirection(currentElevator.get()));
-				elevatorAccel.set(elevator.getElevatorAccel(currentElevator.get()));
-				elevatorDoorStatus.set(elevator.getElevatorDoorStatus(currentElevator.get()));
-				elevatorFloor.set(elevator.getElevatorFloor(currentElevator.get()));
-				elevatorPosition.set(elevator.getElevatorPosition(currentElevator.get()));
-				elevatorSpeed.set(elevator.getElevatorSpeed(currentElevator.get()));
-				elevatorWeight.set(elevator.getElevatorWeight(currentElevator.get()));
-				elevatorCapacity.set(elevator.getElevatorCapacity(currentElevator.get()));
-				elevatorTarget.set(elevator.getTarget(currentElevator.get()));
+				Platform.runLater(() -> {
+					try {
+						data.committedDirection.set(elevator.getCommittedDirection(data.currentElevator.get()));
+						data.elevatorAccel.set(elevator.getElevatorAccel(data.currentElevator.get()));
+						data.elevatorDoorStatus.set(elevator.getElevatorDoorStatus(data.currentElevator.get()));
+						data.elevatorPosition.set(elevator.getElevatorPosition(data.currentElevator.get()));
+						data.elevatorSpeed.set(elevator.getElevatorSpeed(data.currentElevator.get()));
+						data.elevatorCapacity.set(elevator.getElevatorCapacity(data.currentElevator.get()));
+						data.elevatorTarget.set(elevator.getTarget(data.currentElevator.get()));
+						data.elevatorFloor.set(elevator.getElevatorFloor(data.currentElevator.get()));
+						data.elevatorWeight.set(elevator.getElevatorWeight(data.currentElevator.get()));
+					} catch (RemoteException e) {
+						data.errors.add(e.getMessage());
+					}
+					
+				});
 				
 				if(cnt++ == MAX_RETRIES) {
 					throw new RemoteException("Reached maximum retries while updating elevator.");
@@ -187,56 +127,184 @@ public class Controller {
 			} while (tick != elevator.getClockTick());
 			
 		} catch (RemoteException e) {
-			error.set(e.getMessage());
+			data.errors.add(e.getMessage());
 		}
+
+	}
+	
+	public void setElevator(int elevator) {
+		if(elevator >= this.getElevatorNumbers()) {
+			data.errors.add("elevatorNumber not available");
+			return;
+		}
+		data.currentElevator.set(elevator);
+		clearProperties();
+	}
+	
+	private void clearProperties() {
+		for(int i = 0; i < data.floorNumber.get(); i++) {
+			var tmp = data.buttons.get(i);
+			tmp.elevatorButton.set(false);
+			tmp.floorButtonDown.set(false);
+			tmp.floorButtonUp.set(false);
+			tmp.elevatorServicesFloor.set(true);
+		}
+		
+		data.committedDirection.set(0);
+		data.elevatorAccel.set(0);
+		data.elevatorDoorStatus.set(0);
+		data.elevatorFloor.set(0);
+		data.elevatorPosition.set(0);
+		data.elevatorSpeed.set(0);
+		data.elevatorWeight.set(0);
+		data.elevatorCapacity.set(0);
+		data.elevatorTarget.set(0);
 	}
 	
 	public int getElevatorNumbers() {
-		return elevatorNumbers.get();
+		return data.elevatorNumbers.get();
 	}
 	public int getFloorHeight() {
-		return floorHeight.get();
+		return data.floorHeight.get();
 	}
 	public int getFloorNumber() {
-		return floorNumber.get();
+		return data.floorNumber.get();
 	}
 	public int getCurrentElevator() {
-		return currentElevator.get();
+		return data.currentElevator.get();
 	}
 	public ObservableMap<Integer, FloorButtons> getButtons() {
-		return buttons;
+		return data.buttons;
 	}
 	public boolean getIsManualMode() {
-		return isManualMode.get();
+		return data.isManualMode.get();
 	}
 	public int getCommittedDirection() {
-		return committedDirection.get();
+		return data.committedDirection.get();
 	}
 	public int getElevatorAccel() {
-		return elevatorAccel.get();
+		return data.elevatorAccel.get();
 	}
 	public int getElevatorDoorStatus() {
-		return elevatorDoorStatus.get();
+		return data.elevatorDoorStatus.get();
 	}
 	public int getElevatorFloor() {
-		return elevatorFloor.get();
+		return data.elevatorFloor.get();
 	}
 	public int getElevatorPosition() {
-		return elevatorPosition.get();
+		return data.elevatorPosition.get();
 	}
 	public int getElevatorSpeed() {
-		return elevatorSpeed.get();
+		return data.elevatorSpeed.get();
 	}
 	public int getElevatorWeight() {
-		return elevatorWeight.get();
+		return data.elevatorWeight.get();
 	}
 	public int getElevatorCapacity() {
-		return elevatorCapacity.get();
+		return data.elevatorCapacity.get();
 	}
 	public int getElevatorTarget() {
-		return elevatorTarget.get();
+		return data.elevatorTarget.get();
 	}
-	public String getError() {
-		return error.get();
+	public String getLastError() {
+		return data.errors.get(data.errors.size() - 1);
 	}
+
+	/*
+	 * UI Section
+	 */
+	
+	@FXML
+	ListView<Object> lvFloors;
+	@FXML
+	ListView<String> lvErrors;
+	@FXML
+	ComboBox<Integer> cmbElevators;
+	@FXML
+	RadioButton rbManual;
+	@FXML
+	ToggleGroup tgMode;
+	@FXML
+	Label lbFloor;
+	@FXML
+	Label lbPayload;
+	@FXML
+	Label lbSpeed;
+	@FXML
+	Label lbDoors;
+	@FXML
+	Label lbTarget;
+	
+	@FXML
+	ImageView imgElevDown;
+	@FXML
+	ImageView imgElevUp;
+
+	
+	public void fillFields() {
+		// listview lvFloors
+		ObservableList<Object> floors = FXCollections.observableArrayList(data.buttons.values());
+		lvFloors.setItems(floors);
+		
+		// listview lvErrors
+		lvErrors.setItems(data.errors);
+
+		// combobox cmbElevators
+		ObservableList<Integer> elevators = FXCollections.observableArrayList();
+		for(int i = 0; i < getElevatorNumbers(); i++) {
+			elevators.add(i);
+		}
+		cmbElevators.setItems(elevators);
+		cmbElevators.getSelectionModel().select(0);
+		cmbElevators.valueProperty().addListener((o, oldVal, newVal) -> {
+			Platform.runLater(() -> {
+				data.currentElevator.set(newVal);
+			});
+			
+		});
+		
+		// auto/manual (radio buttons)
+		tgMode.selectedToggleProperty().addListener((o, oldVal, newVal) -> {
+			Platform.runLater(() -> {
+				data.isManualMode.set(rbManual.isSelected());
+			});
+		});
+		
+		lbFloor.textProperty().bind(data.elevatorFloor.asString());
+		lbPayload.textProperty().bind(data.elevatorWeight.asString());
+		lbSpeed.textProperty().bind(data.elevatorSpeed.asString());
+		lbDoors.textProperty().bind(data.elevatorDoorStatusString);
+		lbTarget.textProperty().bind(data.elevatorTarget.asString());
+	}
+	
+	public void addUIListeners() {
+		// if 0 is default:
+		imgElevDown.setVisible(true);
+		imgElevUp.setVisible(false);
+		/* Property Listener */
+		data.committedDirection.addListener((o, oldVal, newVal) -> {
+			Platform.runLater(() -> {
+				// up=0, down=1 and uncommitted=2
+				if(newVal.intValue() == 1) {
+					imgElevDown.setVisible(false);
+					imgElevUp.setVisible(true);
+				} else if(newVal.intValue() == 0) {
+					imgElevDown.setVisible(true);
+					imgElevUp.setVisible(false);
+				}
+				else {
+					imgElevDown.setVisible(false);
+					imgElevUp.setVisible(false);
+				}
+			});
+			
+		});
+		data.isManualMode.addListener((o, oldVal, newVal) -> {
+			Platform.runLater(() -> {
+				lvFloors.setDisable(!newVal);
+			});
+		});
+		
+	}
+	
 }
