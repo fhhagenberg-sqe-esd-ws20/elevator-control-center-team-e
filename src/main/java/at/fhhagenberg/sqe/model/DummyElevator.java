@@ -3,6 +3,8 @@ package at.fhhagenberg.sqe.model;
 import java.rmi.RemoteException;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import sqelevator.IElevator;
+
 public class DummyElevator implements IElevator {
 
 	private AtomicInteger v = new AtomicInteger(42);

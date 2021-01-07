@@ -2,6 +2,8 @@ package at.fhhagenberg.sqe.model;
 
 import java.rmi.RemoteException;
 
+import sqelevator.IElevator;
+
 public class ElevatorWrapper implements IElevatorWrapper {
 
 	private IElevator model;

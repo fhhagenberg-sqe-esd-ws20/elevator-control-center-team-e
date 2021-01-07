@@ -5,7 +5,7 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
-import at.fhhagenberg.sqe.model.IElevator;
+import sqelevator.IElevator;
 
 
 public class ElevatorExample {

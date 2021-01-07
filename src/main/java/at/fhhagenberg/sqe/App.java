@@ -2,7 +2,11 @@ package at.fhhagenberg.sqe;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 
 import at.fhhagenberg.sqe.controller.Controller;
 import at.fhhagenberg.sqe.controller.ControllerData;
@@ -11,7 +15,6 @@ import at.fhhagenberg.sqe.model.DummyElevator;
 import at.fhhagenberg.sqe.model.ElevatorWrapper;
 import at.fhhagenberg.sqe.model.IBuildingWrapper;
 import at.fhhagenberg.sqe.model.IElevatorWrapper;
-import at.fhhagenberg.sqe.model.IElevator;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -20,6 +23,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import sqelevator.IElevator;
 
 /**
  * JavaFX App
@@ -30,9 +34,24 @@ public class App extends Application {
 	private IElevatorWrapper used_elevatorwrapper;
 	
 	public App() {
+		//IElevator controller = (IElevator) Naming.lookup("rmi://localhost/ElevatorSim");
 		IElevator used_elevator = new DummyElevator();   // TODO use Simulator
+		try {
+			used_elevator = (IElevator) Naming.lookup("rmi://localhost/ElevatorSim");
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NotBoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		
 		used_buildingwrapper = new BuildingWrapper(used_elevator);
 		used_elevatorwrapper = new ElevatorWrapper(used_elevator);
+		
 	}
 	
 	public App(IBuildingWrapper bw, IElevatorWrapper ew) {
