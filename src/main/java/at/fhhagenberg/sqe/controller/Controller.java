@@ -1,5 +1,8 @@
 package at.fhhagenberg.sqe.controller;
 
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -21,6 +24,8 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
+import sqelevator.IElevator;
+import java.util.concurrent.atomic.*;
 
 public class Controller {
 	
@@ -28,6 +33,7 @@ public class Controller {
 	private IElevatorWrapper elevator;
 	private static int FETCH_INTERVAL = 100;
 	private static int MAX_RETRIES = 4;
+	private AtomicBoolean isConnected;
 	
 	@FXML
 	public ControllerData data;
@@ -43,6 +49,8 @@ public class Controller {
 		
 		// for tests better to call it separate
 		// this.start();
+		isConnected = new AtomicBoolean();
+		isConnected.set(true);
 	}
 	
 	public void SetTarget(int target) {
@@ -95,11 +103,7 @@ public class Controller {
 					if(tmp.setTarget) {
 						if(!data.isManualMode.get()) continue;
 						
-						try {
-							elevator.setTarget(data.currentElevator.get(), tmp.floorNr.get());
-						} catch (RemoteException e) {
-							data.errors.add(e.getMessage());
-						}
+						elevator.setTarget(data.currentElevator.get(), tmp.floorNr.get());
 						tmp.setTarget = false;
 					}
 				}
@@ -116,7 +120,10 @@ public class Controller {
 						data.elevatorFloor.set(elevator.getElevatorFloor(data.currentElevator.get()));
 						data.elevatorWeight.set(elevator.getElevatorWeight(data.currentElevator.get()));
 					} catch (RemoteException e) {
-						data.errors.add(e.getMessage());
+						if(isConnected.get()) {
+							data.errors.add(e.getMessage());	
+							isConnected.set(false);
+						}
 					}
 					
 				});
@@ -127,9 +134,14 @@ public class Controller {
 			} while (tick != elevator.getClockTick());
 			
 		} catch (RemoteException e) {
-			data.errors.add(e.getMessage());
+			Platform.runLater(() -> {
+				if(isConnected.get()) {
+					data.errors.add(e.getMessage());	
+					isConnected.set(false);
+				}
+			});
+			tryReconnectingToRMI();
 		}
-
 	}
 	
 	public void setElevator(int elevator) {
@@ -139,6 +151,18 @@ public class Controller {
 		}
 		data.currentElevator.set(elevator);
 		clearProperties();
+	}
+	
+	private void tryReconnectingToRMI() {
+		try {
+			building.reconnectToRMI();
+			elevator.reconnectToRMI();
+			isConnected.set(true);
+		} catch (Exception e) {
+			Platform.runLater(() -> {
+				data.errors.add("Reconnect to RMI failed! " + e.getMessage());
+			});
+		}
 	}
 	
 	private void clearProperties() {

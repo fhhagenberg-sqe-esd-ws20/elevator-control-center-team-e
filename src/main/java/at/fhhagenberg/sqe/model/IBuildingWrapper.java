@@ -1,6 +1,21 @@
 package at.fhhagenberg.sqe.model;
 
+import java.net.MalformedURLException;
+import java.rmi.NotBoundException;
+
+import sqelevator.IElevator;
+
 public interface IBuildingWrapper {
+	
+	/**
+	 * Sets the used elevator model
+	 * @param model - used elevator model
+	 */
+	public void setModel(IElevator model);
+	
+	public void setConnectionString(String url);
+	
+	public void reconnectToRMI() throws java.rmi.RemoteException, MalformedURLException, NotBoundException;
 
 	/**
 	 * Retrieves the number of elevators in the building. 

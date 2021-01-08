@@ -12,7 +12,6 @@ import org.testfx.matcher.control.LabeledMatchers;
 
 import at.fhhagenberg.sqe.model.IBuildingWrapper;
 import at.fhhagenberg.sqe.model.IElevatorWrapper;
-import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
 import org.mockito.Mock;
@@ -22,7 +21,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(ApplicationExtension.class)
 public class AppTest {
-    private Button button;
     private int target; 
 
     @Mock
@@ -71,28 +69,22 @@ public class AppTest {
     
     /**
      * @param robot - Will be injected by the test runner.
+     * @throws RemoteException 
      */
     @Test
-    public void testEndToEndScenario(FxRobot robot) {
-    	try {
-			Mockito.doAnswer(invocation -> {
-				target = invocation.getArgument(1);
-				Mockito.when(elevatorMock.getTarget(0)).thenReturn(target);
-				return null;
-			}).when(elevatorMock).setTarget(Mockito.anyInt(), Mockito.anyInt());
-		} catch (RemoteException e1) {
-			e1.printStackTrace();
-		}
+    public void testEndToEndScenario(FxRobot robot) throws Exception  {
+    	Mockito.doAnswer(invocation -> {
+			target = invocation.getArgument(1);
+			Mockito.when(elevatorMock.getTarget(0)).thenReturn(target);
+			return null;
+		}).when(elevatorMock).setTarget(Mockito.anyInt(), Mockito.anyInt());
     	
     	FxAssert.verifyThat("#lbTarget", LabeledMatchers.hasText(Integer.toString(target)));
     	
     	robot.clickOn(".button");
         FxAssert.verifyThat(".button", LabeledMatchers.hasText("set target"));
-        try {
-			Thread.sleep(150, 0);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		Thread.sleep(150, 0);
+
         FxAssert.verifyThat("#lbTarget", LabeledMatchers.hasText(Integer.toString(target)));
     }
 }

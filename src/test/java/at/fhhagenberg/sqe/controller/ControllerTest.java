@@ -2,6 +2,8 @@ package at.fhhagenberg.sqe.controller;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.net.MalformedURLException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
 import org.junit.jupiter.api.AfterEach;
@@ -224,5 +226,18 @@ class ControllerTest {
 		assertEquals(0, controller.getElevatorTarget());
 	}
 
-
+	@Test
+	void testReconnectToRMI() throws Exception {
+		Mockito.when(buildingMock.getElevatorNum()).thenReturn(1);
+		Mockito.when(buildingMock.getFloorHeight()).thenReturn(2);
+		Mockito.when(buildingMock.getFloorNum()).thenReturn(0);
+		Mockito.when(elevatorMock.getClockTick()).thenThrow(new RemoteException());
+		
+		controller = new Controller(buildingMock, elevatorMock);
+		controller.start();
+		Thread.sleep(200, 0);
+		
+		Mockito.verify(buildingMock, Mockito.atLeastOnce()).reconnectToRMI();
+		Mockito.verify(elevatorMock, Mockito.atLeastOnce()).reconnectToRMI();
+	}
 }

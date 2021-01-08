@@ -32,12 +32,13 @@ public class App extends Application {
 
 	private IBuildingWrapper used_buildingwrapper;
 	private IElevatorWrapper used_elevatorwrapper;
+	private final String url = "rmi://localhost/ElevatorSim";
 	
 	public App() {
 		//IElevator controller = (IElevator) Naming.lookup("rmi://localhost/ElevatorSim");
 		IElevator used_elevator = new DummyElevator();   // TODO use Simulator
 		try {
-			used_elevator = (IElevator) Naming.lookup("rmi://localhost/ElevatorSim");
+			used_elevator = (IElevator) Naming.lookup(this.url);
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -51,7 +52,8 @@ public class App extends Application {
 		
 		used_buildingwrapper = new BuildingWrapper(used_elevator);
 		used_elevatorwrapper = new ElevatorWrapper(used_elevator);
-		
+		used_buildingwrapper.setConnectionString(this.url);
+		used_elevatorwrapper.setConnectionString(this.url);
 	}
 	
 	public App(IBuildingWrapper bw, IElevatorWrapper ew) {

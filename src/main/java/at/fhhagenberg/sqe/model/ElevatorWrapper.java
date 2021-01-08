@@ -1,5 +1,8 @@
 package at.fhhagenberg.sqe.model;
 
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
 import sqelevator.IElevator;
@@ -7,9 +10,11 @@ import sqelevator.IElevator;
 public class ElevatorWrapper implements IElevatorWrapper {
 
 	private IElevator model;
+	private String url;
 	
 	public ElevatorWrapper(IElevator model) {
 		this.model = model;
+		this.url = "";
 	}
 	
 	@Override
@@ -85,5 +90,20 @@ public class ElevatorWrapper implements IElevatorWrapper {
 	@Override
 	public long getClockTick() throws RemoteException {
 		return model.getClockTick();
+	}
+
+	@Override
+	public void setModel(IElevator model) {
+		this.model = model;
+	}
+
+	@Override
+	public void setConnectionString(String url) {
+		this.url = url;
+	}
+
+	@Override
+	public void reconnectToRMI() throws RemoteException, MalformedURLException, NotBoundException {
+		this.model = (IElevator) Naming.lookup(this.url);
 	}
 }
