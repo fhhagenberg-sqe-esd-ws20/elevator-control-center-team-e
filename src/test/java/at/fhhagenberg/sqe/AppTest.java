@@ -1,17 +1,21 @@
 package at.fhhagenberg.sqe;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.rmi.RemoteException;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.testfx.api.FxAssert;
 import org.testfx.api.FxRobot;
+import org.testfx.api.FxService;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 import org.testfx.matcher.control.LabeledMatchers;
 
 import at.fhhagenberg.sqe.model.IBuildingWrapper;
 import at.fhhagenberg.sqe.model.IElevatorWrapper;
+import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 
 import org.mockito.Mock;
@@ -86,5 +90,18 @@ public class AppTest {
 		Thread.sleep(150, 0);
 
         FxAssert.verifyThat("#lbTarget", LabeledMatchers.hasText(Integer.toString(target)));
+    }
+    
+    /**
+     * @param robot - Will be injected by the test runner.
+     * @throws RemoteException 
+     * @throws InterruptedException 
+     */
+    @Test
+    public void testCorrectErrorState(FxRobot robot) throws RemoteException, InterruptedException {
+    	Mockito.when(elevatorMock.getClockTick()).thenThrow(new RemoteException("ErrorText"));
+    	Thread.sleep(150, 0);
+
+    	assertTrue(robot.lookup("#lvErrors").queryAs(ListView.class).getItems().contains("ErrorText"));
     }
 }

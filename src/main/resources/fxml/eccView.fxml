@@ -71,7 +71,7 @@
                         <Label fx:id="lbTarget" id="lbTarget" />
                      </children>
                   </HBox>
-                  <ListView fx:id="lvErrors" prefHeight="150.0" />
+                  <ListView fx:id="lvErrors" prefHeight="150.0" id="lvErrors" />
                </children>
             </VBox>
 
