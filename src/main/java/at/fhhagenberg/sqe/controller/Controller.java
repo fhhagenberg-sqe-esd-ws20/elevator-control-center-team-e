@@ -4,6 +4,7 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.Comparator;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -263,11 +264,13 @@ public class Controller {
 	ImageView imgElevDown;
 	@FXML
 	ImageView imgElevUp;
-
 	
 	public void fillFields() {
 		// listview lvFloors
-		ObservableList<Object> floors = FXCollections.observableArrayList(data.buttons.values());
+		ObservableList<FloorButtons> floors = FXCollections.observableArrayList(data.buttons.values());
+		// reverse order
+		floors.sort((o1, o2) -> {return Integer.compare(o2.getFloorNr(), o1.getFloorNr());});
+		
 		lvFloors.setItems(floors);
 		
 		// listview lvErrors
