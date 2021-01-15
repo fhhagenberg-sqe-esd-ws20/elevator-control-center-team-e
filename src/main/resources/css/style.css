@@ -38,10 +38,22 @@
 .button{
 	-fx-min-width: 50;
     -fx-min-height: 20;
-    -fx-alignment: center;
+    /*-fx-alignment: left;*/
 }
 
-.label{
-	-fx-min-width: 50;
+.numbering{
+	-fx-min-width: 20;
 }
 
+.title {
+	-fx-font-size: 14pt;
+	-fx-font-weight: bold;
+}
+
+.left {
+	-fx-alignment: left;
+}
+
+.right {
+	-fx-min-width: 200;
+}

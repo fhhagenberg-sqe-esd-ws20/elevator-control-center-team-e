@@ -18,27 +18,27 @@
 <?import javafx.scene.layout.VBox?>
 
 <SplitPane stylesheets="@../css/style.css" 
-dividerPositions="0.8" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+dividerPositions="0.9" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    
    <fx:define>
         <ControllerData fx:id="data" />
     </fx:define>
    
    <items>
-      <SplitPane dividerPositions="0.5" prefHeight="160.0" prefWidth="200.0">
+      <SplitPane dividerPositions="0.45" prefHeight="160.0" prefWidth="200.0">
          <items>
             <VBox prefHeight="200.0" prefWidth="100.0">
                <children>
-               	  <Label text="Elevator Status"/>
+               	  <Label styleClass="title" text="Elevator Status"/>
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Label text="Floor " />
-                        <Label fx:id="lbFloor" id="lbFloor" />
+                        <Label HBox.hgrow="ALWAYS" styleClass="right" text=" Current Floor: " />
+                        <Label HBox.hgrow="ALWAYS" styleClass="left" fx:id="lbFloor" id="lbFloor" />
                      </children>
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Label text="Direction " />
+                        <Label HBox.hgrow="ALWAYS" styleClass="right" text=" Direction: " />
                         <ImageView fx:id="imgElevDown"  fitHeight="50.0" fitWidth="50.0">
                            <image>
                               <Image url="@../icons/down_dotted.png" />
@@ -51,28 +51,31 @@ dividerPositions="0.8" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-In
                   </HBox>
                   <HBox layoutX="10.0" layoutY="42.0" prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Label text="Payload " />
+                        <Label text=" Payload: " styleClass="right" />
                         <Label fx:id="lbPayload" id="lbPayload" />
+                        <Label text=" lbs"/>
                      </children>
                   </HBox>
                   <HBox layoutX="10.0" layoutY="182.0" prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Label text="Speed " />
+                        <Label text=" Speed: "  styleClass="right"/>
                         <Label fx:id="lbSpeed" id="lbSpeed" />
+                        <Label text=" ft/s"/>
                      </children>
                   </HBox>
                   <HBox layoutX="10.0" layoutY="187.0" prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Label text="Doors " />
+                        <Label text=" Doors: " styleClass="right" />
                         <Label fx:id="lbDoors" id="lbDoors" />
                      </children>
                   </HBox>
                   <HBox layoutX="10.0" layoutY="188.0" prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Label text="Next target " />
+                        <Label text=" Next target: " styleClass="right" />
                         <Label fx:id="lbTarget" id="lbTarget" />
                      </children>
                   </HBox>
+                  <Label styleClass="title" text="Errors:"/>
                   <ListView fx:id="lvErrors" prefHeight="150.0" id="lvErrors" />
                </children>
             </VBox>
@@ -85,9 +88,9 @@ dividerPositions="0.8" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-In
 
          </items>
       </SplitPane>
-      <HBox prefHeight="105.0" prefWidth="598.0">
+      <HBox prefHeight="105.0" prefWidth="598.0" >
          <children>
-            <VBox prefHeight="200.0" prefWidth="100.0">
+            <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
                <children>
                   <RadioButton fx:id="rbManual" mnemonicParsing="false" selected="true" text="Manual">
                      <toggleGroup>
@@ -97,16 +100,17 @@ dividerPositions="0.8" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-In
                   <RadioButton fx:id="rbAuto" mnemonicParsing="false" text="Automatic" toggleGroup="$tgMode" />
                </children>
             </VBox>
-            <VBox prefHeight="200.0" prefWidth="100.0">
+            <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
                <children>
                   <Label text="${data.floorNumber}" id="floorNumber" />
                   <Label text="Floors" />
                </children>
             </VBox>
-            <VBox prefHeight="200.0" prefWidth="100.0">
+            <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
                <children>
+                  <Label text="Current Elevator:" />
                   <ComboBox fx:id="cmbElevators" prefWidth="150.0" />
-                  <Label text="Elevator" />
+                  
                </children>
             </VBox>
          </children>

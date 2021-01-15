@@ -13,9 +13,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox id="itemtemplate">
+<HBox id="itemtemplate" >
    <children>
-      <Label text="${item.floorNr}" />
+      <Label styleClass="numbering" text="${item.floorNr}" />
       
       <!-- TODO: conditional image-showing -->
       
@@ -34,6 +34,7 @@
          <image>
             <Image url="@../icons/stop_empty.png" />
          </image></ImageView>
+      <Label text="   "/> <!-- cheat a right margin to button -->
       <Button onAction="#doSetTarget" disable="${!item.elevatorServicesFloor}"
       mnemonicParsing="false" text="set target" />
    </children>
