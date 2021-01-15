@@ -54,6 +54,15 @@ public class Controller {
 		isConnected.set(true);
 	}
 	
+	private void logException(String message) {
+		// special handling for no such object
+		if(message.contains("no such object")) {
+			data.errors.add("Error communicating with RMI interface");
+		} else {
+			data.errors.add(message);
+		}
+	}
+	
 	public void SetTarget(int target) {
 		System.out.println("Set Target (" + target + ")");
 		if(!data.isManualMode.get()) return;
@@ -68,7 +77,7 @@ public class Controller {
 				elevator.setCommittedDirection(data.currentElevator.get(), 1);
 			}
 		} catch (RemoteException e) {
-			data.errors.add(e.getMessage());
+			logException(e.getMessage());
 		}
 	}
 	
@@ -85,7 +94,7 @@ public class Controller {
 			}
 			
 		} catch (RemoteException e) {
-			data.errors.add(e.getMessage());
+			logException(e.getMessage());
 		}
 	}
 	
@@ -136,7 +145,7 @@ public class Controller {
 						}
 					} catch (RemoteException e) {
 						if(isConnected.get()) {
-							data.errors.add(e.getMessage());	
+							logException(e.getMessage());	
 							isConnected.set(false);
 						}
 					}
@@ -151,7 +160,7 @@ public class Controller {
 		} catch (RemoteException e) {
 			Platform.runLater(() -> {
 				if(isConnected.get()) {
-					data.errors.add(e.getMessage());	
+					logException(e.getMessage());	
 					isConnected.set(false);
 				}
 			});
@@ -175,7 +184,7 @@ public class Controller {
 			isConnected.set(true);
 		} catch (Exception e) {
 			Platform.runLater(() -> {
-				data.errors.add("Reconnect to RMI failed! " + e.getMessage());
+				logException("Reconnect to RMI failed! " + e.getMessage());
 			});
 		}
 	}
