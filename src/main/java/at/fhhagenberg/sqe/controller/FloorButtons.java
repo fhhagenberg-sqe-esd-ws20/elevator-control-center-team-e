@@ -17,8 +17,7 @@ public class FloorButtons {
 	BooleanProperty floorButtonUp;
 	BooleanProperty elevatorButton;
 	BooleanProperty elevatorServicesFloor;
-	
-	StringProperty downPic;
+	BooleanProperty isCurrentFloor;
 	
 	boolean setTarget = false;
 	
@@ -30,15 +29,13 @@ public class FloorButtons {
 		floorButtonUp = new SimpleBooleanProperty();
 		elevatorButton = new SimpleBooleanProperty();
 		elevatorServicesFloor = new SimpleBooleanProperty();
-		
-		downPic = new SimpleStringProperty();
+		isCurrentFloor = new SimpleBooleanProperty();
 		
 		floorNr.set(nr);
 		floorButtonDown.set(down);
 		floorButtonUp.set(up);
 		elevatorButton.set(btn);
 		elevatorServicesFloor.set(service);
-		downPic.set("@../icons/down_empty.png");
 		
 		floorButtonDown.addListener((o, oldVal, newVal) -> {
 			if(root.lvFloors != null) root.lvFloors.refresh(); // force proper update of floors
@@ -50,6 +47,9 @@ public class FloorButtons {
 			if(root.lvFloors != null) root.lvFloors.refresh(); // force proper update of floors
 		});
 		elevatorServicesFloor.addListener((o, oldVal, newVal) -> {
+			if(root.lvFloors != null) root.lvFloors.refresh(); // force proper update of floors
+		});
+		isCurrentFloor.addListener((o, oldVal, newVal) -> {
 			if(root.lvFloors != null) root.lvFloors.refresh(); // force proper update of floors
 		});
 	}
@@ -69,8 +69,8 @@ public class FloorButtons {
 	public boolean getElevatorServicesFloor() {
 		return elevatorServicesFloor.get();
 	}
-	public String getDownPic() {
-		return downPic.get();
+	public boolean getIsCurrentFloor() {
+		return isCurrentFloor.get();
 	}
 
 	@FXML

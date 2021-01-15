@@ -106,7 +106,7 @@ dividerPositions="0.9" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-In
                </children>
             </VBox>
 
-            <ListView fx:id="lvFloors" minWidth="320" maxWidth="330">
+            <ListView fx:id="lvFloors" minWidth="330" maxWidth="340">
             	<cellFactory>
             		<FXMLListCellFactory fxmlSource="@floorTemplate.fxml" />
             	</cellFactory>

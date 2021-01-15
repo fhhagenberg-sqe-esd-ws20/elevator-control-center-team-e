@@ -117,6 +117,9 @@ public class Controller {
 					tmp.floorButtonUp.set(building.getFloorButtonUp(i));
 					tmp.elevatorServicesFloor.set(elevator.getServicesFloors(data.currentElevator.get(), i));
 					
+					tmp.isCurrentFloor.set(i == elevator.getElevatorFloor(data.currentElevator.get()));
+
+					
 					if(tmp.setTarget) {
 						if(!data.isManualMode.get()) continue;
 						

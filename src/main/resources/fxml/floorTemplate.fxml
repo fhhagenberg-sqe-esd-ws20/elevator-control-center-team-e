@@ -13,10 +13,19 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.shape.Circle?>
 
-<HBox id="itemtemplate" alignment="CENTER">
+<HBox id="itemtemplate" alignment="CENTER" styleClass="${item.backgroundClass}">
    <children>
-      <Label styleClass="numbering" text="${item.floorNr}" />
+      
+      <StackPane>
+         <children>
+            <Circle visible="${item.isCurrentFloor}" 
+            fill="DODGERBLUE" radius="20.0" strokeWidth="0.0" />
+            <Label styleClass="numbering" alignment="CENTER"
+             text="${item.floorNr}" />
+         </children>
+      </StackPane>
       
       <StackPane prefHeight="50.0" prefWidth="50.0">
          <children>

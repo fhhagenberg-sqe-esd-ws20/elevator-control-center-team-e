@@ -45,7 +45,7 @@
 	-fx-min-width: 20;
 }
 
-.title {
+.title, .numbering {
 	-fx-font-size: 14pt;
 	-fx-font-weight: bold;
 }
@@ -55,4 +55,8 @@
 }
 .desc_slim {
 	-fx-min-width: 175;
+}
+
+.floorWithElev {
+	-fx-background-color: skyblue;
 }
