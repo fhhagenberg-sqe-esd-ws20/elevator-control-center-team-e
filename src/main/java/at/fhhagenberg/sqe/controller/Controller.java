@@ -56,7 +56,7 @@ public class Controller {
 	
 	private void logException(String message) {
 		// special handling for no such object
-		if(message.contains("no such object")) {
+		if(message != null && message.contains("no such object")) {
 			data.errors.add("Error communicating with RMI interface");
 		} else {
 			data.errors.add(message);
@@ -64,7 +64,6 @@ public class Controller {
 	}
 	
 	public void SetTarget(int target) {
-		System.out.println("Set Target (" + target + ")");
 		if(!data.isManualMode.get()) return;
 		
 		try {
