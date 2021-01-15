@@ -60,6 +60,13 @@ public class Controller {
 		
 		try {
 			elevator.setTarget(data.currentElevator.get(), target);
+			// up=0, down=1 and uncommitted=2
+			var current = data.getElevatorFloor();
+			if(current < target) {
+				elevator.setCommittedDirection(data.currentElevator.get(), 0);
+			} else if (current > target) {
+				elevator.setCommittedDirection(data.currentElevator.get(), 1);
+			}
 		} catch (RemoteException e) {
 			data.errors.add(e.getMessage());
 		}
@@ -104,7 +111,7 @@ public class Controller {
 					if(tmp.setTarget) {
 						if(!data.isManualMode.get()) continue;
 						
-						elevator.setTarget(data.currentElevator.get(), tmp.floorNr.get());
+						SetTarget(tmp.floorNr.get());
 						tmp.setTarget = false;
 					}
 				}
@@ -120,6 +127,13 @@ public class Controller {
 						data.elevatorTarget.set(elevator.getTarget(data.currentElevator.get()));
 						data.elevatorFloor.set(elevator.getElevatorFloor(data.currentElevator.get()));
 						data.elevatorWeight.set(elevator.getElevatorWeight(data.currentElevator.get()));
+					
+						if(data.committedDirection.get() != 2 && data.isManualMode.get()) { // not uncommitted, and manual mode
+							if(data.elevatorFloor.get() == data.elevatorTarget.get()) {
+								// set to uncommitted if target is reached
+								elevator.setCommittedDirection(data.currentElevator.get(), 2);
+							}
+						}
 					} catch (RemoteException e) {
 						if(isConnected.get()) {
 							data.errors.add(e.getMessage());	
@@ -240,7 +254,7 @@ public class Controller {
 	 */
 	
 	@FXML
-	ListView<Object> lvFloors;
+	ListView<FloorButtons> lvFloors;
 	@FXML
 	ListView<String> lvErrors;
 	@FXML
@@ -312,10 +326,10 @@ public class Controller {
 		data.committedDirection.addListener((o, oldVal, newVal) -> {
 			Platform.runLater(() -> {
 				// up=0, down=1 and uncommitted=2
-				if(newVal.intValue() == 1) {
+				if(newVal.intValue() == 0) {
 					imgElevDown.setVisible(false);
 					imgElevUp.setVisible(true);
-				} else if(newVal.intValue() == 0) {
+				} else if(newVal.intValue() == 1) {
 					imgElevDown.setVisible(true);
 					imgElevUp.setVisible(false);
 				}
