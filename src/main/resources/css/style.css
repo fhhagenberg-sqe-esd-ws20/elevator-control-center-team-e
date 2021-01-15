@@ -50,10 +50,9 @@
 	-fx-font-weight: bold;
 }
 
-.left {
-	-fx-alignment: left;
-}
-
-.right {
+.desc {
 	-fx-min-width: 200;
+}
+.desc_slim {
+	-fx-min-width: 175;
 }

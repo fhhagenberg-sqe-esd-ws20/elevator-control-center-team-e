@@ -16,6 +16,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.StackPane?>
 
 <SplitPane stylesheets="@../css/style.css" 
 dividerPositions="0.9" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
@@ -29,49 +30,74 @@ dividerPositions="0.9" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-In
          <items>
             <VBox prefHeight="200.0" prefWidth="100.0">
                <children>
-               	  <Label styleClass="title" text="Elevator Status"/>
+               	  <Label styleClass="title" text="Elevator Status:"/>
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Label HBox.hgrow="ALWAYS" styleClass="right" text=" Current Floor: " />
-                        <Label HBox.hgrow="ALWAYS" styleClass="left" fx:id="lbFloor" id="lbFloor" />
+                        <Label styleClass="desc" text=" Current Floor: " />
+                        <Label fx:id="lbFloor" id="lbFloor" />
                      </children>
                   </HBox>
+                  
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Label HBox.hgrow="ALWAYS" styleClass="right" text=" Direction: " />
-                        <ImageView fx:id="imgElevDown"  fitHeight="50.0" fitWidth="50.0">
-                           <image>
-                              <Image url="@../icons/down_dotted.png" />
-                           </image></ImageView>
-                        <ImageView fx:id="imgElevUp"  fitHeight="50.0" fitWidth="50.0">
-                           <image>
-                              <Image url="@../icons/up_dotted.png" />
-                           </image></ImageView>
+                        <Label styleClass="desc_slim" text=" Direction: " />
+                       <StackPane prefHeight="50.0" prefWidth="50.0">
+				         <children>
+				 			<ImageView 
+				      		fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+						         <image>
+		                              <Image url="@../icons/down_dotted_grey.png" />
+		                           </image>
+					         </ImageView>
+				             <ImageView fx:id="imgElevDown" 
+				      		fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+						         <image>
+		                              <Image url="@../icons/down_dotted.png" />
+		                           </image>
+					         </ImageView>
+				         </children>
+				      </StackPane>
+				      <StackPane prefHeight="50.0" prefWidth="50.0">
+				         <children>
+				 			<ImageView 
+				      		fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+						         <image>
+		                              <Image url="@../icons/up_dotted_grey.png" />
+		                           </image>
+					         </ImageView>
+				             <ImageView fx:id="imgElevUp"  fitHeight="50.0" fitWidth="50.0">
+	                           <image>
+	                              <Image url="@../icons/up_dotted.png" />
+	                           </image>
+                           </ImageView>
+				         </children>
+				      </StackPane>
                      </children>
                   </HBox>
+                  
                   <HBox layoutX="10.0" layoutY="42.0" prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Label text=" Payload: " styleClass="right" />
+                        <Label text=" Payload: " styleClass="desc" />
                         <Label fx:id="lbPayload" id="lbPayload" />
                         <Label text=" lbs"/>
                      </children>
                   </HBox>
                   <HBox layoutX="10.0" layoutY="182.0" prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Label text=" Speed: "  styleClass="right"/>
+                        <Label text=" Speed: "  styleClass="desc"/>
                         <Label fx:id="lbSpeed" id="lbSpeed" />
                         <Label text=" ft/s"/>
                      </children>
                   </HBox>
                   <HBox layoutX="10.0" layoutY="187.0" prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Label text=" Doors: " styleClass="right" />
+                        <Label text=" Doors: " styleClass="desc" />
                         <Label fx:id="lbDoors" id="lbDoors" />
                      </children>
                   </HBox>
                   <HBox layoutX="10.0" layoutY="188.0" prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Label text=" Next target: " styleClass="right" />
+                        <Label text=" Next target: " styleClass="desc" />
                         <Label fx:id="lbTarget" id="lbTarget" />
                      </children>
                   </HBox>
@@ -80,7 +106,7 @@ dividerPositions="0.9" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-In
                </children>
             </VBox>
 
-            <ListView fx:id="lvFloors">
+            <ListView fx:id="lvFloors" minWidth="320" maxWidth="330">
             	<cellFactory>
             		<FXMLListCellFactory fxmlSource="@floorTemplate.fxml" />
             	</cellFactory>
