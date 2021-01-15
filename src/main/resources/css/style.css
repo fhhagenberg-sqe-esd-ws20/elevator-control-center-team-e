@@ -1,0 +1,47 @@
+.root{
+    -fx-font-size: 12pt;
+    -fx-background: whitesmoke;
+    -fx-padding: 5pt;
+}
+
+.container-style-parent{
+	-fx-padding: 5pt;
+	-fx-spacing: 5pt;
+}
+
+.container-style-input{
+	-fx-padding: 5pt;
+	-fx-spacing: 5pt;
+	-fx-alignment: center;
+}
+
+.container-style-output{
+	-fx-padding: 5pt;
+	-fx-vgap: 5pt;
+	-fx-hgap: 5pt;
+	-fx-alignment: center;
+}
+
+.text-field{
+    -fx-min-width: 50;
+    -fx-max-width: 100;
+    -fx-min-height: 20;
+    -fx-alignment: center;
+    
+}
+
+.container-style-output .text-field{
+    -fx-min-width: 100;
+    -fx-max-width: 200;
+}
+
+.button{
+	-fx-min-width: 50;
+    -fx-min-height: 20;
+    -fx-alignment: center;
+}
+
+.label{
+	-fx-min-width: 50;
+}
+
