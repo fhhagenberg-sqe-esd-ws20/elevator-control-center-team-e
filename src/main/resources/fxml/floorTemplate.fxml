@@ -29,10 +29,10 @@
       
       <StackPane prefHeight="50.0" prefWidth="50.0">
          <children>
- 			<ImageView 
+ 			<ImageView visible="${item.elevatorServicesFloor}" 
       		fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
 		         <image>
-		            <Image url="@../icons/down_empty.png" />
+		            <Image url="@../icons/down_grey.png" />
 		         </image>
 	         </ImageView>
              <ImageView  visible="${item.floorButtonDown}" 
@@ -41,20 +41,14 @@
 		            <Image url="@../icons/down_green.png" />
 		         </image>
 	         </ImageView>
-	         <ImageView visible="${!item.elevatorServicesFloor}" 
-      		fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
-		         <image>
-		            <Image url="@../icons/down_grey.png" />
-		         </image>
-	         </ImageView>
          </children>
       </StackPane>
       <StackPane prefHeight="50.0" prefWidth="50.0">
          <children>
- 			<ImageView 
+ 			<ImageView visible="${item.elevatorServicesFloor}" 
       		fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
 		         <image>
-		            <Image url="@../icons/up_empty.png" />
+		            <Image url="@../icons/up_grey.png" />
 		         </image>
 	         </ImageView>
              <ImageView  visible="${item.floorButtonUp}" 
@@ -63,32 +57,20 @@
 		            <Image url="@../icons/up_green.png" />
 		         </image>
 	         </ImageView>
-	         <ImageView visible="${!item.elevatorServicesFloor}" 
-      		fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
-		         <image>
-		            <Image url="@../icons/up_grey.png" />
-		         </image>
-	         </ImageView>
          </children>
       </StackPane>
 	  <StackPane prefHeight="50.0" prefWidth="50.0">
          <children>
- 			<ImageView 
+ 			<ImageView visible="${item.elevatorServicesFloor}" 
       		fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
 		         <image>
-		            <Image url="@../icons/stop_empty.png" />
+		            <Image url="@../icons/stop_grey.png" />
 		         </image>
 	         </ImageView>
              <ImageView  visible="${item.elevatorButton}" 
       		fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
 		         <image>
 		            <Image url="@../icons/stop_red.png" />
-		         </image>
-	         </ImageView>
-	         <ImageView visible="${!item.elevatorServicesFloor}" 
-      		fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
-		         <image>
-		            <Image url="@../icons/stop_grey.png" />
 		         </image>
 	         </ImageView>
          </children>
