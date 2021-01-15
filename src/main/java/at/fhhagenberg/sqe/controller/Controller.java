@@ -185,10 +185,6 @@ public class Controller {
 			building.reconnectToRMI();
 			elevator.reconnectToRMI();
 			isConnected.set(true);
-			Platform.runLater(() -> {
-				data.errors.clear();
-				data.errors.add("Reconnected successfully"); // todo leave this?
-			});
 		} catch (Exception e) {
 			Platform.runLater(() -> {
 				logException("Reconnect to RMI failed! " + e.getMessage());
