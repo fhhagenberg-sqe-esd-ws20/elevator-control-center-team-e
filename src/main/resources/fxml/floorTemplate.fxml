@@ -12,28 +12,71 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.shape.Circle?>
 
-<HBox id="itemtemplate">
+<HBox id="itemtemplate" alignment="CENTER" styleClass="${item.backgroundClass}">
    <children>
-      <Label text="${item.floorNr}" />
       
-      <!-- TODO: conditional image-showing -->
+      <StackPane>
+         <children>
+            <Circle visible="${item.isCurrentFloor}" 
+            fill="DODGERBLUE" radius="20.0" strokeWidth="0.0" />
+            <Label styleClass="numbering" alignment="CENTER"
+             text="${item.floorNr}" />
+         </children>
+      </StackPane>
       
-      <ImageView  visible="${item.floorButtonDown}" 
-      fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../icons/down_empty.png" />
-         </image></ImageView>
-      <ImageView  visible="${item.floorButtonUp}"
-      fitHeight="50.0" fitWidth="50.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../icons/up_empty.png" />
-         </image></ImageView>
-      <ImageView  visible="${item.elevatorButton}"
-      fitHeight="50.0" fitWidth="50.0" layoutX="60.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../icons/stop_empty.png" />
-         </image></ImageView>
+      <StackPane prefHeight="50.0" prefWidth="50.0">
+         <children>
+ 			<ImageView visible="${item.elevatorServicesFloor}" 
+      		fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+		         <image>
+		            <Image url="@../icons/down_grey.png" />
+		         </image>
+	         </ImageView>
+             <ImageView  visible="${item.floorButtonDown}" 
+      		fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+		         <image>
+		            <Image url="@../icons/down_green.png" />
+		         </image>
+	         </ImageView>
+         </children>
+      </StackPane>
+      <StackPane prefHeight="50.0" prefWidth="50.0">
+         <children>
+ 			<ImageView visible="${item.elevatorServicesFloor}" 
+      		fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+		         <image>
+		            <Image url="@../icons/up_grey.png" />
+		         </image>
+	         </ImageView>
+             <ImageView  visible="${item.floorButtonUp}" 
+      		fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+		         <image>
+		            <Image url="@../icons/up_green.png" />
+		         </image>
+	         </ImageView>
+         </children>
+      </StackPane>
+	  <StackPane prefHeight="50.0" prefWidth="50.0">
+         <children>
+ 			<ImageView visible="${item.elevatorServicesFloor}" 
+      		fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+		         <image>
+		            <Image url="@../icons/stop_grey.png" />
+		         </image>
+	         </ImageView>
+             <ImageView  visible="${item.elevatorButton}" 
+      		fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+		         <image>
+		            <Image url="@../icons/stop_red.png" />
+		         </image>
+	         </ImageView>
+         </children>
+      </StackPane>
+
+      <Label text="   "/> <!-- cheat a right margin to button -->
       <Button onAction="#doSetTarget" disable="${!item.elevatorServicesFloor}"
       mnemonicParsing="false" text="set target" />
    </children>

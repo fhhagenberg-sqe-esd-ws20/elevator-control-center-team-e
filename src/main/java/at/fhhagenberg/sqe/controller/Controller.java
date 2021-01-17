@@ -4,6 +4,7 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.Comparator;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -53,14 +54,29 @@ public class Controller {
 		isConnected.set(true);
 	}
 	
+	private void logException(String message) {
+		// special handling for no such object
+		if(message != null && message.contains("no such object")) {
+			data.errors.add("Error communicating with RMI interface");
+		} else {
+			data.errors.add(message);
+		}
+	}
+	
 	public void SetTarget(int target) {
-		System.out.println("Set Target (" + target + ")");
 		if(!data.isManualMode.get()) return;
 		
 		try {
 			elevator.setTarget(data.currentElevator.get(), target);
+			// up=0, down=1 and uncommitted=2
+			var current = data.getElevatorFloor();
+			if(current < target) {
+				elevator.setCommittedDirection(data.currentElevator.get(), 0);
+			} else if (current > target) {
+				elevator.setCommittedDirection(data.currentElevator.get(), 1);
+			}
 		} catch (RemoteException e) {
-			data.errors.add(e.getMessage());
+			logException(e.getMessage());
 		}
 	}
 	
@@ -77,7 +93,7 @@ public class Controller {
 			}
 			
 		} catch (RemoteException e) {
-			data.errors.add(e.getMessage());
+			logException(e.getMessage());
 		}
 	}
 	
@@ -100,10 +116,13 @@ public class Controller {
 					tmp.floorButtonUp.set(building.getFloorButtonUp(i));
 					tmp.elevatorServicesFloor.set(elevator.getServicesFloors(data.currentElevator.get(), i));
 					
+					tmp.isCurrentFloor.set(i == elevator.getElevatorFloor(data.currentElevator.get()));
+
+					
 					if(tmp.setTarget) {
 						if(!data.isManualMode.get()) continue;
 						
-						elevator.setTarget(data.currentElevator.get(), tmp.floorNr.get());
+						SetTarget(tmp.floorNr.get());
 						tmp.setTarget = false;
 					}
 				}
@@ -119,9 +138,16 @@ public class Controller {
 						data.elevatorTarget.set(elevator.getTarget(data.currentElevator.get()));
 						data.elevatorFloor.set(elevator.getElevatorFloor(data.currentElevator.get()));
 						data.elevatorWeight.set(elevator.getElevatorWeight(data.currentElevator.get()));
+					
+						if(data.committedDirection.get() != 2 && data.isManualMode.get()) { // not uncommitted, and manual mode
+							if(data.elevatorFloor.get() == data.elevatorTarget.get()) {
+								// set to uncommitted if target is reached
+								elevator.setCommittedDirection(data.currentElevator.get(), 2);
+							}
+						}
 					} catch (RemoteException e) {
 						if(isConnected.get()) {
-							data.errors.add(e.getMessage());	
+							logException(e.getMessage());	
 							isConnected.set(false);
 						}
 					}
@@ -136,7 +162,7 @@ public class Controller {
 		} catch (RemoteException e) {
 			Platform.runLater(() -> {
 				if(isConnected.get()) {
-					data.errors.add(e.getMessage());	
+					logException(e.getMessage());	
 					isConnected.set(false);
 				}
 			});
@@ -160,7 +186,7 @@ public class Controller {
 			isConnected.set(true);
 		} catch (Exception e) {
 			Platform.runLater(() -> {
-				data.errors.add("Reconnect to RMI failed! " + e.getMessage());
+				logException("Reconnect to RMI failed! " + e.getMessage());
 			});
 		}
 	}
@@ -239,7 +265,7 @@ public class Controller {
 	 */
 	
 	@FXML
-	ListView<Object> lvFloors;
+	ListView<FloorButtons> lvFloors;
 	@FXML
 	ListView<String> lvErrors;
 	@FXML
@@ -263,11 +289,13 @@ public class Controller {
 	ImageView imgElevDown;
 	@FXML
 	ImageView imgElevUp;
-
 	
 	public void fillFields() {
 		// listview lvFloors
-		ObservableList<Object> floors = FXCollections.observableArrayList(data.buttons.values());
+		ObservableList<FloorButtons> floors = FXCollections.observableArrayList(data.buttons.values());
+		// reverse order
+		floors.sort((o1, o2) -> {return Integer.compare(o2.getFloorNr(), o1.getFloorNr());});
+		
 		lvFloors.setItems(floors);
 		
 		// listview lvErrors
@@ -309,10 +337,10 @@ public class Controller {
 		data.committedDirection.addListener((o, oldVal, newVal) -> {
 			Platform.runLater(() -> {
 				// up=0, down=1 and uncommitted=2
-				if(newVal.intValue() == 1) {
+				if(newVal.intValue() == 0) {
 					imgElevDown.setVisible(false);
 					imgElevUp.setVisible(true);
-				} else if(newVal.intValue() == 0) {
+				} else if(newVal.intValue() == 1) {
 					imgElevDown.setVisible(true);
 					imgElevUp.setVisible(false);
 				}

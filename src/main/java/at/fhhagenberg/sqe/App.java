@@ -16,6 +16,8 @@ import at.fhhagenberg.sqe.model.ElevatorWrapper;
 import at.fhhagenberg.sqe.model.IBuildingWrapper;
 import at.fhhagenberg.sqe.model.IElevatorWrapper;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -23,6 +25,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import sqelevator.IElevator;
 
 /**
@@ -35,7 +38,6 @@ public class App extends Application {
 	private final String url = "rmi://localhost/ElevatorSim";
 	
 	public App() {
-		//IElevator controller = (IElevator) Naming.lookup("rmi://localhost/ElevatorSim");
 		IElevator used_elevator = new DummyElevator();   // TODO use Simulator
 		try {
 			used_elevator = (IElevator) Naming.lookup(this.url);
@@ -85,6 +87,14 @@ public class App extends Application {
         stage.setScene(scene);
         stage.setTitle("ECC Team E");
         stage.show();
+        
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent t) {
+                Platform.exit();
+                System.exit(0);
+            }
+        });
         
         controller.initStaticBuildingInfo();
         controller.addUIListeners();
