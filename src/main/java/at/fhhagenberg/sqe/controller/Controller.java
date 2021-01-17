@@ -1,10 +1,6 @@
 package at.fhhagenberg.sqe.controller;
 
-import java.net.MalformedURLException;
-import java.rmi.Naming;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.util.Comparator;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -15,8 +11,6 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
-import javafx.concurrent.ScheduledService;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -24,8 +18,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
-import javafx.util.Duration;
-import sqelevator.IElevator;
 import java.util.concurrent.atomic.*;
 
 public class Controller {
@@ -36,6 +28,7 @@ public class Controller {
 	private static int MAX_RETRIES = 4;
 	private AtomicBoolean isConnected;
 	boolean remoteEx = false;
+	private static String maxRetryText = "Reached maximum retries while updating elevator.";
 	
 	@FXML
 	public ControllerData data;
@@ -57,25 +50,15 @@ public class Controller {
 	
 	
 	private void logException(String message) {
-		// special handling for no such object
-		//if(message != null && message.contains("no such object")) {
-		//	data.errors.add("Error communicating with RMI interface");
-		//} else {
 		Platform.runLater(() -> {
 			data.errors.add(message);
 		});
-		//}
 	}
 	
 	private void clearLogs() {
-		// special handling for no such object
-		//if(message != null && message.contains("no such object")) {
-		//	data.errors.add("Error communicating with RMI interface");
-		//} else {
 		Platform.runLater(() -> {
 			data.errors.clear();
 		});
-		//}
 	}
 	
 	public void SetTarget(int target) {
@@ -120,7 +103,7 @@ public class Controller {
 	}
 	
 	private synchronized void scheduleFetch() {
-		if(isConnected.get() == true) {
+		if(isConnected.get()) {
 			try {
 				long tick;
 				int cnt = 0;
@@ -157,30 +140,29 @@ public class Controller {
 							data.elevatorFloor.set(elevator.getElevatorFloor(data.currentElevator.get()));
 							data.elevatorWeight.set(elevator.getElevatorWeight(data.currentElevator.get()));
 							
-							if(data.committedDirection.get() != 2 && data.isManualMode.get()) { // not uncommitted, and manual mode
-								if(data.elevatorFloor.get() == data.elevatorTarget.get()) {
+							if((data.committedDirection.get() != 2 && data.isManualMode.get()) && // not uncommitted, and manual mode
+								(data.elevatorFloor.get() == data.elevatorTarget.get())) {
 									// set to uncommitted if target is reached
 									elevator.setCommittedDirection(data.currentElevator.get(), 2);
-								}
 							}
 						} catch (RemoteException e) {remoteEx = true;}
 						
 					});
-					if(remoteEx == true) {
+					if(remoteEx) {
 						isConnected.set(false);
 						remoteEx = false;
 						tryReconnectingToRMI();
 						return;
 					}
 					if(cnt++ == MAX_RETRIES) {
-						if(data.errors.isEmpty() || !data.errors.get(data.errors.size()-1).contains("Reached maximum retries while updating elevator.")) {
+						if(data.errors.isEmpty() || !data.errors.get(data.errors.size()-1).contains(maxRetryText)) {
 							clearLogs();
-							logException("Reached maximum retries while updating elevator.");
+							logException(maxRetryText);
 						}
 						return;
 					}
 				} while (tick != elevator.getClockTick());
-				if(!data.errors.isEmpty() && data.errors.get(data.errors.size()-1).contains("Reached maximum retries while updating elevator.")) {
+				if(!data.errors.isEmpty() && data.errors.get(data.errors.size()-1).contains(maxRetryText)) {
 					clearLogs();
 					logException("Synchronisation successfully");
 				}
@@ -285,7 +267,7 @@ public class Controller {
 		return data.elevatorTarget.get();
 	}
 	public String getLastError() {
-		if(data.errors.size() == 0) {return "";}
+		if(data.errors.isEmpty()) {return "";}
 		return data.errors.get(data.errors.size() - 1);
 	}
 

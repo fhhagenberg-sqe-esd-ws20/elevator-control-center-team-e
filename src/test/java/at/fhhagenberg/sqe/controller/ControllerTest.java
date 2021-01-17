@@ -177,6 +177,7 @@ class ControllerTest {
 		thenReturn((long) 4).thenReturn((long) 5).thenReturn((long) 6).thenReturn((long) 7).thenReturn((long) 8).thenReturn((long) 9);
 		controller.start();
 		Thread.sleep(650, 0);
+		// TODO
 		//assertEquals("Reached maximum retries while updating elevator.", controller.getLastError());
 		
 	}
