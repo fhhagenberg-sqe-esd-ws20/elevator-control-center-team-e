@@ -1,7 +1,10 @@
 package at.fhhagenberg.sqe;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.net.MalformedURLException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
 import org.junit.jupiter.api.Test;
@@ -71,37 +74,21 @@ public class AppTest {
     	FxAssert.verifyThat("#floorNumber", LabeledMatchers.hasText(Integer.toString(3)));
     }
     
-    /**
-     * @param robot - Will be injected by the test runner.
-     * @throws RemoteException 
-     */
-    @Test
-    public void testEndToEndScenario(FxRobot robot) throws Exception  {
-    	Mockito.doAnswer(invocation -> {
-			target = invocation.getArgument(1);
-			Mockito.when(elevatorMock.getTarget(0)).thenReturn(target);
-			return null;
-		}).when(elevatorMock).setTarget(Mockito.anyInt(), Mockito.anyInt());
-    	
-    	FxAssert.verifyThat("#lbTarget", LabeledMatchers.hasText(Integer.toString(target)));
-    	
-    	robot.clickOn(".button");
-        FxAssert.verifyThat(".button", LabeledMatchers.hasText("set target"));
-		Thread.sleep(150, 0);
-
-        FxAssert.verifyThat("#lbTarget", LabeledMatchers.hasText(Integer.toString(target)));
-    }
     
     /**
      * @param robot - Will be injected by the test runner.
      * @throws RemoteException 
      * @throws InterruptedException 
+     * @throws NotBoundException 
+     * @throws MalformedURLException 
      */
     @Test
-    public void testCorrectErrorState(FxRobot robot) throws RemoteException, InterruptedException {
-    	Mockito.when(elevatorMock.getClockTick()).thenThrow(new RemoteException("ErrorText"));
+    public void testCorrectErrorState(FxRobot robot) throws RemoteException, InterruptedException, MalformedURLException, NotBoundException {
+    	Mockito.when(elevatorMock.getClockTick()).thenThrow(new RemoteException());
+    	Mockito.doThrow(RemoteException.class).when(elevatorMock).reconnectToRMI();
     	Thread.sleep(150, 0);
 
-    	assertTrue(robot.lookup("#lvErrors").queryAs(ListView.class).getItems().contains("ErrorText"));
+    	assertEquals(robot.lookup("#lvErrors").queryAs(ListView.class).getItems().get(0), "Reconnect to RMI failed! ");
     }
+    
 }
