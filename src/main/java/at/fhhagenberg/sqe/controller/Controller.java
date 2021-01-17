@@ -102,7 +102,7 @@ public class Controller {
 		es.scheduleAtFixedRate(this::scheduleFetch, FETCH_INTERVAL, FETCH_INTERVAL, TimeUnit.MILLISECONDS);
 	}
 	
-	private synchronized void scheduleFetch() {
+	public void update() {
 		if(isConnected.get()) {
 			try {
 				long tick;
@@ -167,16 +167,18 @@ public class Controller {
 					logException("Synchronisation successfully");
 				}
 			} catch (RemoteException e) {
-				Platform.runLater(() -> {
-					if(isConnected.get()) {	
-						isConnected.set(false);
-					}
-				});
+				if(isConnected.get()) {	
+					isConnected.set(false);
+				}
 				tryReconnectingToRMI();
 			}
 		}else {
 			tryReconnectingToRMI();
 		}
+	}
+	
+	private synchronized void scheduleFetch() {
+		update();
 	}
 	
 	public void setElevator(int elevator) {

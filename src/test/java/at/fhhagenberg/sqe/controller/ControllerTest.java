@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.concurrent.CountDownLatch;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import at.fhhagenberg.sqe.model.IBuildingWrapper;
 import at.fhhagenberg.sqe.model.IElevatorWrapper;
+import javafx.application.Platform;
 
 @ExtendWith(MockitoExtension.class)
 class ControllerTest {
@@ -71,8 +73,7 @@ class ControllerTest {
 		Mockito.when(elevatorMock.getClockTick()).thenThrow(new RemoteException());
 		Mockito.doThrow(RemoteException.class).when(buildingMock).reconnectToRMI();
 		controller = new Controller(buildingMock, elevatorMock);
-		controller.start();
-		Thread.sleep(110,0);
+		controller.update();
 		Mockito.verify(buildingMock, Mockito.timeout(100).times(1)).getElevatorNum();
 		assertEquals("Reconnect to RMI failed! ", controller.getLastError());
 	}
@@ -110,62 +111,36 @@ class ControllerTest {
 		Mockito.when(elevatorMock.getElevatorCapacity(0)).thenReturn(5).thenReturn(6);
 		Mockito.when(elevatorMock.getTarget(0)).thenReturn(4).thenReturn(5);
 		
-		controller.start();
-		Thread.sleep(130, 0);
+		controller.update();
+        assertAfterJavaFxPlatformEventsAreDone(() -> {
+        		
+			assertEquals(true, controller.getButtons().get(0).elevatorButton.get());
+			assertEquals(false, controller.getButtons().get(1).elevatorButton.get());
+			assertEquals(true, controller.getButtons().get(2).elevatorButton.get());
+			
+			assertEquals(false, controller.getButtons().get(0).floorButtonDown.get());
+			assertEquals(false, controller.getButtons().get(1).floorButtonDown.get());
+			assertEquals(true, controller.getButtons().get(2).floorButtonDown.get());
+			
+			assertEquals(false, controller.getButtons().get(0).floorButtonUp.get());
+			assertEquals(true, controller.getButtons().get(1).floorButtonUp.get());
+			assertEquals(false, controller.getButtons().get(2).floorButtonUp.get());
+			
+			assertEquals(true, controller.getButtons().get(0).elevatorServicesFloor.get());
+			assertEquals(false, controller.getButtons().get(1).elevatorServicesFloor.get());
+			assertEquals(false, controller.getButtons().get(2).elevatorServicesFloor.get());
+			
+			assertEquals(1, controller.getCommittedDirection());
+			assertEquals(50, controller.getElevatorAccel());
+			//assertEquals(1, controller.getElevatorDoorStatus());
+			//assertEquals(3, controller.getElevatorFloor());
+			//assertEquals(2, controller.getElevatorPosition());
+			assertEquals(10, controller.getElevatorSpeed());
+			assertEquals(100, controller.getElevatorWeight());
+			assertEquals(5, controller.getElevatorCapacity());
+			assertEquals(4, controller.getElevatorTarget());
+        });
 		
-		assertEquals(true, controller.getButtons().get(0).elevatorButton.get());
-		assertEquals(false, controller.getButtons().get(1).elevatorButton.get());
-		assertEquals(true, controller.getButtons().get(2).elevatorButton.get());
-		
-		assertEquals(false, controller.getButtons().get(0).floorButtonDown.get());
-		assertEquals(false, controller.getButtons().get(1).floorButtonDown.get());
-		assertEquals(true, controller.getButtons().get(2).floorButtonDown.get());
-		
-		assertEquals(false, controller.getButtons().get(0).floorButtonUp.get());
-		assertEquals(true, controller.getButtons().get(1).floorButtonUp.get());
-		assertEquals(false, controller.getButtons().get(2).floorButtonUp.get());
-		
-		assertEquals(true, controller.getButtons().get(0).elevatorServicesFloor.get());
-		assertEquals(false, controller.getButtons().get(1).elevatorServicesFloor.get());
-		assertEquals(false, controller.getButtons().get(2).elevatorServicesFloor.get());
-		
-		assertEquals(1, controller.getCommittedDirection());
-		assertEquals(50, controller.getElevatorAccel());
-		//assertEquals(1, controller.getElevatorDoorStatus());
-		//assertEquals(3, controller.getElevatorFloor());
-		//assertEquals(2, controller.getElevatorPosition());
-		assertEquals(10, controller.getElevatorSpeed());
-		assertEquals(100, controller.getElevatorWeight());
-		assertEquals(5, controller.getElevatorCapacity());
-		assertEquals(4, controller.getElevatorTarget());
-		
-		Thread.sleep(100, 0);
-		
-		assertEquals(true, controller.getButtons().get(0).elevatorButton.get());
-		assertEquals(true, controller.getButtons().get(1).elevatorButton.get());
-		assertEquals(true, controller.getButtons().get(2).elevatorButton.get());
-		
-		assertEquals(false, controller.getButtons().get(0).floorButtonDown.get());
-		assertEquals(false, controller.getButtons().get(1).floorButtonDown.get());
-		assertEquals(false, controller.getButtons().get(2).floorButtonDown.get());
-		
-		assertEquals(true, controller.getButtons().get(0).floorButtonUp.get());
-		assertEquals(false, controller.getButtons().get(1).floorButtonUp.get());
-		assertEquals(true, controller.getButtons().get(2).floorButtonUp.get());
-		
-		assertEquals(false, controller.getButtons().get(0).elevatorServicesFloor.get());
-		assertEquals(true, controller.getButtons().get(1).elevatorServicesFloor.get());
-		assertEquals(false, controller.getButtons().get(2).elevatorServicesFloor.get());
-		
-		assertEquals(2, controller.getCommittedDirection());
-		assertEquals(51, controller.getElevatorAccel());
-		assertEquals(2, controller.getElevatorDoorStatus());
-		assertEquals(4, controller.getElevatorFloor());
-		assertEquals(3, controller.getElevatorPosition());
-		assertEquals(11, controller.getElevatorSpeed());
-		assertEquals(101, controller.getElevatorWeight());
-		assertEquals(6, controller.getElevatorCapacity());
-		assertEquals(5, controller.getElevatorTarget());
 		
 	}
 	
@@ -175,10 +150,15 @@ class ControllerTest {
 		controller = new Controller(buildingMock, elevatorMock);
 		Mockito.when(elevatorMock.getClockTick()).thenReturn((long) 0).thenReturn((long) 1).thenReturn((long) 2).thenReturn((long) 3).
 		thenReturn((long) 4).thenReturn((long) 5).thenReturn((long) 6).thenReturn((long) 7).thenReturn((long) 8).thenReturn((long) 9);
-		controller.start();
-		Thread.sleep(650, 0);
-		// TODO
-		//assertEquals("Reached maximum retries while updating elevator.", controller.getLastError());
+		controller.update();
+		controller.update();
+		controller.update();
+		controller.update();
+		controller.update();
+        assertAfterJavaFxPlatformEventsAreDone(() -> {
+        	assertEquals("Reached maximum retries while updating elevator.", controller.getLastError());
+       });
+		
 		
 	}
 	
@@ -188,9 +168,11 @@ class ControllerTest {
 		controller = new Controller(buildingMock, elevatorMock);
 		Mockito.when(elevatorMock.getClockTick()).thenThrow(new RemoteException());
 		Mockito.doThrow(RemoteException.class).when(elevatorMock).reconnectToRMI();
-		controller.start();
-		Thread.sleep(110, 0);
-		assertEquals("Reconnect to RMI failed! ", controller.getLastError());
+		controller.update();
+        assertAfterJavaFxPlatformEventsAreDone(() -> {
+    		assertEquals("Reconnect to RMI failed! ", controller.getLastError());
+       });
+
 		
 	}
 	
@@ -230,10 +212,20 @@ class ControllerTest {
 		Mockito.when(elevatorMock.getClockTick()).thenThrow(new RemoteException());
 		
 		controller = new Controller(buildingMock, elevatorMock);
-		controller.start();
-		Thread.sleep(200, 0);
+		controller.update();
 		
 		Mockito.verify(buildingMock, Mockito.atLeastOnce()).reconnectToRMI();
 		Mockito.verify(elevatorMock, Mockito.atLeastOnce()).reconnectToRMI();
 	}
+	
+    private void assertAfterJavaFxPlatformEventsAreDone(Runnable runnable) throws InterruptedException {
+        waitOnJavaFxPlatformEventsDone();
+        runnable.run();
+    }
+
+    private void waitOnJavaFxPlatformEventsDone() throws InterruptedException {
+        CountDownLatch countDownLatch = new CountDownLatch(1);
+        Platform.runLater(countDownLatch::countDown);
+        countDownLatch.await();
+    }
 }

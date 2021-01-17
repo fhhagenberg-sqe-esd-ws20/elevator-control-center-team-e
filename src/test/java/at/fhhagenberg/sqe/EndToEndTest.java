@@ -90,7 +90,7 @@ public class EndToEndTest {
     	
     	robot.clickOn(".button");
     	
-    	Mockito.verify(elevator, Mockito.timeout(100)).setTarget(0, 0);
+    	Mockito.verify(elevator, Mockito.timeout(1000)).setTarget(0, 0);
     }
     
     /**
