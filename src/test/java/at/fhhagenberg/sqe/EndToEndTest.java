@@ -1,23 +1,17 @@
 package at.fhhagenberg.sqe;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.rmi.RemoteException;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.testfx.api.FxAssert;
 import org.testfx.api.FxRobot;
-import org.testfx.api.FxService;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 import org.testfx.matcher.control.LabeledMatchers;
 
 import at.fhhagenberg.sqe.model.BuildingWrapper;
 import at.fhhagenberg.sqe.model.ElevatorWrapper;
-import at.fhhagenberg.sqe.model.IBuildingWrapper;
-import at.fhhagenberg.sqe.model.IElevatorWrapper;
-import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 import sqelevator.IElevator;
 

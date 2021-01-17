@@ -2,16 +2,10 @@ package at.fhhagenberg.sqe;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.Naming;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
-
 import at.fhhagenberg.sqe.controller.Controller;
-import at.fhhagenberg.sqe.controller.ControllerData;
 import at.fhhagenberg.sqe.model.BuildingWrapper;
-import at.fhhagenberg.sqe.model.DummyElevator;
 import at.fhhagenberg.sqe.model.ElevatorWrapper;
 import at.fhhagenberg.sqe.model.IBuildingWrapper;
 import at.fhhagenberg.sqe.model.IElevatorWrapper;
@@ -22,10 +16,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import sqelevator.IElevator;
@@ -53,7 +44,6 @@ public class App extends Application {
 		          alert.setContentText("Cancle to stop Application");
 		          alert.showAndWait().ifPresent(rs -> {
 		        	    if (rs != ButtonType.OK) {
-		        	    	//used_elevator = new DummyElevator();
 							Platform.exit();
 							System.exit(0);
 		        	    }
