@@ -35,11 +35,15 @@ public class Controller {
 	private static int FETCH_INTERVAL = 100;
 	private static int MAX_RETRIES = 4;
 	private AtomicBoolean isConnected;
+	boolean remoteEx = false;
 	
 	@FXML
 	public ControllerData data;
 	
 	public Controller(IBuildingWrapper bw, IElevatorWrapper ew) {
+		isConnected = new AtomicBoolean();
+		isConnected.set(true);
+		
 		building = bw;
 		elevator = ew;
 		
@@ -47,20 +51,31 @@ public class Controller {
 		
 		// also needs to be called in App after data is initialized by FXML
 		this.initStaticBuildingInfo();
-		
-		// for tests better to call it separate
-		// this.start();
-		isConnected = new AtomicBoolean();
-		isConnected.set(true);
+
 	}
+	
+	
 	
 	private void logException(String message) {
 		// special handling for no such object
-		if(message != null && message.contains("no such object")) {
-			data.errors.add("Error communicating with RMI interface");
-		} else {
+		//if(message != null && message.contains("no such object")) {
+		//	data.errors.add("Error communicating with RMI interface");
+		//} else {
+		Platform.runLater(() -> {
 			data.errors.add(message);
-		}
+		});
+		//}
+	}
+	
+	private void clearLogs() {
+		// special handling for no such object
+		//if(message != null && message.contains("no such object")) {
+		//	data.errors.add("Error communicating with RMI interface");
+		//} else {
+		Platform.runLater(() -> {
+			data.errors.clear();
+		});
+		//}
 	}
 	
 	public void SetTarget(int target) {
@@ -76,7 +91,8 @@ public class Controller {
 				elevator.setCommittedDirection(data.currentElevator.get(), 1);
 			}
 		} catch (RemoteException e) {
-			logException(e.getMessage());
+			tryReconnectingToRMI();
+			SetTarget(target);
 		}
 	}
 	
@@ -93,7 +109,8 @@ public class Controller {
 			}
 			
 		} catch (RemoteException e) {
-			logException(e.getMessage());
+			tryReconnectingToRMI();
+			initStaticBuildingInfo();
 		}
 	}
 	
@@ -103,76 +120,86 @@ public class Controller {
 	}
 	
 	private synchronized void scheduleFetch() {
-		try {
-			long tick;
-			int cnt = 0;
-			do {
-				tick = elevator.getClockTick();
+		if(isConnected.get() == true) {
+			try {
+				long tick;
+				int cnt = 0;
 				
-				for(int i = 0; i < data.floorNumber.get(); i++) {
-					var tmp = data.buttons.get(i);
-					tmp.elevatorButton.set(elevator.getElevatorButton(data.currentElevator.get(), i));
-					tmp.floorButtonDown.set(building.getFloorButtonDown(i));
-					tmp.floorButtonUp.set(building.getFloorButtonUp(i));
-					tmp.elevatorServicesFloor.set(elevator.getServicesFloors(data.currentElevator.get(), i));
+				do {
+					tick = elevator.getClockTick();
 					
-					tmp.isCurrentFloor.set(i == elevator.getElevatorFloor(data.currentElevator.get()));
-
-					
-					if(tmp.setTarget) {
-						if(!data.isManualMode.get()) continue;
+					for(int i = 0; i < data.floorNumber.get(); i++) {
+						var tmp = data.buttons.get(i);
+						tmp.elevatorButton.set(elevator.getElevatorButton(data.currentElevator.get(), i));
+						tmp.floorButtonDown.set(building.getFloorButtonDown(i));
+						tmp.floorButtonUp.set(building.getFloorButtonUp(i));
+						tmp.elevatorServicesFloor.set(elevator.getServicesFloors(data.currentElevator.get(), i));
+						tmp.isCurrentFloor.set(i == elevator.getElevatorFloor(data.currentElevator.get()));
 						
-						SetTarget(tmp.floorNr.get());
-						tmp.setTarget = false;
+						if(tmp.setTarget) {
+							if(!data.isManualMode.get()) continue;
+							
+							SetTarget(tmp.floorNr.get());
+							tmp.setTarget = false;
+						}
 					}
-				}
-				
-				Platform.runLater(() -> {
-					try {
-						data.committedDirection.set(elevator.getCommittedDirection(data.currentElevator.get()));
-						data.elevatorAccel.set(elevator.getElevatorAccel(data.currentElevator.get()));
-						data.elevatorDoorStatus.set(elevator.getElevatorDoorStatus(data.currentElevator.get()));
-						data.elevatorPosition.set(elevator.getElevatorPosition(data.currentElevator.get()));
-						data.elevatorSpeed.set(elevator.getElevatorSpeed(data.currentElevator.get()));
-						data.elevatorCapacity.set(elevator.getElevatorCapacity(data.currentElevator.get()));
-						data.elevatorTarget.set(elevator.getTarget(data.currentElevator.get()));
-						data.elevatorFloor.set(elevator.getElevatorFloor(data.currentElevator.get()));
-						data.elevatorWeight.set(elevator.getElevatorWeight(data.currentElevator.get()));
 					
-						if(data.committedDirection.get() != 2 && data.isManualMode.get()) { // not uncommitted, and manual mode
-							if(data.elevatorFloor.get() == data.elevatorTarget.get()) {
-								// set to uncommitted if target is reached
-								elevator.setCommittedDirection(data.currentElevator.get(), 2);
+					Platform.runLater(() -> {
+						try {
+							data.committedDirection.set(elevator.getCommittedDirection(data.currentElevator.get()));
+							data.elevatorDoorStatus.set(elevator.getElevatorDoorStatus(data.currentElevator.get()));
+							data.elevatorAccel.set(elevator.getElevatorAccel(data.currentElevator.get()));
+							data.elevatorDoorStatus.set(elevator.getElevatorDoorStatus(data.currentElevator.get()));
+							data.elevatorPosition.set(elevator.getElevatorPosition(data.currentElevator.get()));
+							data.elevatorSpeed.set(elevator.getElevatorSpeed(data.currentElevator.get()));
+							data.elevatorCapacity.set(elevator.getElevatorCapacity(data.currentElevator.get()));
+							data.elevatorTarget.set(elevator.getTarget(data.currentElevator.get()));
+							data.elevatorFloor.set(elevator.getElevatorFloor(data.currentElevator.get()));
+							data.elevatorWeight.set(elevator.getElevatorWeight(data.currentElevator.get()));
+							
+							if(data.committedDirection.get() != 2 && data.isManualMode.get()) { // not uncommitted, and manual mode
+								if(data.elevatorFloor.get() == data.elevatorTarget.get()) {
+									// set to uncommitted if target is reached
+									elevator.setCommittedDirection(data.currentElevator.get(), 2);
+								}
 							}
-						}
-					} catch (RemoteException e) {
-						if(isConnected.get()) {
-							logException(e.getMessage());	
-							isConnected.set(false);
-						}
+						} catch (RemoteException e) {remoteEx = true;}
+						
+					});
+					if(remoteEx == true) {
+						isConnected.set(false);
+						remoteEx = false;
+						tryReconnectingToRMI();
+						return;
 					}
-					
+					if(cnt++ == MAX_RETRIES) {
+						if(data.errors.isEmpty() || !data.errors.get(data.errors.size()-1).contains("Reached maximum retries while updating elevator.")) {
+							clearLogs();
+							logException("Reached maximum retries while updating elevator.");
+						}
+						return;
+					}
+				} while (tick != elevator.getClockTick());
+				if(!data.errors.isEmpty() && data.errors.get(data.errors.size()-1).contains("Reached maximum retries while updating elevator.")) {
+					clearLogs();
+					logException("Synchronisation successfully");
+				}
+			} catch (RemoteException e) {
+				Platform.runLater(() -> {
+					if(isConnected.get()) {	
+						isConnected.set(false);
+					}
 				});
-				
-				if(cnt++ == MAX_RETRIES) {
-					throw new RemoteException("Reached maximum retries while updating elevator.");
-				}
-			} while (tick != elevator.getClockTick());
-			
-		} catch (RemoteException e) {
-			Platform.runLater(() -> {
-				if(isConnected.get()) {
-					logException(e.getMessage());	
-					isConnected.set(false);
-				}
-			});
+				tryReconnectingToRMI();
+			}
+		}else {
 			tryReconnectingToRMI();
 		}
 	}
 	
 	public void setElevator(int elevator) {
 		if(elevator >= this.getElevatorNumbers()) {
-			data.errors.add("elevatorNumber not available");
+			logException("elevatorNumber not available");
 			return;
 		}
 		data.currentElevator.set(elevator);
@@ -184,11 +211,12 @@ public class Controller {
 			building.reconnectToRMI();
 			elevator.reconnectToRMI();
 			isConnected.set(true);
+			clearLogs();
+			logException("Reconnected successfully");
 		} catch (Exception e) {
-			Platform.runLater(() -> {
-				logException("Reconnect to RMI failed! " + e.getMessage());
-			});
+			logException("Reconnect to RMI failed! ");
 		}
+
 	}
 	
 	private void clearProperties() {
@@ -257,6 +285,7 @@ public class Controller {
 		return data.elevatorTarget.get();
 	}
 	public String getLastError() {
+		if(data.errors.size() == 0) {return "";}
 		return data.errors.get(data.errors.size() - 1);
 	}
 
@@ -289,13 +318,13 @@ public class Controller {
 	ImageView imgElevDown;
 	@FXML
 	ImageView imgElevUp;
+
 	
 	public void fillFields() {
 		// listview lvFloors
 		ObservableList<FloorButtons> floors = FXCollections.observableArrayList(data.buttons.values());
 		// reverse order
 		floors.sort((o1, o2) -> {return Integer.compare(o2.getFloorNr(), o1.getFloorNr());});
-		
 		lvFloors.setItems(floors);
 		
 		// listview lvErrors

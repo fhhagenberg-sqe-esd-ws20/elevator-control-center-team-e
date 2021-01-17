@@ -21,7 +21,9 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -35,22 +37,29 @@ public class App extends Application {
 
 	private IBuildingWrapper used_buildingwrapper;
 	private IElevatorWrapper used_elevatorwrapper;
+	private IElevator used_elevator;
 	private final String url = "rmi://localhost/ElevatorSim";
+
 	
 	public App() {
-		IElevator used_elevator = new DummyElevator();   // TODO use Simulator
-		try {
-			used_elevator = (IElevator) Naming.lookup(this.url);
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NotBoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
+		used_elevator = null;
+		while(used_elevator == null) {
+			try {
+				used_elevator = (IElevator) Naming.lookup(this.url);
+			} catch (Exception e) {
+				  Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+		          alert.setTitle("No Simulation Connection");
+		          alert.setHeaderText("Click ok when simulation started");
+		          alert.setContentText("Cancle to stop Application");
+		          alert.showAndWait().ifPresent(rs -> {
+		        	    if (rs != ButtonType.OK) {
+		        	    	//used_elevator = new DummyElevator();
+							Platform.exit();
+							System.exit(0);
+		        	    }
+		        	});
+			} 
+		}
 		
 		used_buildingwrapper = new BuildingWrapper(used_elevator);
 		used_elevatorwrapper = new ElevatorWrapper(used_elevator);
