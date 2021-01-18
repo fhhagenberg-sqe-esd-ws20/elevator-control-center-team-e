@@ -32,7 +32,7 @@ public class FXMLListCellFactory implements Callback<ListView<Object>, ListCell<
                         loader.setController(item);
                         setGraphic(loader.load());
                     } catch (IOException e) {
-                        e.printStackTrace();
+                    	java.lang.System.out.println(e.getMessage()); 
                         setGraphic(null);
                     }
                 }

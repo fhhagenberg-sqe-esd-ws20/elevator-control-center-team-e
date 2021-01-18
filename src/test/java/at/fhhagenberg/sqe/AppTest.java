@@ -127,7 +127,7 @@ public class AppTest {
     	
     	Mockito.when(elevatorMock.getClockTick()).thenThrow(new RemoteException());
     	Mockito.doThrow(RemoteException.class).when(elevatorMock).reconnectToRMI();
-    	app.getController().SetReconnectErrorText("ReconnectFailed");
+    	app.getController().setReconnectErrorText("ReconnectFailed");
     	Mockito.verify(buildingMock, Mockito.timeout(150).times(1)).reconnectToRMI();
         assertAfterJavaFxPlatformEventsAreDone(() -> {
         	assertEquals(robot.lookup("#lvErrors").queryAs(ListView.class).getItems().get(0), "ReconnectFailed");

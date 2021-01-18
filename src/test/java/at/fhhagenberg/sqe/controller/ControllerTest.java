@@ -100,7 +100,7 @@ class ControllerTest {
 	@Test
 	void testinitStaticInfos_throwExeption() throws RemoteException, MalformedURLException, NotBoundException, InterruptedException {
 		controller.initStaticBuildingInfo();
-		controller.SetReconnectErrorText("ReconnError");
+		controller.setReconnectErrorText("ReconnError");
 		Mockito.doThrow(RemoteException.class).when(buildingMock).getFloorHeight();
 		Mockito.doThrow(RemoteException.class).when(buildingMock).reconnectToRMI();
 		controller.initStaticBuildingInfo();
@@ -129,7 +129,7 @@ class ControllerTest {
 	@Test
 	void testSetTarget_throwExeption() throws RemoteException, MalformedURLException, NotBoundException, InterruptedException {
 		controller.initStaticBuildingInfo();
-		controller.SetReconnectErrorText("ReconnError");
+		controller.setReconnectErrorText("ReconnError");
 		Mockito.doThrow(RemoteException.class).when(elevatorMock).setTarget(0, 2);
 		Mockito.doThrow(RemoteException.class).when(buildingMock).reconnectToRMI();
 		controller.SetTarget(2);
@@ -144,7 +144,7 @@ class ControllerTest {
 	void testConnectionError() throws RemoteException, InterruptedException, MalformedURLException, NotBoundException {
 		Mockito.when(elevatorMock.getClockTick()).thenThrow(new RemoteException());
 		Mockito.doThrow(RemoteException.class).when(buildingMock).reconnectToRMI();
-		controller.SetReconnectErrorText("ReconnError");
+		controller.setReconnectErrorText("ReconnError");
 		controller.update();
 		Mockito.verify(buildingMock, Mockito.timeout(100).times(1)).getElevatorNum();
         assertAfterJavaFxPlatformEventsAreDone(() -> {
@@ -385,7 +385,7 @@ class ControllerTest {
 		(long) 10,(long) 11,(long) 12,(long) 13,(long) 14,(long) 15,(long) 0,(long) 1,(long) 2,(long) 3,
 		(long) 4,(long) 5,(long) 6,(long) 7,(long) 8,(long) 9,(long) 10,(long) 11,(long) 12,(long) 13,(long) 14,
 		(long) 15);
-		controller.SetRetryErrorText("RetryError");
+		controller.setRetryErrorText("RetryError");
 		controller.update();
 		controller.update();
 		controller.update();
@@ -404,7 +404,7 @@ class ControllerTest {
 		controller = new Controller(buildingMock, elevatorMock);
 		Mockito.when(elevatorMock.getClockTick()).thenThrow(new RemoteException());
 		Mockito.doThrow(RemoteException.class).when(elevatorMock).reconnectToRMI();
-		controller.SetReconnectErrorText("Reconnect to RMI failed!");
+		controller.setReconnectErrorText("Reconnect to RMI failed!");
 		controller.update();
 		
         assertAfterJavaFxPlatformEventsAreDone(() -> {
@@ -419,9 +419,9 @@ class ControllerTest {
 		controller = new Controller(buildingMock, elevatorMock);
 		
 		Mockito.when(elevatorMock.getClockTick()).thenReturn((long) 0);
-		controller.SetRetryErrorText("RetryError");
+		controller.setRetryErrorText("RetryError");
 		controller.data.errors.add("RetryError");
-		controller.SetRetrySuccessText("Synchronisation successfully");
+		controller.setRetrySuccessText("Synchronisation successfully");
 		controller.update();
 
 		

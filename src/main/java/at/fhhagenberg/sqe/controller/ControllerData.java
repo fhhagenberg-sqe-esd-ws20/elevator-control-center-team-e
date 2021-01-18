@@ -67,7 +67,7 @@ public class ControllerData {
 		}
 		
 		elevatorDoorStatusString = new SimpleStringProperty("unknown");
-		elevatorDoorStatus.addListener((o, oldVal, newVal) -> {
+		elevatorDoorStatus.addListener((o, oldVal, newVal) -> 
 			// 1=open and 2=closed
 			Platform.runLater(() -> {
 				if(newVal.intValue() == 1) {
@@ -77,9 +77,8 @@ public class ControllerData {
 				} else {
 					elevatorDoorStatusString.set("unknown");
 				}
-			});
-			
-		});
+			})			
+		);
 	}
 	
 	/**

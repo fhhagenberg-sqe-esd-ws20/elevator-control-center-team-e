@@ -26,18 +26,18 @@ import sqelevator.IElevator;
  */
 public class App extends Application {
 
-	private IBuildingWrapper used_buildingwrapper;
-	private IElevatorWrapper used_elevatorwrapper;
-	private IElevator used_elevator;
+	private IBuildingWrapper usedBuildingwrapper;
+	private IElevatorWrapper usedElevatorwrapper;
+	private IElevator usedElevator;
 	private final String url = "rmi://localhost/ElevatorSim";
 	private Controller controller;
 
 	
 	public App() {
-		used_elevator = null;
-		while(used_elevator == null) {
+		usedElevator = null;
+		while(usedElevator == null) {
 			try {
-				used_elevator = (IElevator) Naming.lookup(this.url);
+				usedElevator = (IElevator) Naming.lookup(this.url);
 			} catch (Exception e) {
 				  Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 		          alert.setTitle("No Simulation Connection");
@@ -52,15 +52,15 @@ public class App extends Application {
 			} 
 		}
 		
-		used_buildingwrapper = new BuildingWrapper(used_elevator);
-		used_elevatorwrapper = new ElevatorWrapper(used_elevator);
-		used_buildingwrapper.setConnectionString(this.url);
-		used_elevatorwrapper.setConnectionString(this.url);
+		usedBuildingwrapper = new BuildingWrapper(usedElevator);
+		usedElevatorwrapper = new ElevatorWrapper(usedElevator);
+		usedBuildingwrapper.setConnectionString(this.url);
+		usedElevatorwrapper.setConnectionString(this.url);
 	}
 	
 	public App(IBuildingWrapper bw, IElevatorWrapper ew) {
-		used_buildingwrapper = bw;
-		used_elevatorwrapper = ew;
+		usedBuildingwrapper = bw;
+		usedElevatorwrapper = ew;
 	}
 	
 	public Controller getController() {
@@ -71,19 +71,19 @@ public class App extends Application {
     public void start(Stage stage) {
     	Parent root = null;
     	FXMLLoader loader;
-    	IBuildingWrapper building = used_buildingwrapper;
-    	IElevatorWrapper elevator = used_elevatorwrapper;
+    	IBuildingWrapper building = usedBuildingwrapper;
+    	IElevatorWrapper elevator = usedElevatorwrapper;
     	controller = new Controller(building, elevator);
     	
     	try {
-	    	URL url_fxml = new File("src/main/resources/fxml/eccView.fxml").toURI().toURL();
-	    	loader = new FXMLLoader(url_fxml);
+	    	URL urlFxml = new File("src/main/resources/fxml/eccView.fxml").toURI().toURL();
+	    	loader = new FXMLLoader(urlFxml);
 	    	
 	    	loader.setController(controller);
 	    	
 	    	root = loader.load();
 		} catch (IOException e) {
-			e.printStackTrace();
+			java.lang.System.out.println(e.getMessage()); 
 		}
 
         var scene = new Scene(root, 640, 480);

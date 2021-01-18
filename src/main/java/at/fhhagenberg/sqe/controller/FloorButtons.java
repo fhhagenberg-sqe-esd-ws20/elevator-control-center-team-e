@@ -4,13 +4,10 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
 public class FloorButtons {
-	private Controller rootController;
 	
 	IntegerProperty floorNr;
 	BooleanProperty floorButtonDown;
@@ -31,7 +28,6 @@ public class FloorButtons {
 	 * @param service - if the floor is servicable
 	 */
 	public FloorButtons(Controller root, int nr, boolean down, boolean up, boolean btn, boolean service) {
-		rootController = root;
 		
 		floorNr = new SimpleIntegerProperty();
 		floorButtonDown = new SimpleBooleanProperty();
@@ -119,6 +115,5 @@ public class FloorButtons {
 	void doSetTarget(ActionEvent event) {
 		event.consume();
 		setTarget = true;
-		//rootController.SetTarget(getFloorNr());
 	}
 }

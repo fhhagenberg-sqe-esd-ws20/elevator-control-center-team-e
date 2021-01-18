@@ -24,12 +24,12 @@ public class Controller {
 	
 	private IBuildingWrapper building;
 	private IElevatorWrapper elevator;
-	private static int FETCH_INTERVAL = 100;
-	private static int MAX_RETRIES = 4;
+	private static int fetchInternal = 100;
+	private static int maxRetries = 4;
 	private AtomicBoolean isConnected;
-	private String RetrySuccessText = "Synchronisation successfully";
+	private String retrySuccessText = "Synchronisation successfully";
 	private String maxRetryText = "Reached maximum retries while updating elevator.";
-	private String ReconnectErrorText = "Reconnect to RMI failed! ";
+	private String reconnectErrorText = "Reconnect to RMI failed! ";
 	
 	@FXML
 	public ControllerData data;
@@ -48,31 +48,31 @@ public class Controller {
 
 	}
 	
-	public void SetReconnectErrorText(String txt) {
-		ReconnectErrorText = txt;
+	public void setReconnectErrorText(String txt) {
+		reconnectErrorText = txt;
 	}
 	
-	public void SetRetryErrorText(String txt) {
+	public void setRetryErrorText(String txt) {
 		maxRetryText = txt;
 	}
 	
-	public void SetRetrySuccessText(String txt) {
-		RetrySuccessText = txt;
+	public void setRetrySuccessText(String txt) {
+		retrySuccessText = txt;
 	}
 	
 	
 	
 	
 	public void logException(String message) {
-		Platform.runLater(() -> {
-			data.errors.add(message);
-		});
+		Platform.runLater(() -> 
+			data.errors.add(message)
+		);
 	}
 	
 	private void clearLogs() {
-		Platform.runLater(() -> {
-			data.errors.clear();
-		});
+		Platform.runLater(() -> 
+			data.errors.clear()
+		);
 	}
 	
 	public void SetTarget(int target) {
@@ -111,7 +111,7 @@ public class Controller {
 	
 	public void start() {	
 		ScheduledExecutorService es = Executors.newScheduledThreadPool(1);
-		es.scheduleAtFixedRate(this::scheduleFetch, FETCH_INTERVAL, FETCH_INTERVAL, TimeUnit.MILLISECONDS);
+		es.scheduleAtFixedRate(this::scheduleFetch, fetchInternal, fetchInternal, TimeUnit.MILLISECONDS);
 	}
 	
 	public void update() {
@@ -157,10 +157,10 @@ public class Controller {
 									// set to uncommitted if target is reached
 									elevator.setCommittedDirection(data.currentElevator.get(), 2);
 							}
-						} catch (RemoteException e) {logException(ReconnectErrorText);}
+						} catch (RemoteException e) {logException(reconnectErrorText);}
 						
 					});
-					if(cnt++ == MAX_RETRIES) {
+					if(cnt++ == maxRetries) {
 						if(data.errors.isEmpty() || !data.errors.get(data.errors.size()-1).contains(maxRetryText)) {
 							clearLogs();
 							logException(maxRetryText);
@@ -170,7 +170,7 @@ public class Controller {
 				} while (tick != elevator.getClockTick());
 				if(!data.errors.isEmpty() && data.errors.get(data.errors.size()-1).contains(maxRetryText)) {
 					clearLogs();
-					logException(RetrySuccessText);
+					logException(retrySuccessText);
 				}
 			} catch (RemoteException e) {
 				if(isConnected.get()) {	
@@ -202,9 +202,9 @@ public class Controller {
 			elevator.reconnectToRMI();
 			isConnected.set(true);
 			clearLogs();
-			logException(RetrySuccessText);
+			logException(retrySuccessText);
 		} catch (Exception e) {
-			logException(ReconnectErrorText);
+			logException(reconnectErrorText);
 		}
 
 	}
@@ -314,7 +314,7 @@ public class Controller {
 		// listview lvFloors
 		ObservableList<FloorButtons> floors = FXCollections.observableArrayList(data.buttons.values());
 		// reverse order
-		floors.sort((o1, o2) -> {return Integer.compare(o2.getFloorNr(), o1.getFloorNr());});
+		floors.sort((o1, o2) -> Integer.compare(o2.getFloorNr(), o1.getFloorNr()));
 		lvFloors.setItems(floors);
 		
 		// listview lvErrors
@@ -327,12 +327,11 @@ public class Controller {
 		}
 		cmbElevators.setItems(elevators);
 		cmbElevators.getSelectionModel().select(0);
-		cmbElevators.valueProperty().addListener((o, oldVal, newVal) -> {
-			Platform.runLater(() -> {
-				data.currentElevator.set(newVal);
-			});
-			
-		});
+		cmbElevators.valueProperty().addListener((o, oldVal, newVal) -> 
+			Platform.runLater(() -> 
+				data.currentElevator.set(newVal)
+			)
+		);
 		
 		// auto/manual (radio buttons)
 		tgMode.selectedToggleProperty().addListener((o, oldVal, newVal) -> {
@@ -353,7 +352,7 @@ public class Controller {
 		imgElevDown.setVisible(true);
 		imgElevUp.setVisible(false);
 		/* Property Listener */
-		data.committedDirection.addListener((o, oldVal, newVal) -> {
+		data.committedDirection.addListener((o, oldVal, newVal) -> 
 			Platform.runLater(() -> {
 				// up=0, down=1 and uncommitted=2
 				if(newVal.intValue() == 0) {
@@ -367,13 +366,12 @@ public class Controller {
 					imgElevDown.setVisible(false);
 					imgElevUp.setVisible(false);
 				}
-			});
-			
-		});
+			})
+		);
 		data.isManualMode.addListener((o, oldVal, newVal) -> {
-			Platform.runLater(() -> {
-				lvFloors.setDisable(!newVal);
-			});
+			Platform.runLater(() -> 
+				lvFloors.setDisable(!newVal)
+			);
 		});
 		
 	}
