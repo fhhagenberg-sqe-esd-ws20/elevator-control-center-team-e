@@ -82,48 +82,122 @@ public class ControllerData {
 		});
 	}
 	
+	/**
+	 * Get the number of available elevators
+	 * @return The number of available elevators
+	 */
 	public int getElevatorNumbers() {
 		return elevatorNumbers.get();
 	}
+	
+	/**
+	 * Get the height of the floor
+	 * @return The height of the floor
+	 */
 	public int getFloorHeight() {
 		return floorHeight.get();
 	}
+	
+	/**
+	 * Get the number of floors
+	 * @return The number of floors
+	 */
 	public int getFloorNumber() {
 		return floorNumber.get();
 	}
+	
+	/**
+	 * Get the current active elevator
+	 * @return The current active elevator
+	 */
 	public int getCurrentElevator() {
 		return currentElevator.get();
 	}
+	
+	/**
+	 * Get all available floor-buttons
+	 * @return The available floor-buttons
+	 */
 	public ObservableMap<Integer, FloorButtons> getButtons() {
 		return buttons;
 	}
+	
+	/**
+	 * Query the status of the manual mode
+	 * @return The status of the manual mode
+	 */
 	public boolean getIsManualMode() {
 		return isManualMode.get();
 	}
+	
+	/**
+	 * Get the current committed direction of the elevator
+	 * @return The committed direction
+	 */
 	public int getCommittedDirection() {
 		return committedDirection.get();
 	}
+	
+	/**
+	 * Get the current acceleration of the elevator
+	 * @return The acceleration of the elevator
+	 */
 	public int getElevatorAccel() {
 		return elevatorAccel.get();
 	}
+	
+	/**
+	 * Get the current door status of the current elevator
+	 * @return The door status of the current elevator
+	 */
 	public int getElevatorDoorStatus() {
 		return elevatorDoorStatus.get();
 	}
+	
+	/**
+	 * Get the current floor of the current elevator
+	 * @return The current floor of the current elevator
+	 */
 	public int getElevatorFloor() {
 		return elevatorFloor.get();
 	}
+	
+	/**
+	 * Get the current position of the current elevator
+	 * @return The position of the elevator
+	 */
 	public int getElevatorPosition() {
 		return elevatorPosition.get();
 	}
+	
+	/**
+	 * Get the current speed of the current elevator
+	 * @return The speed of the elevator
+	 */
 	public int getElevatorSpeed() {
 		return elevatorSpeed.get();
 	}
+	
+	/**
+	 * Get the current weight of the current elevator
+	 * @return The weight of the elevator
+	 */
 	public int getElevatorWeight() {
 		return elevatorWeight.get();
 	}
+	
+	/**
+	 * Get the capacitiy of the current elevator
+	 * @return The capacitiy of the elevator
+	 */
 	public int getElevatorCapacity() {
 		return elevatorCapacity.get();
 	}
+	
+	/**
+	 * Get the current target of the current elevator
+	 * @return The target of the elevator
+	 */
 	public int getElevatorTarget() {
 		return elevatorTarget.get();
 	}

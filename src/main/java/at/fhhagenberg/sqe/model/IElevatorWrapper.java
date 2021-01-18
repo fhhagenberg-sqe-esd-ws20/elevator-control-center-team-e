@@ -13,9 +13,20 @@ public interface IElevatorWrapper {
 	 */
 	public void setModel(IElevator model);
 	
+	/**
+	 * Sets the connection string for the RMI connection
+	 * @param url - the connection string
+	 */
 	public void setConnectionString(String url);
 	
+	/**
+	 * Reconnects to the RMI if a valid connection string is set and the application is running
+	 * @throws java.rmi.RemoteException
+	 * @throws MalformedURLException
+	 * @throws NotBoundException
+	 */
 	public void reconnectToRMI() throws java.rmi.RemoteException, MalformedURLException, NotBoundException;
+	
 	/**
 	 * Retrieves the committed direction of the specified elevator (up / down / uncommitted). 
 	 * @param elevatorNumber - elevator number whose committed direction is being retrieved 

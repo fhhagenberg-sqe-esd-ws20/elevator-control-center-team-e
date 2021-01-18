@@ -60,6 +60,7 @@ public class AppTest {
     }
 
     /**
+     * @brief Asserts static information
      * @param robot - Will be injected by the test runner.
      */
     @Test
@@ -73,6 +74,7 @@ public class AppTest {
     
     
     /**
+     * @brief Asserts that the correct error state is shown in the GUI
      * @param robot - Will be injected by the test runner.
      * @throws RemoteException 
      * @throws InterruptedException 
