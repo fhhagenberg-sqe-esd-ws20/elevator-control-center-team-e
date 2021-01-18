@@ -76,13 +76,13 @@ package sqelevator;
 public interface IElevator extends java.rmi.Remote {
 	
 	/** State variable for elevator doors open.	 */
-	public final static int ELEVATOR_DOORS_OPEN = 1;	
+	public static final int ELEVATOR_DOORS_OPEN = 1;	
 	/** State variable for elevator doors closed. */
-	public final static int ELEVATOR_DOORS_CLOSED = 2;
+	public static final int ELEVATOR_DOORS_CLOSED = 2;
 	/** State variable for elevator doors opening. */
-	public final static int ELEVATOR_DOORS_OPENING = 3;
+	public static final int ELEVATOR_DOORS_OPENING = 3;
 	/** State variable for elevator doors closing. */
-	public final static int ELEVATOR_DOORS_CLOSING = 4;
+	public static final int ELEVATOR_DOORS_CLOSING = 4;
 		
 	/** State variable for elevator status when going up */
 	public final static int ELEVATOR_DIRECTION_UP = 0;				

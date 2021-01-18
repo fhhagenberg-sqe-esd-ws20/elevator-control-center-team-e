@@ -23,7 +23,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(ApplicationExtension.class)
-public class EndToEndTest {
+class EndToEndTest {
     private int target; 
 
     @Mock
@@ -63,7 +63,7 @@ public class EndToEndTest {
      * @throws InterruptedException 
      */
     @Test
-    public void testEndToEndStaticInformation(FxRobot robot) throws RemoteException, InterruptedException {
+    void testEndToEndStaticInformation(FxRobot robot) throws RemoteException, InterruptedException {
     	Mockito.reset(elevator);
     	Mockito.when(elevator.getElevatorFloor(0)).thenReturn(3);
     	Mockito.when(elevator.getElevatorWeight(0)).thenReturn(100);
@@ -87,7 +87,7 @@ public class EndToEndTest {
      * @throws RemoteException 
      */
     @Test
-    public void testEndToEndScenarioSetTarget(FxRobot robot) throws Exception  {
+    void testEndToEndScenarioSetTarget(FxRobot robot) throws Exception  {
     	Mockito.doAnswer(invocation -> {
 			target = invocation.getArgument(1);
 			Mockito.when(elevator.getTarget(0)).thenReturn(target);
@@ -109,7 +109,7 @@ public class EndToEndTest {
      * @throws RemoteException 
      */
     @Test
-    public void testEndToEndScenarioReadTarget(FxRobot robot) throws Exception  {
+    void testEndToEndScenarioReadTarget(FxRobot robot) throws Exception  {
     	Mockito.reset(elevator);
     	Mockito.when(elevator.getTarget(0)).thenReturn(5);
     	Mockito.verify(elevator, Mockito.timeout(2000).atLeast(2)).getClockTick();

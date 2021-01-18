@@ -112,7 +112,7 @@ class ControllerTest {
 	@Test
 	void testSetTarget_commitedDirectionUp() throws RemoteException {
 		controller.initStaticBuildingInfo();
-		controller.SetTarget(5);
+		controller.setTarget(5);
 		Mockito.verify(elevatorMock).setTarget(0, 5);
 		Mockito.verify(elevatorMock).setCommittedDirection(0, 0);
 	}
@@ -121,7 +121,7 @@ class ControllerTest {
 	void testSetTarget_commitedDirectionDown() throws RemoteException {
 		controller.initStaticBuildingInfo();
 		controller.data.elevatorFloor.set(3);
-		controller.SetTarget(2);
+		controller.setTarget(2);
 		Mockito.verify(elevatorMock).setTarget(0, 2);
 		Mockito.verify(elevatorMock).setCommittedDirection(0, 1);
 	}
@@ -132,7 +132,7 @@ class ControllerTest {
 		controller.setReconnectErrorText("ReconnError");
 		Mockito.doThrow(RemoteException.class).when(elevatorMock).setTarget(0, 2);
 		Mockito.doThrow(RemoteException.class).when(buildingMock).reconnectToRMI();
-		controller.SetTarget(2);
+		controller.setTarget(2);
 		Thread.sleep(100,0);
         assertAfterJavaFxPlatformEventsAreDone(() -> {
     		assertEquals("ReconnError", controller.getLastError());

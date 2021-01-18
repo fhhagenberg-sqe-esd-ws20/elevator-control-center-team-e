@@ -29,7 +29,7 @@ public class App extends Application {
 	private IBuildingWrapper usedBuildingwrapper;
 	private IElevatorWrapper usedElevatorwrapper;
 	private IElevator usedElevator;
-	private final String url = "rmi://localhost/ElevatorSim";
+	private final static String url = "rmi://localhost/ElevatorSim";
 	private Controller controller;
 
 	
@@ -83,7 +83,7 @@ public class App extends Application {
 	    	
 	    	root = loader.load();
 		} catch (IOException e) {
-			java.lang.System.out.println(e.getMessage()); 
+			e.printStackTrace();
 		}
 
         var scene = new Scene(root, 640, 480);
@@ -92,13 +92,14 @@ public class App extends Application {
         stage.setTitle("ECC Team E");
         stage.show();
         
-        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+        var EventHandler = new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent t) {
                 Platform.exit();
                 System.exit(0);
-            }
-        });
+            }};
+            
+        stage.setOnCloseRequest(EventHandler);
         
         controller.initStaticBuildingInfo();
         controller.addUIListeners();

@@ -30,6 +30,7 @@ public class Controller {
 	private String retrySuccessText = "Synchronisation successfully";
 	private String maxRetryText = "Reached maximum retries while updating elevator.";
 	private String reconnectErrorText = "Reconnect to RMI failed! ";
+	private String reconnectSuccessText = "Reconnect to RMI successfully! ";
 	
 	@FXML
 	public ControllerData data;
@@ -75,7 +76,7 @@ public class Controller {
 		);
 	}
 	
-	public void SetTarget(int target) {
+	public void setTarget(int target) {
 		if(!data.isManualMode.get()) return;
 		
 		try {
@@ -134,7 +135,7 @@ public class Controller {
 						if(tmp.setTarget) {
 							if(!data.isManualMode.get()) continue;
 							
-							SetTarget(tmp.floorNr.get());
+							setTarget(tmp.floorNr.get());
 							tmp.setTarget = false;
 						}
 					}
@@ -202,7 +203,7 @@ public class Controller {
 			elevator.reconnectToRMI();
 			isConnected.set(true);
 			clearLogs();
-			logException(retrySuccessText);
+			logException(reconnectSuccessText);
 		} catch (Exception e) {
 			logException(reconnectErrorText);
 		}
@@ -334,11 +335,11 @@ public class Controller {
 		);
 		
 		// auto/manual (radio buttons)
-		tgMode.selectedToggleProperty().addListener((o, oldVal, newVal) -> {
-			Platform.runLater(() -> {
-				data.isManualMode.set(rbManual.isSelected());
-			});
-		});
+		tgMode.selectedToggleProperty().addListener((o, oldVal, newVal) -> 
+			Platform.runLater(() -> 
+				data.isManualMode.set(rbManual.isSelected())
+			)
+		);
 		
 		lbFloor.textProperty().bind(data.elevatorFloor.asString());
 		lbPayload.textProperty().bind(data.elevatorWeight.asString());
@@ -368,11 +369,11 @@ public class Controller {
 				}
 			})
 		);
-		data.isManualMode.addListener((o, oldVal, newVal) -> {
+		data.isManualMode.addListener((o, oldVal, newVal) -> 
 			Platform.runLater(() -> 
 				lvFloors.setDisable(!newVal)
-			);
-		});
+			)
+		);
 		
 	}
 	

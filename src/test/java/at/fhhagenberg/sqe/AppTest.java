@@ -26,7 +26,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(ApplicationExtension.class)
-public class AppTest {
+class AppTest {
     private int target; 
 
     @Mock
@@ -72,7 +72,7 @@ public class AppTest {
      * @throws InterruptedException 
      */
     @Test
-    public void testFloorNumber(FxRobot robot) throws RemoteException, InterruptedException {
+    void testFloorNumber(FxRobot robot) throws RemoteException, InterruptedException {
     	Mockito.verify(buildingMock, Mockito.timeout(100).times(2)).getElevatorNum();
 
         assertAfterJavaFxPlatformEventsAreDone(() -> {
@@ -88,7 +88,7 @@ public class AppTest {
      * @throws InterruptedException 
      */
     @Test
-    public void testSpeed(FxRobot robot) throws RemoteException, InterruptedException {
+    void testSpeed(FxRobot robot) throws RemoteException, InterruptedException {
     	Mockito.verify(buildingMock, Mockito.timeout(100).times(2)).getElevatorNum();
 
         assertAfterJavaFxPlatformEventsAreDone(() -> {
@@ -104,7 +104,7 @@ public class AppTest {
      * @throws InterruptedException 
      */
     @Test
-    public void testDoorStatus(FxRobot robot) throws RemoteException, InterruptedException {
+    void testDoorStatus(FxRobot robot) throws RemoteException, InterruptedException {
     	Mockito.verify(buildingMock, Mockito.timeout(100).times(2)).getElevatorNum();
 
         assertAfterJavaFxPlatformEventsAreDone(() -> {
@@ -123,7 +123,7 @@ public class AppTest {
      * @throws MalformedURLException 
      */
     @Test
-    public void testCorrectErrorState(FxRobot robot) throws RemoteException, InterruptedException, MalformedURLException, NotBoundException {
+    void testCorrectErrorState(FxRobot robot) throws RemoteException, InterruptedException, MalformedURLException, NotBoundException {
     	
     	Mockito.when(elevatorMock.getClockTick()).thenThrow(new RemoteException());
     	Mockito.doThrow(RemoteException.class).when(elevatorMock).reconnectToRMI();
