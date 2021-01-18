@@ -385,7 +385,7 @@ class ControllerTest {
 		controller.update();
 		controller.update();
 		controller.update();
-		controller.update();
+		
         assertAfterJavaFxPlatformEventsAreDone(() -> {
         	assertEquals("RetryError", controller.getLastError());
        });
@@ -401,6 +401,7 @@ class ControllerTest {
 		Mockito.doThrow(RemoteException.class).when(elevatorMock).reconnectToRMI();
 		controller.SetReconnectErrorText("Reconnect to RMI failed!");
 		controller.update();
+		
         assertAfterJavaFxPlatformEventsAreDone(() -> {
     		assertEquals("Reconnect to RMI failed!", controller.getLastError());
        });
@@ -415,7 +416,6 @@ class ControllerTest {
 		thenReturn((long) 4).thenReturn((long) 5).thenReturn((long) 6).thenReturn((long) 7).thenReturn((long) 8).thenReturn((long) 9);
 		controller.SetRetryErrorText("RetryError");
 		controller.SetRetrySuccessText("Synchronisation successfully");
-		controller.update();
 		controller.update();
 		controller.update();
 		controller.update();
