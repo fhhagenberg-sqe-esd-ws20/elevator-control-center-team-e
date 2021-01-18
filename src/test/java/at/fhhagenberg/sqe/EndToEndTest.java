@@ -1,6 +1,7 @@
 package at.fhhagenberg.sqe;
 
 import java.rmi.RemoteException;
+import java.util.concurrent.CountDownLatch;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,6 +13,7 @@ import org.testfx.matcher.control.LabeledMatchers;
 
 import at.fhhagenberg.sqe.model.BuildingWrapper;
 import at.fhhagenberg.sqe.model.ElevatorWrapper;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 import sqelevator.IElevator;
 
@@ -40,10 +42,10 @@ public class EndToEndTest {
      * Will be called with {@code @Before} semantics, i. e. before each test method.
      *
      * @param stage - Will be injected by the test runner.
+     * @throws RemoteException 
      */
     @Start
-    public void start(Stage stage) {
-    	
+    public void start(Stage stage) throws RemoteException {
     	try {
     		target = 99;
 			setupMock();
@@ -52,6 +54,7 @@ public class EndToEndTest {
 		}    	
         var app = new App(new BuildingWrapper(elevator), new ElevatorWrapper(elevator));
         app.start(stage);
+        
     }
 
     /**
@@ -61,17 +64,22 @@ public class EndToEndTest {
      */
     @Test
     public void testEndToEndStaticInformation(FxRobot robot) throws RemoteException, InterruptedException {
+    	Mockito.reset(elevator);
     	Mockito.when(elevator.getElevatorFloor(0)).thenReturn(3);
     	Mockito.when(elevator.getElevatorWeight(0)).thenReturn(100);
     	Mockito.when(elevator.getElevatorSpeed(0)).thenReturn(5);
     	Mockito.when(elevator.getElevatorDoorStatus(0)).thenReturn(1);
     	
-    	Thread.sleep(150, 0);
-    	FxAssert.verifyThat("#lbFloor", LabeledMatchers.hasText(Integer.toString(3)));
-    	FxAssert.verifyThat("#lbPayload", LabeledMatchers.hasText(Integer.toString(100)));
-    	FxAssert.verifyThat("#lbSpeed", LabeledMatchers.hasText(Integer.toString(5)));
-    	FxAssert.verifyThat("#lbDoors", LabeledMatchers.hasText("open"));
-    	FxAssert.verifyThat("#floorNumber", LabeledMatchers.hasText(Integer.toString(3)));
+    	Mockito.verify(elevator, Mockito.timeout(2000).atLeast(2)).getClockTick();
+    	
+        assertAfterJavaFxPlatformEventsAreDone(() -> {
+        	FxAssert.verifyThat("#lbFloor", LabeledMatchers.hasText(Integer.toString(3)));
+        	FxAssert.verifyThat("#lbPayload", LabeledMatchers.hasText(Integer.toString(100)));
+        	FxAssert.verifyThat("#lbSpeed", LabeledMatchers.hasText(Integer.toString(5)));
+        	FxAssert.verifyThat("#lbDoors", LabeledMatchers.hasText("open"));
+        	FxAssert.verifyThat("#floorNumber", LabeledMatchers.hasText(Integer.toString(3)));
+       });
+
     }
     
     /**
@@ -86,11 +94,14 @@ public class EndToEndTest {
 			return null;
 		}).when(elevator).setTarget(Mockito.anyInt(), Mockito.anyInt());
     	
-    	FxAssert.verifyThat("#lbTarget", LabeledMatchers.hasText(Integer.toString(target)));
+    	
+        assertAfterJavaFxPlatformEventsAreDone(() -> {
+        	FxAssert.verifyThat("#lbTarget", LabeledMatchers.hasText(Integer.toString(target)));
+       });
     	
     	robot.clickOn(".button");
     	
-    	Mockito.verify(elevator, Mockito.timeout(100)).setTarget(0, 0);
+    	Mockito.verify(elevator, Mockito.timeout(1000)).setTarget(0, 0);
     }
     
     /**
@@ -99,9 +110,24 @@ public class EndToEndTest {
      */
     @Test
     public void testEndToEndScenarioReadTarget(FxRobot robot) throws Exception  {
+    	Mockito.reset(elevator);
     	Mockito.when(elevator.getTarget(0)).thenReturn(5);
-		Thread.sleep(100, 0);
-        FxAssert.verifyThat("#lbTarget", LabeledMatchers.hasText(Integer.toString(5)));
+    	Mockito.verify(elevator, Mockito.timeout(2000).atLeast(2)).getClockTick();
+        assertAfterJavaFxPlatformEventsAreDone(() -> {
+            FxAssert.verifyThat("#lbTarget", LabeledMatchers.hasText(Integer.toString(5)));
+       });
+
+    }
+    
+    private void assertAfterJavaFxPlatformEventsAreDone(Runnable runnable) throws InterruptedException {
+        waitOnJavaFxPlatformEventsDone();
+        runnable.run();
+    }
+
+    private void waitOnJavaFxPlatformEventsDone() throws InterruptedException {
+        CountDownLatch countDownLatch = new CountDownLatch(1);
+        Platform.runLater(countDownLatch::countDown);
+        countDownLatch.await();
     }
 
 }

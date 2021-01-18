@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.concurrent.CountDownLatch;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,6 +16,7 @@ import org.testfx.matcher.control.LabeledMatchers;
 
 import at.fhhagenberg.sqe.model.IBuildingWrapper;
 import at.fhhagenberg.sqe.model.IElevatorWrapper;
+import javafx.application.Platform;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 
@@ -33,9 +35,13 @@ public class AppTest {
 	@Mock
 	private IElevatorWrapper elevatorMock;
 	
+	App app;
+	
 	private void setupMock() throws RemoteException {
 		Mockito.when(buildingMock.getElevatorNum()).thenReturn(2);
 		Mockito.when(buildingMock.getFloorNum()).thenReturn(3);
+		Mockito.when(elevatorMock.getElevatorCapacity(0)).thenReturn(100);
+		Mockito.when(elevatorMock.getElevatorSpeed(0)).thenReturn(200);
 		Mockito.when(elevatorMock.getTarget(0)).thenReturn(target);
 		Mockito.when(elevatorMock.getElevatorDoorStatus(0)).thenReturn(2);
 		Mockito.when(elevatorMock.getServicesFloors(Mockito.anyInt(), Mockito.anyInt())).thenReturn(true);
@@ -55,26 +61,61 @@ public class AppTest {
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}    	
-        var app = new App(buildingMock, elevatorMock);
+        app = new App(buildingMock, elevatorMock);
         app.start(stage);
     }
 
     /**
-     * @brief Asserts static information
+     * @brief Asserts floor number
      * @param robot - Will be injected by the test runner.
+     * @throws RemoteException 
+     * @throws InterruptedException 
      */
     @Test
-    public void testStaticInformation(FxRobot robot) {
-    	FxAssert.verifyThat("#lbFloor", LabeledMatchers.hasText(Integer.toString(0)));
-    	FxAssert.verifyThat("#lbPayload", LabeledMatchers.hasText(Integer.toString(0)));
-    	FxAssert.verifyThat("#lbSpeed", LabeledMatchers.hasText(Integer.toString(0)));
-    	FxAssert.verifyThat("#lbDoors", LabeledMatchers.hasText("closed"));
-    	FxAssert.verifyThat("#floorNumber", LabeledMatchers.hasText(Integer.toString(3)));
+    public void testFloorNumber(FxRobot robot) throws RemoteException, InterruptedException {
+    	Mockito.verify(buildingMock, Mockito.timeout(100).times(2)).getElevatorNum();
+
+        assertAfterJavaFxPlatformEventsAreDone(() -> {
+        	FxAssert.verifyThat("#floorNumber", LabeledMatchers.hasText(Integer.toString(3)));
+       });
+
+    }
+    
+    /**
+     * @brief Asserts speed
+     * @param robot - Will be injected by the test runner.
+     * @throws RemoteException 
+     * @throws InterruptedException 
+     */
+    @Test
+    public void testSpeed(FxRobot robot) throws RemoteException, InterruptedException {
+    	Mockito.verify(buildingMock, Mockito.timeout(100).times(2)).getElevatorNum();
+
+        assertAfterJavaFxPlatformEventsAreDone(() -> {
+        	FxAssert.verifyThat("#lbSpeed", LabeledMatchers.hasText(Integer.toString(200)));
+       });
+
+    }
+    
+    /**
+     * @brief Asserts door status
+     * @param robot - Will be injected by the test runner.
+     * @throws RemoteException 
+     * @throws InterruptedException 
+     */
+    @Test
+    public void testDoorStatus(FxRobot robot) throws RemoteException, InterruptedException {
+    	Mockito.verify(buildingMock, Mockito.timeout(100).times(2)).getElevatorNum();
+
+        assertAfterJavaFxPlatformEventsAreDone(() -> {
+        	FxAssert.verifyThat("#lbDoors", LabeledMatchers.hasText("closed"));
+       });
+
     }
     
     
     /**
-     * @brief Asserts that the correct error state is shown in the GUI
+     * @brief Asserts error state
      * @param robot - Will be injected by the test runner.
      * @throws RemoteException 
      * @throws InterruptedException 
@@ -83,11 +124,27 @@ public class AppTest {
      */
     @Test
     public void testCorrectErrorState(FxRobot robot) throws RemoteException, InterruptedException, MalformedURLException, NotBoundException {
+    	
     	Mockito.when(elevatorMock.getClockTick()).thenThrow(new RemoteException());
     	Mockito.doThrow(RemoteException.class).when(elevatorMock).reconnectToRMI();
-    	Thread.sleep(150, 0);
+    	app.getController().SetReconnectErrorText("ReconnectFailed");
+    	Mockito.verify(buildingMock, Mockito.timeout(150).times(1)).reconnectToRMI();
+        assertAfterJavaFxPlatformEventsAreDone(() -> {
+        	assertEquals(robot.lookup("#lvErrors").queryAs(ListView.class).getItems().get(0), "ReconnectFailed");
+       });
 
-    	assertEquals(robot.lookup("#lvErrors").queryAs(ListView.class).getItems().get(0), "Reconnect to RMI failed! ");
     }
+    
+    private void assertAfterJavaFxPlatformEventsAreDone(Runnable runnable) throws InterruptedException {
+        waitOnJavaFxPlatformEventsDone();
+        runnable.run();
+    }
+
+    private void waitOnJavaFxPlatformEventsDone() throws InterruptedException {
+        CountDownLatch countDownLatch = new CountDownLatch(1);
+        Platform.runLater(countDownLatch::countDown);
+        countDownLatch.await();
+    }
+    
     
 }
