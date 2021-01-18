@@ -29,7 +29,7 @@ public class App extends Application {
 	private IBuildingWrapper usedBuildingwrapper;
 	private IElevatorWrapper usedElevatorwrapper;
 	private IElevator usedElevator;
-	private final static String url = "rmi://localhost/ElevatorSim";
+	private static final String url = "rmi://localhost/ElevatorSim";
 	private Controller controller;
 
 	
@@ -37,7 +37,7 @@ public class App extends Application {
 		usedElevator = null;
 		while(usedElevator == null) {
 			try {
-				usedElevator = (IElevator) Naming.lookup(this.url);
+				usedElevator = (IElevator) Naming.lookup(url);
 			} catch (Exception e) {
 				  Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 		          alert.setTitle("No Simulation Connection");
@@ -54,8 +54,8 @@ public class App extends Application {
 		
 		usedBuildingwrapper = new BuildingWrapper(usedElevator);
 		usedElevatorwrapper = new ElevatorWrapper(usedElevator);
-		usedBuildingwrapper.setConnectionString(this.url);
-		usedElevatorwrapper.setConnectionString(this.url);
+		usedBuildingwrapper.setConnectionString(url);
+		usedElevatorwrapper.setConnectionString(url);
 	}
 	
 	public App(IBuildingWrapper bw, IElevatorWrapper ew) {
@@ -83,7 +83,7 @@ public class App extends Application {
 	    	
 	    	root = loader.load();
 		} catch (IOException e) {
-			e.printStackTrace();
+			java.lang.System.out.println(e.getMessage()); 
 		}
 
         var scene = new Scene(root, 640, 480);
@@ -92,14 +92,14 @@ public class App extends Application {
         stage.setTitle("ECC Team E");
         stage.show();
         
-        var EventHandler = new EventHandler<WindowEvent>() {
+        var EVENTHANDLER = new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent t) {
                 Platform.exit();
                 System.exit(0);
             }};
             
-        stage.setOnCloseRequest(EventHandler);
+        stage.setOnCloseRequest(EVENTHANDLER);
         
         controller.initStaticBuildingInfo();
         controller.addUIListeners();

@@ -85,11 +85,11 @@ public interface IElevator extends java.rmi.Remote {
 	public static final int ELEVATOR_DOORS_CLOSING = 4;
 		
 	/** State variable for elevator status when going up */
-	public final static int ELEVATOR_DIRECTION_UP = 0;				
+	public static final int ELEVATOR_DIRECTION_UP = 0;				
 	/** State variable for elevator status when going down. */
-	public final static int ELEVATOR_DIRECTION_DOWN = 1;			
+	public static final int ELEVATOR_DIRECTION_DOWN = 1;			
 	/** State variables for elevator status stopped and uncommitted. */
-	public final static int ELEVATOR_DIRECTION_UNCOMMITTED = 2;		
+	public static final int ELEVATOR_DIRECTION_UNCOMMITTED = 2;		
 	
 	/**
 	 * Retrieves the committed direction of the specified elevator (up / down / uncommitted). 
