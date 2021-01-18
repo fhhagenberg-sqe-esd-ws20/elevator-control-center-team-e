@@ -21,26 +21,30 @@ class ControllerDataTest {
 
 	@Test
 	void testGetElevatorNumbers() {
+		cd.elevatorNumbers.set(1);
 		var res = cd.getElevatorNumbers();
-		assertEquals(0, res);
+		assertEquals(1, res);
 	}
 
 	@Test
 	void testGetFloorHeight() {
+		cd.floorHeight.set(1);
 		var res = cd.getFloorHeight();
-		assertEquals(0, res);
+		assertEquals(1, res);
 	}
 
 	@Test
 	void testGetFloorNumber() {
+		cd.floorNumber.set(1);
 		var res = cd.getFloorNumber();
-		assertEquals(0, res);
+		assertEquals(1, res);
 	}
 
 	@Test
 	void testGetCurrentElevator() {
+		cd.currentElevator.set(1);
 		var res = cd.getCurrentElevator();
-		assertEquals(0, res);
+		assertEquals(1, res);
 	}
 
 	@Test
@@ -51,62 +55,72 @@ class ControllerDataTest {
 
 	@Test
 	void testGetIsManualMode() {
+		cd.isManualMode.set(true);
 		var res = cd.getIsManualMode();
-		assertEquals(false, res);
+		assertEquals(true, res);
 	}
 
 	@Test
 	void testGetCommittedDirection() {
+		cd.committedDirection.set(1);
 		var res = cd.getCommittedDirection();
-		assertEquals(0, res);
+		assertEquals(1, res);
 	}
 
 	@Test
 	void testGetElevatorAccel() {
+		cd.elevatorAccel.set(1);
 		var res = cd.getElevatorAccel();
-		assertEquals(0, res);
+		assertEquals(1, res);
 	}
 
 	@Test
 	void testGetElevatorDoorStatus() {
+		cd.elevatorDoorStatus.set(1);
 		var res = cd.getElevatorDoorStatus();
-		assertEquals(0, res);
+		assertEquals(1, res);
 	}
 
 	@Test
 	void testGetElevatorFloor() {
+		cd.elevatorFloor.set(1);
 		var res = cd.getElevatorFloor();
-		assertEquals(0, res);
+		assertEquals(1, res);
 	}
 
 	@Test
 	void testGetElevatorPosition() {
+		cd.elevatorPosition.set(1);
 		var res = cd.getElevatorPosition();
-		assertEquals(0, res);
+		assertEquals(1, res);
 	}
 
 	@Test
 	void testGetElevatorSpeed() {
+		cd.elevatorSpeed.set(1);
 		var res = cd.getElevatorSpeed();
-		assertEquals(0, res);
+		assertEquals(1, res);
 	}
 
 	@Test
 	void testGetElevatorWeight() {
+		cd.elevatorWeight.set(1);
 		var res = cd.getElevatorWeight();
-		assertEquals(0, res);
+		assertEquals(1, res);
 	}
 
 	@Test
 	void testGetElevatorCapacity() {
+		cd.elevatorCapacity.set(1);
 		var res = cd.getElevatorCapacity();
-		assertEquals(0, res);
+		assertEquals(1, res);
 	}
 
 	@Test
 	void testGetElevatorTarget() {
+		cd.elevatorTarget.set(1);
 		var res = cd.getElevatorTarget();
-		assertEquals(0, res);
+		assertEquals(1, res);
 	}
 
 }

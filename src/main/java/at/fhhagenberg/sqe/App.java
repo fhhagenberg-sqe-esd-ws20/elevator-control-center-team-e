@@ -30,6 +30,7 @@ public class App extends Application {
 	private IElevatorWrapper used_elevatorwrapper;
 	private IElevator used_elevator;
 	private final String url = "rmi://localhost/ElevatorSim";
+	private Controller controller;
 
 	
 	public App() {
@@ -62,13 +63,17 @@ public class App extends Application {
 		used_elevatorwrapper = ew;
 	}
 	
+	public Controller getController() {
+		return controller;
+	}
+	
     @Override
     public void start(Stage stage) {
     	Parent root = null;
     	FXMLLoader loader;
     	IBuildingWrapper building = used_buildingwrapper;
     	IElevatorWrapper elevator = used_elevatorwrapper;
-    	Controller controller = new Controller(building, elevator);
+    	controller = new Controller(building, elevator);
     	
     	try {
 	    	URL url_fxml = new File("src/main/resources/fxml/eccView.fxml").toURI().toURL();

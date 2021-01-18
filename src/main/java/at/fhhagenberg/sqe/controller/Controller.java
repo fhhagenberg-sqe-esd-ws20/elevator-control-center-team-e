@@ -27,8 +27,9 @@ public class Controller {
 	private static int FETCH_INTERVAL = 100;
 	private static int MAX_RETRIES = 4;
 	private AtomicBoolean isConnected;
-	boolean remoteEx = false;
-	private static String maxRetryText = "Reached maximum retries while updating elevator.";
+	private String RetrySuccessText = "Synchronisation successfully";
+	private String maxRetryText = "Reached maximum retries while updating elevator.";
+	private String ReconnectErrorText = "Reconnect to RMI failed! ";
 	
 	@FXML
 	public ControllerData data;
@@ -47,9 +48,22 @@ public class Controller {
 
 	}
 	
+	public void SetReconnectErrorText(String txt) {
+		ReconnectErrorText = txt;
+	}
+	
+	public void SetRetryErrorText(String txt) {
+		maxRetryText = txt;
+	}
+	
+	public void SetRetrySuccessText(String txt) {
+		RetrySuccessText = txt;
+	}
 	
 	
-	private void logException(String message) {
+	
+	
+	public void logException(String message) {
 		Platform.runLater(() -> {
 			data.errors.add(message);
 		});
@@ -75,7 +89,6 @@ public class Controller {
 			}
 		} catch (RemoteException e) {
 			tryReconnectingToRMI();
-			SetTarget(target);
 		}
 	}
 	
@@ -93,7 +106,6 @@ public class Controller {
 			
 		} catch (RemoteException e) {
 			tryReconnectingToRMI();
-			initStaticBuildingInfo();
 		}
 	}
 	
@@ -145,15 +157,9 @@ public class Controller {
 									// set to uncommitted if target is reached
 									elevator.setCommittedDirection(data.currentElevator.get(), 2);
 							}
-						} catch (RemoteException e) {remoteEx = true;}
+						} catch (RemoteException e) {logException(ReconnectErrorText);}
 						
 					});
-					if(remoteEx) {
-						isConnected.set(false);
-						remoteEx = false;
-						tryReconnectingToRMI();
-						return;
-					}
 					if(cnt++ == MAX_RETRIES) {
 						if(data.errors.isEmpty() || !data.errors.get(data.errors.size()-1).contains(maxRetryText)) {
 							clearLogs();
@@ -164,7 +170,7 @@ public class Controller {
 				} while (tick != elevator.getClockTick());
 				if(!data.errors.isEmpty() && data.errors.get(data.errors.size()-1).contains(maxRetryText)) {
 					clearLogs();
-					logException("Synchronisation successfully");
+					logException(RetrySuccessText);
 				}
 			} catch (RemoteException e) {
 				if(isConnected.get()) {	
@@ -196,9 +202,9 @@ public class Controller {
 			elevator.reconnectToRMI();
 			isConnected.set(true);
 			clearLogs();
-			logException("Reconnected successfully");
+			logException(RetrySuccessText);
 		} catch (Exception e) {
-			logException("Reconnect to RMI failed! ");
+			logException(ReconnectErrorText);
 		}
 
 	}
