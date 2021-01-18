@@ -378,8 +378,7 @@ class ControllerTest {
 	@Test
 	void testTickFails() throws RemoteException, InterruptedException {
 		controller = new Controller(buildingMock, elevatorMock);
-		Mockito.when(elevatorMock.getClockTick()).thenReturn((long) 0).thenReturn((long) 1).thenReturn((long) 2).thenReturn((long) 3).
-		thenReturn((long) 4).thenReturn((long) 5).thenReturn((long) 6).thenReturn((long) 7).thenReturn((long) 8).thenReturn((long) 9).thenReturn((long) 9).thenReturn((long) 10).thenReturn((long) 11).thenReturn((long) 12).thenReturn((long) 13);
+		Mockito.when(elevatorMock.getClockTick()).thenReturn((long) 0,(long) 1,(long) 2,(long) 3,(long) 4,(long) 5,(long) 6,(long) 7,(long) 8,(long) 9,(long) 10,(long) 11,(long) 12,(long) 13,(long) 14,(long) 15,(long) 0,(long) 1,(long) 2,(long) 3,(long) 4,(long) 5,(long) 6,(long) 7,(long) 8,(long) 9,(long) 10,(long) 11,(long) 12,(long) 13,(long) 14,(long) 15);
 		controller.SetRetryErrorText("RetryError");
 		controller.update();
 		controller.update();
@@ -412,26 +411,17 @@ class ControllerTest {
 	void testSyncSuccessfully() throws RemoteException, InterruptedException, MalformedURLException, NotBoundException {
 		
 		controller = new Controller(buildingMock, elevatorMock);
-		Mockito.when(elevatorMock.getClockTick()).thenReturn((long) 0).thenReturn((long) 1).thenReturn((long) 2).thenReturn((long) 3).
-		thenReturn((long) 4).thenReturn((long) 5).thenReturn((long) 6).thenReturn((long) 7).thenReturn((long) 8).thenReturn((long) 9).thenReturn((long) 9).thenReturn((long) 10).thenReturn((long) 11).thenReturn((long) 12).thenReturn((long) 13);
+		
+		Mockito.when(elevatorMock.getClockTick()).thenReturn((long) 0);
 		controller.SetRetryErrorText("RetryError");
+		controller.data.errors.add("RetryError");
 		controller.SetRetrySuccessText("Synchronisation successfully");
 		controller.update();
-		controller.update();
-		controller.update();
-		controller.update();
 
-        assertAfterJavaFxPlatformEventsAreDone(() -> {
-    		assertEquals("RetryError", controller.getLastError());
-       });
-        
-		Mockito.when(elevatorMock.getClockTick()).thenReturn((long)0);
-		
-		controller.update();
-		controller.update();
 		
         assertAfterJavaFxPlatformEventsAreDone(() -> {
     		assertEquals("Synchronisation successfully", controller.getLastError());
+
        });
         
 	}
