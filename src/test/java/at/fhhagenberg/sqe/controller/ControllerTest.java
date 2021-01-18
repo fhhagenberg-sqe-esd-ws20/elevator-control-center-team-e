@@ -379,7 +379,7 @@ class ControllerTest {
 	void testTickFails() throws RemoteException, InterruptedException {
 		controller = new Controller(buildingMock, elevatorMock);
 		Mockito.when(elevatorMock.getClockTick()).thenReturn((long) 0).thenReturn((long) 1).thenReturn((long) 2).thenReturn((long) 3).
-		thenReturn((long) 4).thenReturn((long) 5).thenReturn((long) 6).thenReturn((long) 7).thenReturn((long) 8).thenReturn((long) 9);
+		thenReturn((long) 4).thenReturn((long) 5).thenReturn((long) 6).thenReturn((long) 7).thenReturn((long) 8).thenReturn((long) 9).thenReturn((long) 9).thenReturn((long) 10).thenReturn((long) 11).thenReturn((long) 12).thenReturn((long) 13);
 		controller.SetRetryErrorText("RetryError");
 		controller.update();
 		controller.update();
@@ -413,7 +413,7 @@ class ControllerTest {
 		
 		controller = new Controller(buildingMock, elevatorMock);
 		Mockito.when(elevatorMock.getClockTick()).thenReturn((long) 0).thenReturn((long) 1).thenReturn((long) 2).thenReturn((long) 3).
-		thenReturn((long) 4).thenReturn((long) 5).thenReturn((long) 6).thenReturn((long) 7).thenReturn((long) 8).thenReturn((long) 9);
+		thenReturn((long) 4).thenReturn((long) 5).thenReturn((long) 6).thenReturn((long) 7).thenReturn((long) 8).thenReturn((long) 9).thenReturn((long) 9).thenReturn((long) 10).thenReturn((long) 11).thenReturn((long) 12).thenReturn((long) 13);
 		controller.SetRetryErrorText("RetryError");
 		controller.SetRetrySuccessText("Synchronisation successfully");
 		controller.update();
