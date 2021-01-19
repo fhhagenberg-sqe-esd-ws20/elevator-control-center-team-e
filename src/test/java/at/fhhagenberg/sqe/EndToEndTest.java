@@ -116,5 +116,28 @@ class EndToEndTest {
 
         po.VerifyLabel(po.GetTargetLabel(), Integer.toString(5));
     }
+    
+    /**
+     * @param robot - Will be injected by the test runner.
+     * @throws RemoteException 
+     */
+    @Test
+    void testSetAutomaticMode(FxRobot robot) throws Exception {
+    	po.ClickSetAutomatic(robot);
+    	
+    	po.VerifyEquals(po.GetFloorsDisabled(robot), true);
+    }
+    
+    /**
+     * @param robot - Will be injected by the test runner.
+     * @throws RemoteException 
+     */
+    @Test
+    void testResetToManualMode(FxRobot robot) throws Exception {
+    	po.ClickSetAutomatic(robot);
+    	po.ClickSetManual(robot);
+    	
+    	po.VerifyEquals(po.GetFloorsDisabled(robot), false);
+    }
 
 }

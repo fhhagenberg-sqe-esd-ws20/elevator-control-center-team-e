@@ -10,6 +10,7 @@ import org.testfx.matcher.control.LabeledMatchers;
 
 import javafx.application.Platform;
 import javafx.scene.control.ListView;
+import javafx.scene.image.ImageView;
 import javafx.util.Pair;
 
 public class AppPO {
@@ -18,7 +19,7 @@ public class AppPO {
 		
 	}
 	
-	/* IDs of UI Elements */
+	/* IDs and properties of UI Elements */
 	
 	/**
 	 * @return CSS id of Current Floor
@@ -35,10 +36,26 @@ public class AppPO {
 	}
 	
 	/**
+	 * @param robot - FxRobot of test
+	 * @return if DownArrow is active
+	 */
+	public boolean GetDownActive(FxRobot robot) {
+		return robot.lookup(GetDownImage()).queryAs(ImageView.class).isVisible();
+	}
+	
+	/**
 	 * @return CSS id of Up Image
 	 */
 	public String GetUpImage() {
 		return "#imgElevUp";
+	}
+	
+	/**
+	 * @param robot - FxRobot of test
+	 * @return if UpArrow is active
+	 */
+	public boolean GetUpActive(FxRobot robot) {
+		return robot.lookup(GetUpImage()).queryAs(ImageView.class).isVisible();
 	}
 	
 	/**
@@ -92,6 +109,14 @@ public class AppPO {
 	}
 	
 	/**
+	 * @param robot - FxRobot of test
+	 * @return if ListView is disabled
+	 */
+	public boolean GetFloorsDisabled(FxRobot robot) {
+		return robot.lookup(GetFloorListView()).queryAs(ListView.class).isDisabled();
+	}
+	
+	/**
 	 * @return CSS id of Manual Mode RB
 	 */
 	public String GetManualRB() {
@@ -132,7 +157,21 @@ public class AppPO {
 		robot.clickOn(".button");
 	}
 	
+	/**
+	 * Click on Radiobutton to set Automatic Mode
+	 * @param robot - FxRobot of test
+	 */
+	public void ClickSetAutomatic(FxRobot robot) {
+		robot.clickOn(GetAutomaticRB());
+	}
 	
+	/**
+	 * Click on Radiobutton to set Manual Mode
+	 * @param robot - FxRobot of test
+	 */
+	public void ClickSetManual(FxRobot robot) {
+		robot.clickOn(GetManualRB());
+	}
 	
 	/* Assertions */
 	
