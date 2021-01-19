@@ -15,10 +15,9 @@ import javafx.util.Pair;
 
 public class AppPO {
 
-	public AppPO() {
-		
-	}
+	public AppPO() { }
 	
+	/*******************************************************************/
 	/* IDs and properties of UI Elements */
 	
 	/**
@@ -145,7 +144,7 @@ public class AppPO {
 	}
 	
 	
-
+	/*******************************************************************/
 	/* Actions */
 	
 	/**
@@ -173,14 +172,16 @@ public class AppPO {
 		robot.clickOn(GetManualRB());
 	}
 	
+	
+	/*******************************************************************/
 	/* Assertions */
 	
 	/**
 	 * @param actual - Object to do assertion on
 	 * @param expected - expected value
-	 * @throws InterruptedException
+	 * @throws Exception
 	 */
-	public void VerifyEquals(Object actual, Object expected) throws InterruptedException {
+	public void VerifyEquals(Object actual, Object expected) throws Exception {
 		assertAfterJavaFxPlatformEventsAreDone(() -> {
 			assertEquals(expected, actual);
 		});
@@ -189,9 +190,9 @@ public class AppPO {
 	/**
 	 * @param elementId - CSS id of element
 	 * @param value - expected value
-	 * @throws InterruptedException
+	 * @throws Exception
 	 */
-	public void VerifyLabel(String elementId, String value) throws InterruptedException {
+	public void VerifyLabel(String elementId, String value) throws Exception {
 		assertAfterJavaFxPlatformEventsAreDone(() -> {
 			FxAssert.verifyThat(elementId, LabeledMatchers.hasText(value));
 		});
@@ -199,9 +200,9 @@ public class AppPO {
 	
 	/**
 	 * @param pairs - Pairs of CSS id of element and expected value
-	 * @throws InterruptedException
+	 * @throws Exception
 	 */
-	public void VerifyLabels(Pair<String, String>... pairs) throws InterruptedException {
+	public void VerifyLabels(Pair<String, String>... pairs) throws Exception {
 		assertAfterJavaFxPlatformEventsAreDone(() -> {
 			for(var pair : pairs) {
 				FxAssert.verifyThat(pair.getKey(), LabeledMatchers.hasText(pair.getValue()));
@@ -209,12 +210,12 @@ public class AppPO {
 		});
 	}
 	
-    private void assertAfterJavaFxPlatformEventsAreDone(Runnable runnable) throws InterruptedException {
+    private void assertAfterJavaFxPlatformEventsAreDone(Runnable runnable) throws Exception {
         waitOnJavaFxPlatformEventsDone();
         runnable.run();
     }
 
-    private void waitOnJavaFxPlatformEventsDone() throws InterruptedException {
+    private void waitOnJavaFxPlatformEventsDone() throws Exception {
         CountDownLatch countDownLatch = new CountDownLatch(1);
         Platform.runLater(countDownLatch::countDown);
         countDownLatch.await();

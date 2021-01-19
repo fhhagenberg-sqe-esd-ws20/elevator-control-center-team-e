@@ -1,27 +1,22 @@
 package at.fhhagenberg.sqe;
 
 import java.rmi.RemoteException;
-import java.util.concurrent.CountDownLatch;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.testfx.api.FxAssert;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
-import org.testfx.matcher.control.LabeledMatchers;
 
 import at.fhhagenberg.sqe.model.BuildingWrapper;
 import at.fhhagenberg.sqe.model.ElevatorWrapper;
 import at.fhhagenberg.sqe.pageobject.AppPO;
-import javafx.application.Platform;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import sqelevator.IElevator;
-
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(ApplicationExtension.class)
@@ -34,7 +29,7 @@ class EndToEndTest {
     AppPO po;
 	
 	
-	private void setupMock() throws RemoteException {
+	private void setupMock() throws Exception {
 		Mockito.when(elevator.getElevatorNum()).thenReturn(2);
 		Mockito.when(elevator.getFloorNum()).thenReturn(3);
 		Mockito.when(elevator.getTarget(0)).thenReturn(target);
@@ -46,10 +41,10 @@ class EndToEndTest {
      * Will be called with {@code @Before} semantics, i. e. before each test method.
      *
      * @param stage - Will be injected by the test runner.
-     * @throws RemoteException 
+     * @throws Exception 
      */
     @Start
-    public void start(Stage stage) throws RemoteException {
+    public void start(Stage stage) throws Exception {
     	try {
     		target = 99;
 			setupMock();
@@ -63,11 +58,10 @@ class EndToEndTest {
 
     /**
      * @param robot - Will be injected by the test runner.
-     * @throws RemoteException 
-     * @throws InterruptedException 
+     * @throws Exception 
      */
-    @Test
-    void testEndToEndStaticInformation(FxRobot robot) throws RemoteException, InterruptedException {
+	@Test
+    void testEndToEndStaticInformation(FxRobot robot) throws Exception {
     	Mockito.reset(elevator);
     	Mockito.when(elevator.getElevatorFloor(0)).thenReturn(3);
     	Mockito.when(elevator.getElevatorWeight(0)).thenReturn(100);
@@ -87,7 +81,7 @@ class EndToEndTest {
     
     /**
      * @param robot - Will be injected by the test runner.
-     * @throws RemoteException 
+     * @throws Exception 
      */
     @Test
     void testEndToEndScenarioSetTarget(FxRobot robot) throws Exception  {
@@ -106,7 +100,7 @@ class EndToEndTest {
     
     /**
      * @param robot - Will be injected by the test runner.
-     * @throws RemoteException 
+     * @throws Exception 
      */
     @Test
     void testEndToEndScenarioReadTarget(FxRobot robot) throws Exception  {
@@ -119,7 +113,7 @@ class EndToEndTest {
     
     /**
      * @param robot - Will be injected by the test runner.
-     * @throws RemoteException 
+     * @throws Exception 
      */
     @Test
     void testSetAutomaticMode(FxRobot robot) throws Exception {
@@ -130,7 +124,7 @@ class EndToEndTest {
     
     /**
      * @param robot - Will be injected by the test runner.
-     * @throws RemoteException 
+     * @throws Exception 
      */
     @Test
     void testResetToManualMode(FxRobot robot) throws Exception {
@@ -139,5 +133,5 @@ class EndToEndTest {
     	
     	po.VerifyEquals(po.GetFloorsDisabled(robot), false);
     }
-
+    
 }

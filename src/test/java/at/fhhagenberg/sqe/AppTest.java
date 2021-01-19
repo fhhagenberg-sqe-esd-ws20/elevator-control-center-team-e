@@ -1,29 +1,20 @@
 package at.fhhagenberg.sqe;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import java.net.MalformedURLException;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.util.concurrent.CountDownLatch;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.testfx.api.FxAssert;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
-import org.testfx.matcher.control.LabeledMatchers;
 
 import at.fhhagenberg.sqe.model.IBuildingWrapper;
 import at.fhhagenberg.sqe.model.IElevatorWrapper;
 import at.fhhagenberg.sqe.pageobject.AppPO;
-import javafx.application.Platform;
-import javafx.scene.control.ListView;
 import javafx.stage.Stage;
-
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(ApplicationExtension.class)
@@ -39,7 +30,7 @@ class AppTest {
 	App app;
 	AppPO po;
 	
-	private void setupMock() throws RemoteException {
+	private void setupMock() throws Exception {
 		Mockito.when(buildingMock.getElevatorNum()).thenReturn(2);
 		Mockito.when(buildingMock.getFloorNum()).thenReturn(3);
 		Mockito.when(elevatorMock.getElevatorCapacity(0)).thenReturn(100);
@@ -53,9 +44,10 @@ class AppTest {
      * Will be called with {@code @Before} semantics, i. e. before each test method.
      *
      * @param stage - Will be injected by the test runner.
+     * @throws Exception 
      */
     @Start
-    public void start(Stage stage) {
+    public void start(Stage stage) throws Exception {
     	
     	try {
     		target = 99;
@@ -71,11 +63,10 @@ class AppTest {
     /**
      * @brief Asserts floor number
      * @param robot - Will be injected by the test runner.
-     * @throws RemoteException 
-     * @throws InterruptedException 
+     * @throws Exception 
      */
     @Test
-    void testFloorNumber(FxRobot robot) throws RemoteException, InterruptedException {
+    void testFloorNumber(FxRobot robot) throws Exception {
     	Mockito.verify(buildingMock, Mockito.timeout(100).times(2)).getElevatorNum();
 
         po.VerifyLabel(po.GetFloorNumberLabel(), Integer.toString(3));
@@ -84,11 +75,10 @@ class AppTest {
     /**
      * @brief Asserts speed
      * @param robot - Will be injected by the test runner.
-     * @throws RemoteException 
-     * @throws InterruptedException 
+     * @throws Exception 
      */
     @Test
-    void testSpeed(FxRobot robot) throws RemoteException, InterruptedException {
+    void testSpeed(FxRobot robot) throws Exception {
     	Mockito.verify(buildingMock, Mockito.timeout(100).times(2)).getElevatorNum();
 
         po.VerifyLabel(po.GetSpeedLabel(), Integer.toString(200));
@@ -97,11 +87,10 @@ class AppTest {
     /**
      * @brief Checks Direction Images
      * @param robot - Will be injected by the test runner.
-     * @throws RemoteException 
-     * @throws InterruptedException 
+     * @throws Exception 
      */
     @Test
-    void testDirectionUncommitted(FxRobot robot) throws RemoteException, InterruptedException {
+    void testDirectionUncommitted(FxRobot robot) throws Exception {
     	Mockito.when(elevatorMock.getCommittedDirection(0)).thenReturn(2);
     	Mockito.verify(elevatorMock, Mockito.timeout(100).atLeastOnce()).getCommittedDirection(0);
     	
@@ -112,11 +101,10 @@ class AppTest {
     /**
      * @brief Checks Direction Images
      * @param robot - Will be injected by the test runner.
-     * @throws RemoteException 
-     * @throws InterruptedException 
+     * @throws Exception 
      */
     @Test
-    void testDirectionDown(FxRobot robot) throws RemoteException, InterruptedException {
+    void testDirectionDown(FxRobot robot) throws Exception {
     	Mockito.when(elevatorMock.getCommittedDirection(0)).thenReturn(1);
     	Mockito.verify(elevatorMock, Mockito.timeout(100).atLeastOnce()).getCommittedDirection(0);
     	
@@ -127,27 +115,22 @@ class AppTest {
     /**
      * @brief Asserts door status
      * @param robot - Will be injected by the test runner.
-     * @throws RemoteException 
-     * @throws InterruptedException 
+     * @throws Exception 
      */
     @Test
-    void testDoorStatus(FxRobot robot) throws RemoteException, InterruptedException {
+    void testDoorStatus(FxRobot robot) throws Exception {
     	Mockito.verify(buildingMock, Mockito.timeout(100).times(2)).getElevatorNum();
 
         po.VerifyLabel(po.GetDoorsLabel(), "closed");
     }
-    
-    
+
     /**
      * @brief Asserts error state
      * @param robot - Will be injected by the test runner.
-     * @throws RemoteException 
-     * @throws InterruptedException 
-     * @throws NotBoundException 
-     * @throws MalformedURLException 
+     * @throws Exception 
      */
     @Test
-    void testCorrectErrorState(FxRobot robot) throws RemoteException, InterruptedException, MalformedURLException, NotBoundException {
+    void testCorrectErrorState(FxRobot robot) throws Exception {
     	
     	Mockito.when(elevatorMock.getClockTick()).thenThrow(new RemoteException());
     	Mockito.doThrow(RemoteException.class).when(elevatorMock).reconnectToRMI();
