@@ -76,11 +76,11 @@ class EndToEndTest {
     	Mockito.verify(elevator, Mockito.timeout(2000).atLeast(2)).getClockTick();
     	
         po.assertAfterJavaFxPlatformEventsAreDone(() -> {
-        	FxAssert.verifyThat("#lbFloor", LabeledMatchers.hasText(Integer.toString(3)));
-        	FxAssert.verifyThat("#lbPayload", LabeledMatchers.hasText(Integer.toString(100)));
-        	FxAssert.verifyThat("#lbSpeed", LabeledMatchers.hasText(Integer.toString(5)));
-        	FxAssert.verifyThat("#lbDoors", LabeledMatchers.hasText("open"));
-        	FxAssert.verifyThat("#floorNumber", LabeledMatchers.hasText(Integer.toString(3)));
+        	FxAssert.verifyThat(po.GetCurrentFloorLabel(), LabeledMatchers.hasText(Integer.toString(3)));
+        	FxAssert.verifyThat(po.GetPayloadLabel(), LabeledMatchers.hasText(Integer.toString(100)));
+        	FxAssert.verifyThat(po.GetSpeedLabel(), LabeledMatchers.hasText(Integer.toString(5)));
+        	FxAssert.verifyThat(po.GetDoorsLabel(), LabeledMatchers.hasText("open"));
+        	FxAssert.verifyThat(po.GetFloorNumberLabel(), LabeledMatchers.hasText(Integer.toString(3)));
        });
 
     }
@@ -99,7 +99,7 @@ class EndToEndTest {
     	
     	
         po.assertAfterJavaFxPlatformEventsAreDone(() -> {
-        	FxAssert.verifyThat("#lbTarget", LabeledMatchers.hasText(Integer.toString(target)));
+        	FxAssert.verifyThat(po.GetTargetLabel(), LabeledMatchers.hasText(Integer.toString(target)));
        });
     	
         
@@ -119,7 +119,7 @@ class EndToEndTest {
     	Mockito.when(elevator.getTarget(0)).thenReturn(5);
     	Mockito.verify(elevator, Mockito.timeout(2000).atLeast(2)).getClockTick();
         po.assertAfterJavaFxPlatformEventsAreDone(() -> {
-            FxAssert.verifyThat("#lbTarget", LabeledMatchers.hasText(Integer.toString(5)));
+            FxAssert.verifyThat(po.GetTargetLabel(), LabeledMatchers.hasText(Integer.toString(5)));
        });
 
     }
