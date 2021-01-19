@@ -94,6 +94,8 @@ class AppTest {
     	Mockito.when(elevatorMock.getCommittedDirection(0)).thenReturn(2);
     	Mockito.verify(elevatorMock, Mockito.timeout(100).atLeastOnce()).getCommittedDirection(0);
     	
+    	app.getController().setCommittedDirection(2);
+    	
         po.VerifyEquals(po.GetUpActive(robot), false);
         po.VerifyEquals(po.GetDownActive(robot), false);
     }
@@ -107,6 +109,8 @@ class AppTest {
     void testDirectionDown(FxRobot robot) throws Exception {
     	Mockito.when(elevatorMock.getCommittedDirection(0)).thenReturn(1);
     	Mockito.verify(elevatorMock, Mockito.timeout(100).atLeastOnce()).getCommittedDirection(0);
+    	
+    	app.getController().setCommittedDirection(1);
     	
         po.VerifyEquals(po.GetUpActive(robot), false);
         po.VerifyEquals(po.GetDownActive(robot), true);

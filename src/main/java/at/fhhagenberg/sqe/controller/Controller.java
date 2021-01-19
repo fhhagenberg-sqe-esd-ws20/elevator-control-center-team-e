@@ -61,7 +61,9 @@ public class Controller {
 		retrySuccessText = txt;
 	}
 	
-	
+	public void setCommittedDirection(int direction) {
+		data.committedDirection.set(direction);
+	}
 	
 	
 	public void logException(String message) {
