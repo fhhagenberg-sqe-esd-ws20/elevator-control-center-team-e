@@ -1,5 +1,7 @@
 package at.fhhagenberg.sqe.pageobject;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.concurrent.CountDownLatch;
 
 import org.testfx.api.FxAssert;
@@ -7,6 +9,7 @@ import org.testfx.api.FxRobot;
 import org.testfx.matcher.control.LabeledMatchers;
 
 import javafx.application.Platform;
+import javafx.scene.control.ListView;
 import javafx.util.Pair;
 
 public class AppPO {
@@ -49,6 +52,10 @@ public class AppPO {
 		return "#lvErrors"; 
 	}
 	
+	public Object GetFirstError(FxRobot robot) {
+		return robot.lookup(GetErrorListView()).queryAs(ListView.class).getItems().get(0);
+	}
+	
 	public String GetFloorListView() {
 		return "#lvFloors"; 
 	}
@@ -78,6 +85,12 @@ public class AppPO {
 	
 	/* Assertions */
 	
+	public void VerifyEquals(Object actual, Object expected) throws InterruptedException {
+		assertAfterJavaFxPlatformEventsAreDone(() -> {
+			assertEquals(expected, actual);
+		});
+	}
+	
 	public void VerifyLabel(String elementId, String value) throws InterruptedException {
 		assertAfterJavaFxPlatformEventsAreDone(() -> {
 			FxAssert.verifyThat(elementId, LabeledMatchers.hasText(value));
@@ -92,12 +105,12 @@ public class AppPO {
 		});
 	}
 	
-    public void assertAfterJavaFxPlatformEventsAreDone(Runnable runnable) throws InterruptedException {
+    private void assertAfterJavaFxPlatformEventsAreDone(Runnable runnable) throws InterruptedException {
         waitOnJavaFxPlatformEventsDone();
         runnable.run();
     }
 
-    public void waitOnJavaFxPlatformEventsDone() throws InterruptedException {
+    private void waitOnJavaFxPlatformEventsDone() throws InterruptedException {
         CountDownLatch countDownLatch = new CountDownLatch(1);
         Platform.runLater(countDownLatch::countDown);
         countDownLatch.await();

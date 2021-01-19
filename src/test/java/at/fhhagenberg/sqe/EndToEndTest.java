@@ -75,15 +75,7 @@ class EndToEndTest {
     	Mockito.when(elevator.getElevatorDoorStatus(0)).thenReturn(1);
     	
     	Mockito.verify(elevator, Mockito.timeout(2000).atLeast(2)).getClockTick();
-    	
-//        po.assertAfterJavaFxPlatformEventsAreDone(() -> {
-//        	FxAssert.verifyThat(po.GetCurrentFloorLabel(), LabeledMatchers.hasText(Integer.toString(3)));
-//        	FxAssert.verifyThat(po.GetPayloadLabel(), LabeledMatchers.hasText(Integer.toString(100)));
-//        	FxAssert.verifyThat(po.GetSpeedLabel(), LabeledMatchers.hasText(Integer.toString(5)));
-//        	FxAssert.verifyThat(po.GetDoorsLabel(), LabeledMatchers.hasText("open"));
-//        	FxAssert.verifyThat(po.GetFloorNumberLabel(), LabeledMatchers.hasText(Integer.toString(3)));
-//       });
-        
+    	        
         po.VerifyLabels(
         		new Pair<String, String>(po.GetCurrentFloorLabel(), Integer.toString(3)),
         		new Pair<String, String>(po.GetPayloadLabel(), Integer.toString(100)),
@@ -91,7 +83,6 @@ class EndToEndTest {
         		new Pair<String, String>(po.GetDoorsLabel(), "open"),
         		new Pair<String, String>(po.GetFloorNumberLabel(), Integer.toString(3))
         		);
-
     }
     
     /**
@@ -105,17 +96,10 @@ class EndToEndTest {
 			Mockito.when(elevator.getTarget(0)).thenReturn(target);
 			return null;
 		}).when(elevator).setTarget(Mockito.anyInt(), Mockito.anyInt());
-    	
-    	
-//        po.assertAfterJavaFxPlatformEventsAreDone(() -> {
-//        	FxAssert.verifyThat(po.GetTargetLabel(), LabeledMatchers.hasText(Integer.toString(target)));
-//       });
-        
+    	        
         po.VerifyLabel(po.GetTargetLabel(), Integer.toString(target));
-    	
-        
+    	      
         po.ClickSetTarget(robot);
-    	// robot.clickOn(".button");
     	
     	Mockito.verify(elevator, Mockito.timeout(1000)).setTarget(0, 0);
     }
@@ -129,12 +113,8 @@ class EndToEndTest {
     	Mockito.reset(elevator);
     	Mockito.when(elevator.getTarget(0)).thenReturn(5);
     	Mockito.verify(elevator, Mockito.timeout(2000).atLeast(2)).getClockTick();
-//        po.assertAfterJavaFxPlatformEventsAreDone(() -> {
-//            FxAssert.verifyThat(po.GetTargetLabel(), LabeledMatchers.hasText(Integer.toString(5)));
-//       });
-        
-        po.VerifyLabel(po.GetTargetLabel(), Integer.toString(5));
 
+        po.VerifyLabel(po.GetTargetLabel(), Integer.toString(5));
     }
 
 }

@@ -78,10 +78,7 @@ class AppTest {
     void testFloorNumber(FxRobot robot) throws RemoteException, InterruptedException {
     	Mockito.verify(buildingMock, Mockito.timeout(100).times(2)).getElevatorNum();
 
-        po.assertAfterJavaFxPlatformEventsAreDone(() -> {
-        	FxAssert.verifyThat(po.GetFloorNumberLabel(), LabeledMatchers.hasText(Integer.toString(3)));
-       });
-
+        po.VerifyLabel(po.GetCurrentFloorLabel(), Integer.toString(3));
     }
     
     /**
@@ -94,10 +91,7 @@ class AppTest {
     void testSpeed(FxRobot robot) throws RemoteException, InterruptedException {
     	Mockito.verify(buildingMock, Mockito.timeout(100).times(2)).getElevatorNum();
 
-        po.assertAfterJavaFxPlatformEventsAreDone(() -> {
-        	FxAssert.verifyThat(po.GetSpeedLabel(), LabeledMatchers.hasText(Integer.toString(200)));
-       });
-
+        po.VerifyLabel(po.GetSpeedLabel(), Integer.toString(200));
     }
     
     /**
@@ -110,10 +104,7 @@ class AppTest {
     void testDoorStatus(FxRobot robot) throws RemoteException, InterruptedException {
     	Mockito.verify(buildingMock, Mockito.timeout(100).times(2)).getElevatorNum();
 
-        po.assertAfterJavaFxPlatformEventsAreDone(() -> {
-        	FxAssert.verifyThat(po.GetDoorsLabel(), LabeledMatchers.hasText("closed"));
-       });
-
+        po.VerifyLabel(po.GetDoorsLabel(), "closed");
     }
     
     
@@ -130,12 +121,11 @@ class AppTest {
     	
     	Mockito.when(elevatorMock.getClockTick()).thenThrow(new RemoteException());
     	Mockito.doThrow(RemoteException.class).when(elevatorMock).reconnectToRMI();
+    	
     	app.getController().setReconnectErrorText("ReconnectFailed");
+    	
     	Mockito.verify(buildingMock, Mockito.timeout(150).times(1)).reconnectToRMI();
-        po.assertAfterJavaFxPlatformEventsAreDone(() -> {
-        	assertEquals(robot.lookup(po.GetErrorListView()).queryAs(ListView.class).getItems().get(0), "ReconnectFailed");
-       });
-
+        po.VerifyEquals(po.GetFirstError(robot), "ReconnectFailed");
     }
 
 }
