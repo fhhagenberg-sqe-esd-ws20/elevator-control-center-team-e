@@ -78,7 +78,7 @@ class AppTest {
     void testFloorNumber(FxRobot robot) throws RemoteException, InterruptedException {
     	Mockito.verify(buildingMock, Mockito.timeout(100).times(2)).getElevatorNum();
 
-        po.VerifyLabel(po.GetCurrentFloorLabel(), Integer.toString(3));
+        po.VerifyLabel(po.GetFloorNumberLabel(), Integer.toString(3));
     }
     
     /**
