@@ -77,12 +77,12 @@ public class AppPO {
 	
 	
 	
-    private void assertAfterJavaFxPlatformEventsAreDone(Runnable runnable) throws InterruptedException {
+    public void assertAfterJavaFxPlatformEventsAreDone(Runnable runnable) throws InterruptedException {
         waitOnJavaFxPlatformEventsDone();
         runnable.run();
     }
 
-    private void waitOnJavaFxPlatformEventsDone() throws InterruptedException {
+    public void waitOnJavaFxPlatformEventsDone() throws InterruptedException {
         CountDownLatch countDownLatch = new CountDownLatch(1);
         Platform.runLater(countDownLatch::countDown);
         countDownLatch.await();

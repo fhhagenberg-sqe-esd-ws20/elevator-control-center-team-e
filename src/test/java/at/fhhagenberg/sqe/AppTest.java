@@ -16,6 +16,7 @@ import org.testfx.matcher.control.LabeledMatchers;
 
 import at.fhhagenberg.sqe.model.IBuildingWrapper;
 import at.fhhagenberg.sqe.model.IElevatorWrapper;
+import at.fhhagenberg.sqe.pageobject.AppPO;
 import javafx.application.Platform;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
@@ -36,6 +37,7 @@ class AppTest {
 	private IElevatorWrapper elevatorMock;
 	
 	App app;
+	AppPO po;
 	
 	private void setupMock() throws RemoteException {
 		Mockito.when(buildingMock.getElevatorNum()).thenReturn(2);
@@ -63,6 +65,7 @@ class AppTest {
 		}    	
         app = new App(buildingMock, elevatorMock);
         app.start(stage);
+        po = new AppPO();
     }
 
     /**
@@ -75,8 +78,8 @@ class AppTest {
     void testFloorNumber(FxRobot robot) throws RemoteException, InterruptedException {
     	Mockito.verify(buildingMock, Mockito.timeout(100).times(2)).getElevatorNum();
 
-        assertAfterJavaFxPlatformEventsAreDone(() -> {
-        	FxAssert.verifyThat("#floorNumber", LabeledMatchers.hasText(Integer.toString(3)));
+        po.assertAfterJavaFxPlatformEventsAreDone(() -> {
+        	FxAssert.verifyThat(po.GetFloorNumberLabel(), LabeledMatchers.hasText(Integer.toString(3)));
        });
 
     }
@@ -91,8 +94,8 @@ class AppTest {
     void testSpeed(FxRobot robot) throws RemoteException, InterruptedException {
     	Mockito.verify(buildingMock, Mockito.timeout(100).times(2)).getElevatorNum();
 
-        assertAfterJavaFxPlatformEventsAreDone(() -> {
-        	FxAssert.verifyThat("#lbSpeed", LabeledMatchers.hasText(Integer.toString(200)));
+        po.assertAfterJavaFxPlatformEventsAreDone(() -> {
+        	FxAssert.verifyThat(po.GetSpeedLabel(), LabeledMatchers.hasText(Integer.toString(200)));
        });
 
     }
@@ -107,8 +110,8 @@ class AppTest {
     void testDoorStatus(FxRobot robot) throws RemoteException, InterruptedException {
     	Mockito.verify(buildingMock, Mockito.timeout(100).times(2)).getElevatorNum();
 
-        assertAfterJavaFxPlatformEventsAreDone(() -> {
-        	FxAssert.verifyThat("#lbDoors", LabeledMatchers.hasText("closed"));
+        po.assertAfterJavaFxPlatformEventsAreDone(() -> {
+        	FxAssert.verifyThat(po.GetDoorsLabel(), LabeledMatchers.hasText("closed"));
        });
 
     }
@@ -129,22 +132,10 @@ class AppTest {
     	Mockito.doThrow(RemoteException.class).when(elevatorMock).reconnectToRMI();
     	app.getController().setReconnectErrorText("ReconnectFailed");
     	Mockito.verify(buildingMock, Mockito.timeout(150).times(1)).reconnectToRMI();
-        assertAfterJavaFxPlatformEventsAreDone(() -> {
-        	assertEquals(robot.lookup("#lvErrors").queryAs(ListView.class).getItems().get(0), "ReconnectFailed");
+        po.assertAfterJavaFxPlatformEventsAreDone(() -> {
+        	assertEquals(robot.lookup(po.GetErrorListView()).queryAs(ListView.class).getItems().get(0), "ReconnectFailed");
        });
 
     }
-    
-    private void assertAfterJavaFxPlatformEventsAreDone(Runnable runnable) throws InterruptedException {
-        waitOnJavaFxPlatformEventsDone();
-        runnable.run();
-    }
 
-    private void waitOnJavaFxPlatformEventsDone() throws InterruptedException {
-        CountDownLatch countDownLatch = new CountDownLatch(1);
-        Platform.runLater(countDownLatch::countDown);
-        countDownLatch.await();
-    }
-    
-    
 }
