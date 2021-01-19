@@ -2,9 +2,12 @@ package at.fhhagenberg.sqe.pageobject;
 
 import java.util.concurrent.CountDownLatch;
 
+import org.testfx.api.FxAssert;
 import org.testfx.api.FxRobot;
+import org.testfx.matcher.control.LabeledMatchers;
 
 import javafx.application.Platform;
+import javafx.util.Pair;
 
 public class AppPO {
 
@@ -75,7 +78,19 @@ public class AppPO {
 	
 	/* Assertions */
 	
+	public void VerifyLabel(String elementId, String value) throws InterruptedException {
+		assertAfterJavaFxPlatformEventsAreDone(() -> {
+			FxAssert.verifyThat(elementId, LabeledMatchers.hasText(value));
+		});
+	}
 	
+	public void VerifyLabels(Pair<String, String>... pairs) throws InterruptedException {
+		assertAfterJavaFxPlatformEventsAreDone(() -> {
+			for(var pair : pairs) {
+				FxAssert.verifyThat(pair.getKey(), LabeledMatchers.hasText(pair.getValue()));
+			}
+		});
+	}
 	
     public void assertAfterJavaFxPlatformEventsAreDone(Runnable runnable) throws InterruptedException {
         waitOnJavaFxPlatformEventsDone();
