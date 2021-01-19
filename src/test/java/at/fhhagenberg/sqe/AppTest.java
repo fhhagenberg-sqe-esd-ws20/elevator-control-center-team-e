@@ -95,6 +95,36 @@ class AppTest {
     }
     
     /**
+     * @brief Checks Direction Images
+     * @param robot - Will be injected by the test runner.
+     * @throws RemoteException 
+     * @throws InterruptedException 
+     */
+    @Test
+    void testDirectionUncommitted(FxRobot robot) throws RemoteException, InterruptedException {
+    	Mockito.when(elevatorMock.getCommittedDirection(0)).thenReturn(2);
+    	Mockito.verify(elevatorMock, Mockito.timeout(100).atLeastOnce()).getCommittedDirection(0);
+    	
+        po.VerifyEquals(po.GetUpActive(robot), false);
+        po.VerifyEquals(po.GetDownActive(robot), false);
+    }
+    
+    /**
+     * @brief Checks Direction Images
+     * @param robot - Will be injected by the test runner.
+     * @throws RemoteException 
+     * @throws InterruptedException 
+     */
+    @Test
+    void testDirectionDown(FxRobot robot) throws RemoteException, InterruptedException {
+    	Mockito.when(elevatorMock.getCommittedDirection(0)).thenReturn(1);
+    	Mockito.verify(elevatorMock, Mockito.timeout(100).atLeastOnce()).getCommittedDirection(0);
+    	
+        po.VerifyEquals(po.GetUpActive(robot), false);
+        po.VerifyEquals(po.GetDownActive(robot), true);
+    }
+  
+    /**
      * @brief Asserts door status
      * @param robot - Will be injected by the test runner.
      * @throws RemoteException 
