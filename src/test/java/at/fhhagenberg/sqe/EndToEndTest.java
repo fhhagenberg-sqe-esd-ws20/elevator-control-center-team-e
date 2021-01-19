@@ -13,6 +13,7 @@ import org.testfx.matcher.control.LabeledMatchers;
 
 import at.fhhagenberg.sqe.model.BuildingWrapper;
 import at.fhhagenberg.sqe.model.ElevatorWrapper;
+import at.fhhagenberg.sqe.pageobject.AppPO;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 import sqelevator.IElevator;
@@ -28,6 +29,8 @@ class EndToEndTest {
 
     @Mock
 	private IElevator elevator;
+    
+    AppPO po;
 	
 	
 	private void setupMock() throws RemoteException {
@@ -54,7 +57,7 @@ class EndToEndTest {
 		}    	
         var app = new App(new BuildingWrapper(elevator), new ElevatorWrapper(elevator));
         app.start(stage);
-        
+        po = new AppPO();
     }
 
     /**
@@ -72,7 +75,7 @@ class EndToEndTest {
     	
     	Mockito.verify(elevator, Mockito.timeout(2000).atLeast(2)).getClockTick();
     	
-        assertAfterJavaFxPlatformEventsAreDone(() -> {
+        po.assertAfterJavaFxPlatformEventsAreDone(() -> {
         	FxAssert.verifyThat("#lbFloor", LabeledMatchers.hasText(Integer.toString(3)));
         	FxAssert.verifyThat("#lbPayload", LabeledMatchers.hasText(Integer.toString(100)));
         	FxAssert.verifyThat("#lbSpeed", LabeledMatchers.hasText(Integer.toString(5)));
@@ -95,11 +98,13 @@ class EndToEndTest {
 		}).when(elevator).setTarget(Mockito.anyInt(), Mockito.anyInt());
     	
     	
-        assertAfterJavaFxPlatformEventsAreDone(() -> {
+        po.assertAfterJavaFxPlatformEventsAreDone(() -> {
         	FxAssert.verifyThat("#lbTarget", LabeledMatchers.hasText(Integer.toString(target)));
        });
     	
-    	robot.clickOn(".button");
+        
+        po.ClickSetTarget(robot);
+    	// robot.clickOn(".button");
     	
     	Mockito.verify(elevator, Mockito.timeout(1000)).setTarget(0, 0);
     }
@@ -113,21 +118,10 @@ class EndToEndTest {
     	Mockito.reset(elevator);
     	Mockito.when(elevator.getTarget(0)).thenReturn(5);
     	Mockito.verify(elevator, Mockito.timeout(2000).atLeast(2)).getClockTick();
-        assertAfterJavaFxPlatformEventsAreDone(() -> {
+        po.assertAfterJavaFxPlatformEventsAreDone(() -> {
             FxAssert.verifyThat("#lbTarget", LabeledMatchers.hasText(Integer.toString(5)));
        });
 
-    }
-    
-    private void assertAfterJavaFxPlatformEventsAreDone(Runnable runnable) throws InterruptedException {
-        waitOnJavaFxPlatformEventsDone();
-        runnable.run();
-    }
-
-    private void waitOnJavaFxPlatformEventsDone() throws InterruptedException {
-        CountDownLatch countDownLatch = new CountDownLatch(1);
-        Platform.runLater(countDownLatch::countDown);
-        countDownLatch.await();
     }
 
 }
