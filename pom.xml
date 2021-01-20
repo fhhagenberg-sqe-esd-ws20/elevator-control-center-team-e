@@ -5,7 +5,7 @@
 
 	<groupId>at.fhhagenberg.sqe.esd.ws20</groupId>
 	<artifactId>ecc-team-e</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -101,6 +101,19 @@
 				<configuration>
 					<launcher>launcher</launcher>
 					<mainClass>at.fhhagenberg.sqe.App</mainClass>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>at.fhhagenberg.sqe.LaunchApp</mainClass>
+						</manifest>
+					</archive>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
 				</configuration>
 			</plugin>
 		</plugins>

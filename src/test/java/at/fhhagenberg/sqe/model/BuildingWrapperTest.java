@@ -79,15 +79,6 @@ class BuildingWrapperTest {
 		Mockito.verify(elevatorMock).getFloorNum();
 	}
 	
-	@Test 
-	void testReconnectToRMI() {
-		try {
-			buildingWrapper.reconnectToRMI();
-		} catch (Exception e) {
-			assertFalse(false);
-		}
-	}
-	
 	@Test
 	void testSetModel() {
 		buildingWrapper.setModel(elevatorMock);

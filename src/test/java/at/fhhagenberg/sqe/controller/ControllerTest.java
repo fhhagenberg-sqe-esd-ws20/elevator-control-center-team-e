@@ -133,7 +133,6 @@ class ControllerTest {
 		Mockito.doThrow(RemoteException.class).when(elevatorMock).setTarget(0, 2);
 		Mockito.doThrow(RemoteException.class).when(buildingMock).reconnectToRMI();
 		controller.setTarget(2);
-		Thread.sleep(100,0);
         assertAfterJavaFxPlatformEventsAreDone(() -> {
     		assertEquals("ReconnError", controller.getLastError());
        });

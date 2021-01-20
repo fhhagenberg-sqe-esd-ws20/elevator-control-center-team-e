@@ -40,9 +40,9 @@ public class App extends Application {
 				usedElevator = (IElevator) Naming.lookup(url);
 			} catch (Exception e) {
 				  Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-		          alert.setTitle("No Simulation Connection");
-		          alert.setHeaderText("Click ok when simulation started");
-		          alert.setContentText("Cancle to stop Application");
+		          alert.setTitle("No simulator connection");
+		          alert.setHeaderText("Click ok when simulator is running");
+		          alert.setContentText("Cancel to stop application");
 		          alert.showAndWait().ifPresent(rs -> {
 		        	    if (rs != ButtonType.OK) {
 							Platform.exit();
