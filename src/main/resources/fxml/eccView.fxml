@@ -49,7 +49,7 @@ dividerPositions="0.9" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-In
 		                              <Image url="@../icons/down_dotted_grey.png" />
 		                           </image>
 					         </ImageView>
-				             <ImageView fx:id="imgElevDown" 
+				             <ImageView id="imgElevDown" fx:id="imgElevDown" 
 				      		fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
 						         <image>
 		                              <Image url="@../icons/down_dotted.png" />
@@ -65,7 +65,7 @@ dividerPositions="0.9" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-In
 		                              <Image url="@../icons/up_dotted_grey.png" />
 		                           </image>
 					         </ImageView>
-				             <ImageView fx:id="imgElevUp"  fitHeight="50.0" fitWidth="50.0">
+				             <ImageView id="imgElevUp" fx:id="imgElevUp" fitHeight="50.0" fitWidth="50.0">
 	                           <image>
 	                              <Image url="@../icons/up_dotted.png" />
 	                           </image>
@@ -102,11 +102,11 @@ dividerPositions="0.9" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-In
                      </children>
                   </HBox>
                   <Label styleClass="title" text="Errors:"/>
-                  <ListView fx:id="lvErrors" prefHeight="150.0" id="lvErrors" />
+                  <ListView id="lvErrors" fx:id="lvErrors" prefHeight="150.0" />
                </children>
             </VBox>
 
-            <ListView fx:id="lvFloors" minWidth="330" maxWidth="340">
+            <ListView id="lvFloors" fx:id="lvFloors" minWidth="330" maxWidth="340">
             	<cellFactory>
             		<FXMLListCellFactory fxmlSource="@floorTemplate.fxml" />
             	</cellFactory>
@@ -118,12 +118,12 @@ dividerPositions="0.9" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-In
          <children>
             <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
                <children>
-                  <RadioButton fx:id="rbManual" mnemonicParsing="false" selected="true" text="Manual">
+                  <RadioButton id="rbManual" fx:id="rbManual" mnemonicParsing="false" selected="true" text="Manual">
                      <toggleGroup>
                         <ToggleGroup fx:id="tgMode" />
                      </toggleGroup>
                   </RadioButton>
-                  <RadioButton fx:id="rbAuto" mnemonicParsing="false" text="Automatic" toggleGroup="$tgMode" />
+                  <RadioButton id="rbAuto" fx:id="rbAuto" mnemonicParsing="false" text="Automatic" toggleGroup="$tgMode" />
                </children>
             </VBox>
             <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
@@ -135,7 +135,7 @@ dividerPositions="0.9" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-In
             <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
                <children>
                   <Label text="Current Elevator:" />
-                  <ComboBox fx:id="cmbElevators" prefWidth="150.0" />
+                  <ComboBox id="cmbElevators" fx:id="cmbElevators" prefWidth="150.0" />
                   
                </children>
             </VBox>
