@@ -13,11 +13,24 @@ public interface IElevatorWrapper {
 	 */
 	public void setModel(IElevator model);
 	
+	
+	/**
+	 * Gets the used elevator model
+	 * @param model - used elevator model
+	 */
+	public IElevator getModel();
+	
 	/**
 	 * Sets the connection string for the RMI connection
 	 * @param url - the connection string
 	 */
 	public void setConnectionString(String url);
+	
+	/**
+	 * Gets the connection string for the RMI connection
+	 * @param url - the connection string
+	 */
+	public String getConnectionString();
 	
 	/**
 	 * Reconnects to the RMI if a valid connection string is set and the application is running

@@ -96,10 +96,20 @@ public class ElevatorWrapper implements IElevatorWrapper {
 	public void setModel(IElevator model) {
 		this.model = model;
 	}
+	
+	@Override
+	public IElevator getModel() {
+		return model;
+	}
 
 	@Override
 	public void setConnectionString(String url) {
 		this.url = url;
+	}
+	
+	@Override
+	public String getConnectionString() {
+		return url;
 	}
 
 	@Override

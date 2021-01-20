@@ -2,8 +2,6 @@ package at.fhhagenberg.sqe.model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.net.MalformedURLException;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
 import org.junit.jupiter.api.AfterEach;
@@ -92,13 +90,13 @@ class BuildingWrapperTest {
 	
 	@Test
 	void testSetModel() {
-		buildingWrapper.setModel(null);
-		assertFalse(false);
+		buildingWrapper.setModel(elevatorMock);
+		assertEquals(elevatorMock, buildingWrapper.getModel());
 	}
 	
 	@Test
 	void testSetConnectionString() {
-		buildingWrapper.setConnectionString("");
-		assertFalse(false);
+		buildingWrapper.setConnectionString("test");
+		assertEquals("test", buildingWrapper.getConnectionString());
 	}
 }

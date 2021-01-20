@@ -138,6 +138,19 @@ class ElevatorWrapperTest {
 	}
 	
 	@Test
+	void testSetModel() {
+		elevatorWrapper.setModel(elevatorMock);
+		assertEquals(elevatorMock, elevatorWrapper.getModel());
+	}
+	
+	@Test
+	void testSetConnectionString() {
+		elevatorWrapper.setConnectionString("test");
+		assertEquals("test", elevatorWrapper.getConnectionString());
+	}
+	
+	
+	@Test
 	void testGetClockTick() throws RemoteException {
 		long tick = 5;
 		Mockito.when(elevatorMock.getClockTick()).thenReturn(tick);		
