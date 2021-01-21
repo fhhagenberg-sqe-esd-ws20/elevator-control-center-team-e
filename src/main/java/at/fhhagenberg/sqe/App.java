@@ -76,7 +76,7 @@ public class App extends Application {
     	controller = new Controller(building, elevator);
     	
     	try {
-	    	URL urlFxml = new File("src/main/resources/fxml/eccView.fxml").toURI().toURL();
+	    	URL urlFxml = getClass().getClassLoader().getResource("fxml/eccView.fxml");
 	    	loader = new FXMLLoader(urlFxml);
 	    	
 	    	loader.setController(controller);
