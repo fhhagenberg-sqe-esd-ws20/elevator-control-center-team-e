@@ -60,6 +60,7 @@ class EndToEndTest {
      * @param robot - Will be injected by the test runner.
      * @throws Exception 
      */
+	@SuppressWarnings("unchecked")
 	@Test
     void testEndToEndStaticInformation(FxRobot robot) throws Exception {
     	Mockito.reset(elevator);
